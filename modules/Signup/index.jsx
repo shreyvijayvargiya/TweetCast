@@ -2,6 +2,8 @@ import React from 'react';
 import { Button, InputLabel, TextField, Typography } from '@material-ui/core';
 import { useStyles } from './styles';
 import app from '../../utils/firebase';
+import { setCookie } from '../../utils/cookie';
+import { useRouter } from 'next/router';
 
 const Signup = () => {
 
@@ -10,6 +12,7 @@ const Signup = () => {
         password: '',
         username: ''
     });
+    const router = useRouter();
     const [error, setError] = React.useState(null);
     const [disabled, setDisabled] = React.useState(true);
 
@@ -18,7 +21,7 @@ const Signup = () => {
     const handleChange = (event) => {
         const val = event.target.value;
         const name = event.target.name;
-        setValues((prevState) => ({ ...prevState, [name]: val}))
+        setValues((prevState) => ({ ...prevState, [name]: val}));
     };
 
     React.useEffect(() => {
@@ -27,12 +30,15 @@ const Signup = () => {
         }else {
             setDisabled(true)
         }
-    })
+    });
 
     const handleSubmit = () => {
-        app.auth().createUserWithEmailAndPassword(values.email, values.password).then((res) => console.log(res, 'res'))
+        app.auth().createUserWithEmailAndPassword(values.email, values.password).then((res) => {
+            setCookie('uid', res.user.uid, 14);
+            router.push({ pathname: '/dashboard', query: { type: 'tweets'}})
+        })
         .catch((error) => console.log(error));
-    }
+    };
 
     return (
         <div className={classes.root}>
