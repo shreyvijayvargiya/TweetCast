@@ -7,7 +7,7 @@ export const useStyles = makeStyles((theme) => ({
       justifyContent: 'center',
     },
     box : {
-      width: '60%',
+      width: '25%',
       margin: 'auto',
       padding: theme.spacing(4),
       position: 'absolute',
@@ -16,12 +16,17 @@ export const useStyles = makeStyles((theme) => ({
       justifyContent: 'center',
       flexDirection: 'column',
       textAlign: 'center'
+    }, 
+    googleButton: {
+      width: '100%',
+      margin: 'auto',
+      padding: theme.spacing(2)
     },
     topbar:{
       backgroundColor: '#F9F9F9',
     },
     button: {
-      width: '30%',
+      width: '100%',
       margin: 'auto'
     },
     title: {
@@ -29,13 +34,13 @@ export const useStyles = makeStyles((theme) => ({
      color: "black"
     },
     input: {
-      width: '30%',
+      width: '100%',
       margin: 'auto',
       marginTop: theme.spacing(2),
       marginBottom: theme.spacing(2)
     },
     label : {
-      width: '30%',
+      width: '100%',
       margin: 'auto',
       textAlign: 'left'
     }

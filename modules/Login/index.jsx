@@ -4,6 +4,12 @@ import { useStyles } from './styles';
 import app from '../../utils/firebase';
 import { setCookie } from '../../utils/cookie';
 import { useRouter } from 'next/router';
+import { AiOutlineGoogle } from 'react-icons/ai';
+import { GoogleLogin } from 'react-google-login';
+import firebase from 'firebase';
+import { setUserInStore } from '../../redux/action';
+import { useDispatch } from 'react-redux';
+
 
 const Login = () => {
     const router = useRouter();
@@ -11,6 +17,8 @@ const Login = () => {
         email: '',
         password: ''
     });
+    const dispatch = useDispatch();
+
     const [error, setError] = React.useState(null);
     const [disabled, setDisabled] = React.useState(true);
 
@@ -32,17 +40,37 @@ const Login = () => {
     const handleSubmit = (e) => {
         app.auth().signInWithEmailAndPassword(values.email, values.password).then((res) => {
             setCookie('uid', res.user.uid, 14);
+            const user = {
+                userId: res.user.uid,
+                email,
+            }
+            // dispatch(setUserInStore(user));
             router.push({ pathname: '/dashboard', query: { type: 'tweets'}})
         })
         .catch((error) => setError(error.message));
     };
     
-    // const ref = app.database().ref()
-    // ref.on("value", (snap) => console.log(snap.value), (error) => console.log(error))
+  
+    const handleGoogleLogin = (e) => {
+        e.preventDefault();
+        const auth = firebase.auth();
+        const googleProvider = new firebase.auth.GoogleAuthProvider();
+        auth.signInWithPopup(googleProvider).then((res) => {
+            const user = {
+                userId: res.user.uid,
+                email: res.user.email,
+            }
+            setCookie('uid', res.user.uid, 14);
+            // dispatch(setUserInStore(user));
+            router.push({ pathname: '/dashboard', query: { type: 'tweets'}})
+          }).catch((error) => {
+            console.log(error.message)
+        });
+    }
 
     return (
         <div className={classes.root}>
-            <form noValidate autoComplete="off" className={classes.box}>
+            <div className={classes.box}>
                     <Typography variant="h6">Sign In</Typography>
                     <br />
                     <br />
@@ -73,18 +101,29 @@ const Login = () => {
                         onChange={handleChange} 
                         className={classes.input}
                     />
-                <br />
-                <Button 
-                    color="primary" 
-                    variant="contained"
-                    fullWidth
-                    className={classes.button}
-                    disabled={disabled}
-                    onClick={() => handleSubmit()}
-                >
-                    Login
-                </Button>
-            </form>
+                    <br />
+                    <Button
+                        name="gogole-login-button"
+                        type="primary"
+                        color="primary"
+                        variant="outlined"
+                        className={classes.googleButton}
+                        onClick={(e) => handleGoogleLogin(e)}
+                    >
+                        <AiOutlineGoogle />
+                    </Button>
+                    <br />
+                    <Button 
+                        color="primary" 
+                        variant="contained"
+                        fullWidth
+                        className={classes.button}
+                        disabled={disabled}
+                        onClick={() => handleSubmit()}
+                    >
+                        Login
+                    </Button>
+            </div>
         </div>
     );
 };

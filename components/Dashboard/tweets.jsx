@@ -1,15 +1,23 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { TextField, Button, Typography } from '@material-ui/core';
+import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 const TweetsPanel = () => {
     const [message, setMessage] = React.useState("");
     const classes = styles();
-
+    const router = useRouter();
+    
     const handleChange = (e) => {
         const value = e.target.value;
         setMessage(value);
     };
+
+    const handleTweetButton = () => {
+        router.push(`https://twitter.com/intent/tweet?text=${message}`);
+    }
+    const url = `https://twitter.com/intent/tweet?text=${message}`;
 
     return (
         <div className={classes.root}>
@@ -28,15 +36,19 @@ const TweetsPanel = () => {
             />
             <br />
             <br />
-            <Button 
-                size="large" 
-                color="primary" 
-                variant="contained" 
-                fullWidth
-                disabled={message.trim(" ").length >0 ? false: true}
-            >
-                Tweet The Message
-            </Button>
+                <Button 
+                    size="large" 
+                    color="primary" 
+                    variant="contained" 
+                    fullWidth
+                    // onClick={() => handleTweetButton()}
+                    disabled={message.trim(" ").length >0 ? false: true}
+                >
+                    <a target="_blank" href={url} style={{ color: message.trim(" ").length > 0 ? 'white': 'black', textDecoration: 'none' }}>
+                        Tweet the message
+                    </a>
+                </Button>
+            <br />
         </div>
     );
 };

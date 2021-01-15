@@ -6,6 +6,9 @@ import { store } from '../redux/store';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { Navbar, Body } from '../modules/index';
 import CssBaseline from '@material-ui/core/CssBaseline';
+import { applyMiddleware, createStore  } from 'redux';
+import { userReducer } from '../redux/reducer';
+import thunk from "redux-thunk"
 
 function MyApp({ Component, pageProps }) {
     React.useEffect(() => {
@@ -16,19 +19,20 @@ function MyApp({ Component, pageProps }) {
         }
       }, []);
     
+    const store = createStore(userReducer, applyMiddleware(thunk));
+
     return (
-        // <Provider store={store}>
-            <ThemeProvider theme={theme}>
-                <Head>
-                    <title>TweetCast</title>
-                </Head>
-                <Navbar />
-                {/* <CssBaseline /> */}
-                <Body>
-                  <Component {...pageProps} />
-                </Body>
-            </ThemeProvider>
-        // </Provider>
+        <Provider store={store}>
+          <ThemeProvider theme={theme}>
+            <Head>
+                <title>TweetCast</title>
+            </Head>
+            <Navbar />
+            <Body>
+              <Component {...pageProps} />
+            </Body>
+          </ThemeProvider>
+        </Provider>
     );
   };
   

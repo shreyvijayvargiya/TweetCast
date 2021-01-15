@@ -4,6 +4,8 @@ import { useStyles } from './styles';
 import app from '../../utils/firebase';
 import { setCookie } from '../../utils/cookie';
 import { useRouter } from 'next/router';
+import { AiOutlineGoogle } from 'react-icons/ai';
+import { GoogleLogin } from 'react-google-login';
 
 const Signup = () => {
 
@@ -37,7 +39,11 @@ const Signup = () => {
             setCookie('uid', res.user.uid, 14);
             router.push({ pathname: '/dashboard', query: { type: 'tweets'}})
         })
-        .catch((error) => console.log(error));
+        .catch((error) => setError(error.message));
+    };
+
+    function responseGoogle(response){
+        console.log(response)
     };
 
     return (
@@ -46,32 +52,50 @@ const Signup = () => {
                 <Typography variant="h6">Sign Up</Typography>  
                 <br />
                 <br />
-                {error && error}
-                    <InputLabel className={classes.label} htmlFor="component-simple">Email</InputLabel>
-                    <TextField id="component-simple" 
-                        placeholder="Enter email" 
-                        size="small"  
-                        color="primary" 
-                        variant="outlined" 
-                        name="email" 
-                        type="email"
-                        value={values.email} 
-                        onChange={handleChange}
-                        className={classes.input}
-                    />
-                    <br />
-                    <InputLabel className={classes.label} htmlFor="component-simple">Password</InputLabel>
-                    <TextField 
-                        id="component-simple" 
-                        placeholder="Enter password" 
-                        size="small"  
-                        name="password" 
-                        variant="outlined" 
-                        type="password"
-                        value={values.password} 
-                        onChange={handleChange} 
-                        className={classes.input}
-                    />
+                {error && <InputLabel>{error}</InputLabel>}
+                <InputLabel className={classes.label} htmlFor="component-simple">Email</InputLabel>
+                <TextField id="component-simple-email" 
+                    placeholder="Enter email" 
+                    size="small"  
+                    color="primary" 
+                    variant="outlined" 
+                    name="email" 
+                    type="email"
+                    value={values.email} 
+                    onChange={handleChange}
+                    className={classes.input}
+                />
+                <br />
+                <InputLabel className={classes.label} htmlFor="component-simple">Password</InputLabel>
+                <TextField 
+                    id="component-simple-password" 
+                    placeholder="Enter password" 
+                    size="small"  
+                    name="password" 
+                    variant="outlined" 
+                    type="password"
+                    value={values.password} 
+                    onChange={handleChange} 
+                    className={classes.input}
+                />
+                <br />
+                <GoogleLogin
+                    clientId={process.env.GOOGLE_CLIENT_ID}
+                    render={renderProps => (
+                        <Button 
+                            onClick={renderProps.onClick} 
+                            className={classes.googleButton}
+                            color="primary"
+                            variant="outlined"
+                            >
+                                <AiOutlineGoogle />
+                            </Button>
+                        )}
+                    onFailure={responseGoogle}
+                    onSuccess={() => handleSubmit()}
+                    cookiePolicy={'single_host_origin'}
+                    className={classes.googleButton}
+                />
                 <br />
                 <Button 
                     color="primary" 
