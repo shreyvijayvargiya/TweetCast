@@ -7,6 +7,7 @@ export const theme = responsiveFontSizes(
         secondary: { main: '#FF7492' },
         info: { main: '#343434' },
         success: { main: '#4CAF50'},
+        error: {main: '#FF0000'}
       },
     }),
     {

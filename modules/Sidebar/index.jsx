@@ -27,6 +27,9 @@ const Sidebar = () => {
                 <ListItem className={classes.listItem}>
                     <Button className={classes.button} onClick={() => handleClick('timelines')} variant={router.query.type === 'timelines' ? 'contained': 'text'} color="primary" fullWidth>Timelines</Button>
                 </ListItem>
+                {/* <ListItem className={classes.listItem}>
+                    <Button className={classes.button} onClick={() => handleClick('team')} variant={router.query.type === 'team' ? 'contained': 'text'} color="primary" fullWidth>Team</Button>
+                </ListItem> */}
             </List>
             {/* <div className={classes.logoutButton}>
                 <ListItem>

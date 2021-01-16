@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 import TweetsPanel from './tweets';
 import AdminPanel from './admin';
 import Timelines from './timelines';
+import TeamPanel from './team';
 import app from '../../utils/firebase';
 
 const Dashboard = () => {
@@ -19,6 +20,7 @@ const Dashboard = () => {
         if(type === 'admin') return <AdminPanel />
         else if(type === 'tweets') return <TweetsPanel />
         else if(type === 'timelines') return <Timelines />
+        else if(type === 'team') return <TeamPanel />
         else return <AdminPanel />
     };
     React.useEffect(() => {

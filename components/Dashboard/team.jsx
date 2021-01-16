@@ -1,6 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Typography, Button, IconButton, Paper, Grid, TextField, Switch, Select, MenuItem } from '@material-ui/core';
+import { Typography, Button, Snackbar, Paper, Grid, TextField, Switch } from '@material-ui/core';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -8,10 +8,9 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import app from '../../utils/firebase';
-import { AiOutlineDelete } from 'react-icons/ai';
+import { v4 as uuidv4 } from 'uuid';
 
-
-const AdminPanel = () => {
+const TeamPanel = () => {
     const classes = styles();
     const [email, setEmail] = React.useState("");
     const [users, setUsers] = React.useState(null);
@@ -31,23 +30,9 @@ const AdminPanel = () => {
         });
     };
 
-    const handleUserType = (e, id) => {
-        const val = e.target.value;
-        let dbRef = app.database().ref();
-        let childRef = dbRef.child("users").child(id).child("userType");
-        childRef.transaction(() => {
-            console.log(val, 'val');
-            return val;
-        });
-    };
-
-    const handleDelete = (id) => {
-        let dbRef = app.database().ref("users/" +  id);
-        dbRef.remove().then((data) => console.log(data));
-    }
-
     const handleSendInvitation = () => {
         let dbRef = app.database().ref("users");
+        const id = uuidv4();
         Object.keys(users.users).map(item => {
             if(users.users[item].email === email){
                 setDisabled(true);
@@ -62,26 +47,25 @@ const AdminPanel = () => {
                 setMessage("Invitation sent successfully");
             }
         });
-        setMessage(null)
     };
     React.useEffect(() => {
         let dbRef = app.database().ref("users");
         dbRef.on("value", snap => setUsers((prevState) => ({ ...prevState, users: snap.val() })));
     }, [ ]);
 
-   
     return (
         <div className={classes.root}>
            <Typography variant="h5">Admin Account</Typography>
            <br />
+           <Typography variant="h6">Invite users</Typography>
            <br />
-           <Typography variant="body1">Invite users</Typography>
            <TableContainer>
                 <Table className={classes.table}>
                     <TableBody>
                         <TableRow>
-                            <TableCell style={{ border: 'none', padding: 0 }}>
-                                <TextField id="component-simple-email" 
+                            <TableCell style={{ border: 'none' }}>
+                                {message && <label>{message}</label>}
+                                <TextField id="component-simple" 
                                     placeholder="Enter email" 
                                     size="small"  
                                     color="primary" 
@@ -92,7 +76,6 @@ const AdminPanel = () => {
                                     value={email}
                                     onChange={handleChange}
                                 />
-                                {message && <label>{message}</label>}
                             </TableCell>
                             <TableCell align="right" style={{ border: 'none' }}>
                                 <Button disabled={email.trim(" ").length > 0 ? false: true || disabled} onClick={() => handleSendInvitation()} color="primary" variant="contained">Send Invitation</Button>
@@ -104,29 +87,23 @@ const AdminPanel = () => {
            <br />
            <br />
            <br />
-           <Typography variant="body1" color="primary">Team</Typography>
+           <br />
            <TableContainer component={Paper}>
                 <Table aria-label="simple table" className={classes.table}>
                     <TableHead>
-                        <TableRow style={{ backgroundColor: '#EEEEEE' }}>
+                        <TableRow>
                             <TableCell>
                                 <Typography variant="body1">Email</Typography>
                             </TableCell>
                             <TableCell align="right">
                                 <Typography variant="body1">Access</Typography>
                             </TableCell>
-                            <TableCell align="right">
-                                <Typography variant="body1">Promote</Typography>
-                            </TableCell>
-                            <TableCell align="right">
-                                <Typography variant="body1">Delete</Typography>
-                            </TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody className={classes.list}>
                         {users && users.users && Object.keys(users.users).map(item => {
                             return (
-                                <TableRow className={classes.cell} key={item}>
+                                <TableRow key={item}>
                                     <TableCell>
                                         {users.users[item].email}
                                     </TableCell>
@@ -134,21 +111,10 @@ const AdminPanel = () => {
                                         <Switch
                                             checked={users.users[item].dashboardAcccess}
                                             onChange={() => handleSwitchChange(item)}
-                                            name={item}
+                                            name={item.id}
                                             color="primary"
                                             inputProps={{ 'aria-label': 'secondary checkbox' }}
                                         />
-                                    </TableCell>
-                                    <TableCell align="right">
-                                        <Select value={users.users[item].userType} onChange={(e) => handleUserType(e, item)} >
-                                            <MenuItem value="admin">Admin</MenuItem>
-                                            <MenuItem value="staff">Staff</MenuItem>
-                                        </Select>
-                                    </TableCell>
-                                    <TableCell align="right">
-                                        <IconButton style={{ color: '#FF0000' }} onClick={() => handleDelete(item)} color="error">
-                                            <AiOutlineDelete  />
-                                        </IconButton>
                                     </TableCell>
                                 </TableRow>
                             )
@@ -159,7 +125,7 @@ const AdminPanel = () => {
         </div>
     );
 };
-export default AdminPanel;
+export default TeamPanel;
 
 
 const styles = makeStyles((theme) => ({
@@ -173,15 +139,10 @@ const styles = makeStyles((theme) => ({
         padding: theme.spacing(2)
     },
     table: {
-        minWidth: 800
+        minWidth: 700
     },
     list: {
         maxHeight: '30vh',
-        overflow: 'scroll',
-    },
-    cell: {
-        "&:hover": {
-            backgroundColor: '#EEEEEE'
-        }
+        overflow: 'scroll'
     }
 }));
