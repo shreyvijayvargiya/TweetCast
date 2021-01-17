@@ -56,7 +56,7 @@ export default TweetsPanel;
 
 const styles = makeStyles((theme) => ({
     root: {
-        height: '90vh',
+        // height: '90vh',
         overflow: 'hidden',
         padding: theme.spacing(8),
         width: 700

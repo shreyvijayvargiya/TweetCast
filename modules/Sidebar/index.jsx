@@ -52,7 +52,7 @@ const style = makeStyles((theme) => ({
         position: 'fixed',
         top: '8%',
         bottom: 0,
-        paddingTop: theme.spacing(3),
+        paddingTop: theme.spacing(0),
         overflow: 'hidden',
         width: '18%'
     },

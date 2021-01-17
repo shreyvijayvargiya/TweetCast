@@ -48,20 +48,20 @@ const AdminPanel = () => {
 
     const handleSendInvitation = () => {
         let dbRef = app.database().ref("users");
-        Object.keys(users.users).map(item => {
-            if(users.users[item].email === email){
-                setDisabled(true);
-                setMessage("Email already exist");
-            }else {
-                dbRef.push({
-                    email,
-                    dashboardAcccess: true,
-                    userType: 'staff'
-                });
-                setEmail("");
-                setMessage("Invitation sent successfully");
-            }
+        // Object.keys(users.users).map(item => {
+        //     if(users.users[item].email === email){
+        //         setDisabled(true);
+        //         setMessage("Email already exist");
+        //     }else {
+        //         setMessage("Invitation sent successfully");
+        //     }
+        // });
+        dbRef.push({
+            email,
+            dashboardAcccess: true,
+            userType: 'staff'
         });
+        setEmail("");
         setMessage(null)
     };
     React.useEffect(() => {
@@ -73,7 +73,6 @@ const AdminPanel = () => {
     return (
         <div className={classes.root}>
            <Typography variant="h5">Admin Account</Typography>
-           <br />
            <br />
            <Typography variant="body1">Invite users</Typography>
            <TableContainer>
@@ -102,17 +101,15 @@ const AdminPanel = () => {
                 </Table>
            </TableContainer>
            <br />
-           <br />
-           <br />
            <Typography variant="body1" color="primary">Team</Typography>
            <TableContainer component={Paper}>
                 <Table aria-label="simple table" className={classes.table}>
                     <TableHead>
                         <TableRow style={{ backgroundColor: '#EEEEEE' }}>
-                            <TableCell>
+                            <TableCell align="left" style={{ minWidth: '11vw' }}>
                                 <Typography variant="body1">Email</Typography>
                             </TableCell>
-                            <TableCell align="right">
+                            <TableCell align="right" style={{ paddingRight: 0 }}>
                                 <Typography variant="body1">Access</Typography>
                             </TableCell>
                             <TableCell align="right">
@@ -123,6 +120,10 @@ const AdminPanel = () => {
                             </TableCell>
                         </TableRow>
                     </TableHead>
+                </Table>
+           </TableContainer>
+           <TableContainer className={classes.tableContainer}>
+                <Table aria-label="simple table" className={classes.table}>
                     <TableBody className={classes.list}>
                         {users && users.users && Object.keys(users.users).map(item => {
                             return (
@@ -130,7 +131,7 @@ const AdminPanel = () => {
                                     <TableCell>
                                         {users.users[item].email}
                                     </TableCell>
-                                    <TableCell align="right">
+                                    <TableCell align="center">
                                         <Switch
                                             checked={users.users[item].dashboardAcccess}
                                             onChange={() => handleSwitchChange(item)}
@@ -139,19 +140,19 @@ const AdminPanel = () => {
                                             inputProps={{ 'aria-label': 'secondary checkbox' }}
                                         />
                                     </TableCell>
-                                    <TableCell align="right">
-                                        <Select value={users.users[item].userType} onChange={(e) => handleUserType(e, item)} >
+                                    <TableCell align="center">
+                                        <Select className={classes.select} variant="outlined" value={users.users[item].userType} onChange={(e) => handleUserType(e, item)} >
                                             <MenuItem value="admin">Admin</MenuItem>
                                             <MenuItem value="staff">Staff</MenuItem>
                                         </Select>
                                     </TableCell>
-                                    <TableCell align="right">
+                                    <TableCell align="center">
                                         <IconButton style={{ color: '#FF0000' }} onClick={() => handleDelete(item)} color="error">
                                             <AiOutlineDelete  />
                                         </IconButton>
                                     </TableCell>
                                 </TableRow>
-                            )
+                            );
                         })}
                     </TableBody>
                 </Table>
@@ -164,24 +165,33 @@ export default AdminPanel;
 
 const styles = makeStyles((theme) => ({
     root: {
-        height: '100vh',
+        // height: '90vh',
         width: '100%',
-        overflow: 'scroll',
-        padding: theme.spacing(8)
+        overflow: 'hidden',
+        paddingTop: theme.spacing(4),
+        paddingLeft: theme.spacing(8)
     },
     paper: {
         padding: theme.spacing(2)
     },
     table: {
-        minWidth: 800
+        minWidth: 900
     },
     list: {
         maxHeight: '30vh',
         overflow: 'scroll',
+        position: 'relative',
     },
     cell: {
         "&:hover": {
             backgroundColor: '#EEEEEE'
         }
+    },
+    tableContainer: {
+        maxHeight: '60vh',
+        position: 'relative',
+    },
+    select: {
+        minWidth: '7vw'
     }
 }));

@@ -130,9 +130,9 @@ export default TeamPanel;
 
 const styles = makeStyles((theme) => ({
     root: {
-        height: '100vh',
+        // height: '90vh',
         width: '100%',
-        overflow: 'scroll',
+        overflow: 'hidden',
         padding: theme.spacing(8)
     },
     paper: {

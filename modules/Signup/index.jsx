@@ -35,6 +35,7 @@ const Signup = () => {
     });
 
     const handleSubmit = () => {
+        setError(null);
         app.auth().createUserWithEmailAndPassword(values.email, values.password).then((res) => {
             setCookie('uid', res.user.uid, 14);
             router.push({ pathname: '/dashboard', query: { type: 'tweets'}})

@@ -1,41 +1,82 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Typography, Divider } from '@material-ui/core';
+import { Typography, Divider, Tabs, Tab, Box, AppBar } from '@material-ui/core';
 import axios from 'axios';
 import Head from 'next/head';
+import { Timeline } from 'react-twitter-widgets'
+
+function a11yProps(index) {
+    return {
+      id: `simple-tab-${index}`,
+      'aria-controls': `simple-tabpanel-${index}`,
+    };
+};
+
+function TabPanel(props) {
+    const { children, value, index, ...other } = props;
+  
+    return (
+      <div
+        role="tabpanel"
+        hidden={value !== index}
+        id={`simple-tabpanel-${index}`}
+        aria-labelledby={`simple-tab-${index}`}
+        {...other}
+      >
+        {value === index && (
+          <Box p={3}>
+            <Typography>{children}</Typography>
+          </Box>
+        )}
+      </div>
+    );
+};
 
 const Timelines = () => {
     const classes = styles();
-    const [tweetsData, setTweetsData] = React.useState(null);
+    const [value, setValue] = React.useState(0);
 
-    const fetchData = async () => {
-        const name = "treyvijay";
-        const count = 10;
-        const result = await axios.get(`https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=${name}&count=${count}`, {
-            header: {
-                "Access-Control-Allow-Origin": "*"
-            }
-        });
-        setTweetsData(result.data);
+    const handleChange = (event, newValue) => {
+      setValue(newValue);
     };
     
-    React.useEffect(() => {
-        // fetchData()
-        console.log(tweetsData)
-    }, [])
-
     return (
         <div className={classes.root}>
             <Head>
                 <script src="https://platform.twitter.com/widgets.js"></script>
             </Head>
-            <div>
-                <Typography variant="h6">Timelines</Typography>
+            <div className={classes.header}>
+                <AppBar position="static">
+                    <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
+                        <Tab label="Profile" {...a11yProps(0)} />
+                        <Tab label="Collection" {...a11yProps(1)} />
+                        <Tab label="List" {...a11yProps(2)} />
+                    </Tabs>
+                </AppBar>
             </div>
-            <Divider />
-            <br />
             <div className={classes.timeline}>
-                <a className="twitter-timeline" href="https://twitter.com/treyvijay?ref_src=twsrc%5Etfw">Tweets by treyvijay</a>
+                <TabPanel value={value} index={0}>
+                   <Timeline 
+                        dataSource={{
+                            sourceType: 'profile',
+                            screenName: 'treyvijay'
+                        }}
+                   />
+                </TabPanel>
+                <TabPanel value={value} index={1}>
+                    <Timeline
+                        dataSource={{ sourceType: "collection", id: "393773266801659904" }}
+                    />
+                </TabPanel>
+                <TabPanel value={value} index={2}>
+                    <Timeline
+                        dataSource={{
+                        sourceType: "list",
+                        ownerScreenName: "twitter",
+                        id: "214727905"
+                        }}
+                    />
+                </TabPanel>
             </div>
         </div>
     );
@@ -45,13 +86,23 @@ export default Timelines;
 
 const styles = makeStyles((theme) => ({
     root: {
-        height: '90vh',
-        padding: theme.spacing(8)
+        height: '80vh',
+        padding: theme.spacing(4),
+        position: 'relative',
+        overflow: 'hidden'
     },
-
     timeline: {
-        width: '50vw',
+        width: '60vw',
+        minHeight: '80vh',
         maxHeight: '80vh',
-        overflow: 'scroll'
+        overflow: 'scroll',
+        position: "relative",
+        top: '8%',
+        border: '1px solid #EEEEEE',
+        borderRadius: '4px'
+    },
+    header : {
+        position: "fixed",
+        width: '60vw'
     }
 }))
