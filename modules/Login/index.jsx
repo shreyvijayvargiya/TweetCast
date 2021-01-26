@@ -44,7 +44,7 @@ const Login = () => {
                 userId: res.user.uid,
                 email,
             }
-            // dispatch(setUserInStore(user));
+            dispatch(setUserInStore(user));
             router.push({ pathname: '/dashboard', query: { type: 'tweets'}})
         })
         .catch((error) => setError(error.message));
@@ -61,7 +61,7 @@ const Login = () => {
                 email: res.user.email,
             }
             setCookie('uid', res.user.uid, 14);
-            // dispatch(setUserInStore(user));
+            dispatch(setUserInStore(user));
             router.push({ pathname: '/dashboard', query: { type: 'tweets'}})
           }).catch((error) => {
             console.log(error.message)

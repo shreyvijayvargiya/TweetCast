@@ -8,12 +8,12 @@ import AdminPanel from './admin';
 import Timelines from './timelines';
 import TeamPanel from './team';
 import app from '../../utils/firebase';
+import { setUserInStore } from '../../redux/action';
+import { useDispatch } from 'react-redux';
 
 const Dashboard = () => {
     
-    const classes = styles();
     const router = useRouter();
-
     const type = router.query.type;
 
     const Panel = () => {
@@ -23,9 +23,7 @@ const Dashboard = () => {
         else if(type === 'team') return <TeamPanel />
         else return <AdminPanel />
     };
-    React.useEffect(() => {
-        app.database().ref("users").on("value", (snap) => console.log(snap.value))
-    }, [])
+   
     return (
         <Grid container>
             <Grid item xl={3} md={2}>

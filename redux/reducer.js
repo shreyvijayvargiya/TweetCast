@@ -1,16 +1,23 @@
-import { SET_USER } from './constants';
+import { SET_USER, REMOVE_USER } from './constants';
 
 const initialState = {
-    user: null
+    email: "",
+    userId: ""
 }
 export const userReducer = (state = initialState, action) => {
     switch(action.type){
         case SET_USER:
-            console.log(action.paylaod, 'in reducer');
+            console.log(action.payload, 'in reducer');
             return {
                 ...state, 
-                user: action.paylaod
+                email: action.payload.email,
+                userId: action.payload.userId
             }
+        case REMOVE_USER: {
+            return {
+                ...state, email: "", userId: ""
+            }
+        }
         default:
             return state;
     }

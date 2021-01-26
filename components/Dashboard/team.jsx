@@ -1,6 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Typography, Button, Snackbar, Paper, Grid, TextField, Switch } from '@material-ui/core';
+import { Typography, Button, Snackbar, Paper, TextField, Switch } from '@material-ui/core';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -8,7 +8,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import app from '../../utils/firebase';
-import { v4 as uuidv4 } from 'uuid';
+
 
 const TeamPanel = () => {
     const classes = styles();
@@ -32,7 +32,6 @@ const TeamPanel = () => {
 
     const handleSendInvitation = () => {
         let dbRef = app.database().ref("users");
-        const id = uuidv4();
         Object.keys(users.users).map(item => {
             if(users.users[item].email === email){
                 setDisabled(true);
@@ -48,9 +47,14 @@ const TeamPanel = () => {
             }
         });
     };
-    React.useEffect(() => {
+
+    const fetchUserFromFirebase = () => {
         let dbRef = app.database().ref("users");
         dbRef.on("value", snap => setUsers((prevState) => ({ ...prevState, users: snap.val() })));
+    };
+
+    React.useEffect(() => {
+        fetchUserFromFirebase()
     }, [ ]);
 
     return (

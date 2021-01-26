@@ -4,6 +4,7 @@ import { useStyles } from './styles';
 import { useRouter } from 'next/router';
 import { getCookie, removeCookie } from '../../utils/cookie';
 import app from '../../utils/firebase';
+import {removeUserFromStore } from '../../redux/action';
 
 export default function Navbar() {
   const classes = useStyles();
@@ -17,6 +18,7 @@ export default function Navbar() {
 
   const handleLogout = () => {
     removeCookie('uid');
+    removeUserFromStore()
     app.auth().signOut();
     router.push('/login')
   };

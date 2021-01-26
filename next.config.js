@@ -5,6 +5,11 @@ module.exports = {
         REACT_APP_FIREBASE_DATABASE: "https://tweetcast-default-rtdb.firebaseio.com/",
         REACT_APP_FIREBASE_PROJECT_ID: "tweetcast",
         REACT_APP_FIREBASE_STORAGE_BUCKET: "tweetcast.appspot.com",
-        GOOGLE_CLIENT_ID: "499314077621-n7klfql9rfd8ho7kl26bu6p1vf9fgg5h.apps.googleusercontent.com"
+        GOOGLE_CLIENT_ID: "499314077621-n7klfql9rfd8ho7kl26bu6p1vf9fgg5h.apps.googleusercontent.com",
+        consumerKey: "V7JNiTLcwUYFEUjPmgZch7GtD",
+        consumerSecret: "V7JNiTLcwUYFEUjPmgZch7GtD",
+        acessToken: "2567443994-PxwgpM4riXsbTmgT7EitGhN0CZCMZFreUIRMTmK",
+        tokenSecret: "1di5TPMzxUjmafsUlJcMhS5PtVW6qtNjIv3y5UXPNXshi",
+        bearerToken: "AAAAAAAAAAAAAAAAAAAAAB5kMAEAAAAAqg4X%2BbQOQxXyaIe8DqTjb%2Fzo5cE%3DDpNNHWyjOgVe5aE4Rk2zJbQM5nMQprAfon5jiLVfCL66TVCaj5"
     }
 }

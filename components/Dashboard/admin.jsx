@@ -11,6 +11,7 @@ import app from '../../utils/firebase';
 import { AiOutlineDelete } from 'react-icons/ai';
 
 
+
 const AdminPanel = () => {
     const classes = styles();
     const [email, setEmail] = React.useState("");
@@ -36,7 +37,6 @@ const AdminPanel = () => {
         let dbRef = app.database().ref();
         let childRef = dbRef.child("users").child(id).child("userType");
         childRef.transaction(() => {
-            console.log(val, 'val');
             return val;
         });
     };
@@ -48,14 +48,6 @@ const AdminPanel = () => {
 
     const handleSendInvitation = () => {
         let dbRef = app.database().ref("users");
-        // Object.keys(users.users).map(item => {
-        //     if(users.users[item].email === email){
-        //         setDisabled(true);
-        //         setMessage("Email already exist");
-        //     }else {
-        //         setMessage("Invitation sent successfully");
-        //     }
-        // });
         dbRef.push({
             email,
             dashboardAcccess: true,
@@ -64,9 +56,13 @@ const AdminPanel = () => {
         setEmail("");
         setMessage(null)
     };
-    React.useEffect(() => {
+
+    const fetchUsers = () => {
         let dbRef = app.database().ref("users");
         dbRef.on("value", snap => setUsers((prevState) => ({ ...prevState, users: snap.val() })));
+    }
+    React.useEffect(() => {
+        fetchUsers();
     }, [ ]);
 
    

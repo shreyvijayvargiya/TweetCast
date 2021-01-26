@@ -9,6 +9,11 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import { applyMiddleware, createStore  } from 'redux';
 import { userReducer } from '../redux/reducer';
 import thunk from "redux-thunk"
+import 'react-phone-input-2/lib/style.css'
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import { persistStore, persistReducer } from 'redux-persist'
+import storage from 'redux-persist/lib/storage'
+import { PersistGate } from 'redux-persist/integration/react'
 
 function MyApp({ Component, pageProps }) {
     React.useEffect(() => {
@@ -18,20 +23,27 @@ function MyApp({ Component, pageProps }) {
           jssStyles.parentElement.removeChild(jssStyles);
         }
       }, []);
-    
-    const store = createStore(userReducer, applyMiddleware(thunk));
+      const persistConfig = {
+        key: 'root',
+        storage,
+      }
+    const persistedReducer = persistReducer(persistConfig, userReducer)
+    const store = createStore(persistedReducer, applyMiddleware(thunk));
+    const persistor = persistStore(store)
 
     return (
         <Provider store={store}>
-          <ThemeProvider theme={theme}>
-            <Head>
-                <title>TweetCast</title>
-            </Head>
-            <Navbar />
-            <Body>
-              <Component {...pageProps} />
-            </Body>
-          </ThemeProvider>
+          <PersistGate loading={null} persistor={persistor}>
+            <ThemeProvider theme={theme}>
+              <Head>
+                  <title>TweetCast</title>
+              </Head>
+              <Navbar />
+              <Body>
+                <Component {...pageProps} />
+              </Body>
+            </ThemeProvider>
+          </PersistGate>
         </Provider>
     );
   };
