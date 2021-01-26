@@ -26,17 +26,13 @@ const Dashboard = () => {
    
     return (
         <Grid container>
-            <Grid item xl={3} md={2}>
+            <Grid item md={2}>
                 <Sidebar />
             </Grid>
-            <Grid item xl={8}>
+            <Grid item>
                 <Panel />
             </Grid>
         </Grid>
     );
 };
 export default Dashboard;
-
-const styles = makeStyles((theme) => ({
-    
-}))

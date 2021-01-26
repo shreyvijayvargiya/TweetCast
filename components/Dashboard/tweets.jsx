@@ -1,10 +1,11 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { TextField, Button, Typography ,Table, TableContainer,Paper, TableBody, TableRow, TableCell, TableHead, Switch, Modal, Grid, CircularProgress, IconButton } from '@material-ui/core';
+import { TextField, Button, Typography ,Table, TableContainer,Paper, TableBody, TableRow, TableCell, Fab, TableHead, Switch, Modal, Grid, CircularProgress, IconButton } from '@material-ui/core';
 import { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';
 import app from '../../utils/firebase';
 import { AiFillCloseCircle } from 'react-icons/ai';
+import { FiCamera } from 'react-icons/fi';
 
 const TweetsPanel = () => {
 
@@ -13,6 +14,7 @@ const TweetsPanel = () => {
         editableMessage: "",
         createdAt: new Date(),
         currentId: null,
+        fileData: null
     });
 
     const [tweets, setTweets] = React.useState(null);
@@ -37,7 +39,8 @@ const TweetsPanel = () => {
             email: user ? user.email: "",
             image: null,
             createdAt: message.createdAt,
-            approved: false
+            approved: false,
+            fileName: null
         });
         setMessage(prevState => ({ ...prevState, message: "" }));
     };
@@ -93,7 +96,17 @@ const TweetsPanel = () => {
         setOpen(false);
     };
 
+    const handleUploadClick = (event) => {
+        event.preventDefault();
+        const reader = new FileReader();
     
+        reader.onload = () => {
+            setMessage(prevState => ({ ...prevState, fileData:reader.result }));
+            setOpen(true);
+        };
+        reader.readAsDataURL(event.target.files[0]);
+    };
+
     return (
         <div className={classes.root}>
              <Paper elevation={2} style={{ padding: '10px', backgroundColor: '#EEEEEE'}}>
@@ -128,16 +141,24 @@ const TweetsPanel = () => {
                         />
                     </Grid>
                 </Grid>
+                <Grid container>
+                    <Grid item md={2} className={classes.uploadContainer}>
+                        <TextField
+                            className={classes.input}
+                            id="contained-button-file"
+                            multiple
+                            type="file"
+                            variant="outlined" 
+                            onChange={handleUploadClick}
+                        />
+                        <label htmlFor="contained-button-file">
+                            <Fab color="primary" size="small" component="span" className={classes.fabButton}>
+                                <FiCamera />
+                            </Fab>
+                        </label>
+                    </Grid>
+                </Grid>
                 <br />
-                <div>
-                    {/* <Editor
-                        editorState={editorState}
-                        toolbarClassName="toolbarClassName"
-                        wrapperClassName="wrapperClassName"
-                        editorClassName="editorClassName"
-                        onEditorStateChange={onEditorStateChange}
-                    /> */}
-                </div>
                 <br />
                     <Button 
                         size="large" 
@@ -268,5 +289,18 @@ const styles = makeStyles((theme) => ({
         backgroundColor: '#FFFFFF',
         borderRadius: '20px',
         boxShadow: '10px 10px 4px #EEEEEE'
+    },
+    fabButton: {
+        margin: 10
+    },
+    uploadContainer :{
+        border: '3px dotted #2D2D2D',
+        borderRadius: '10px',
+        padding: theme.spacing(2),
+        marginTop: theme.spacing(2),
+        textAlign: 'center'
+    },
+    input: {
+        display: "none"
     },
 }))
