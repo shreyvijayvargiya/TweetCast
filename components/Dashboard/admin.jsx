@@ -11,7 +11,6 @@ import app from '../../utils/firebase';
 import { AiOutlineDelete } from 'react-icons/ai';
 
 
-
 const AdminPanel = () => {
     const classes = styles();
     const [email, setEmail] = React.useState("");
@@ -54,7 +53,7 @@ const AdminPanel = () => {
             userType: 'staff'
         });
         setEmail("");
-        setMessage(null)
+        setMessage(null);
     };
 
     const fetchUsers = () => {
@@ -70,89 +69,85 @@ const AdminPanel = () => {
         <div className={classes.root}>
            <Typography variant="h5">Admin Account</Typography>
            <br />
-           <Typography variant="body1">Invite users</Typography>
-           <TableContainer>
-                <Table className={classes.table}>
-                    <TableBody>
-                        <TableRow>
-                            <TableCell style={{ border: 'none', padding: 0 }}>
-                                <TextField id="component-simple-email" 
-                                    placeholder="Enter email" 
-                                    size="small"  
-                                    color="primary" 
-                                    fullWidth
-                                    type="email"
-                                    variant="outlined" 
-                                    name="email" 
-                                    value={email}
-                                    onChange={handleChange}
-                                />
-                                {message && <label>{message}</label>}
-                            </TableCell>
-                            <TableCell align="right" style={{ border: 'none' }}>
-                                <Button disabled={email.trim(" ").length > 0 ? false: true || disabled} onClick={() => handleSendInvitation()} color="primary" variant="contained">Send Invitation</Button>
-                            </TableCell>
-                        </TableRow>
-                    </TableBody>
-                </Table>
-           </TableContainer>
+           <Paper elevation={5} style={{ padding: '30px', backgroundColor: '#EEEEEE'}}>
+            <Typography variant="body1">Invite users</Typography>
+            <div className={classes.table}>
+                <TextField id="component-simple-email" 
+                    placeholder="Enter email" 
+                    size="small"  
+                    color="primary" 
+                    style={{ width: '30%' }}
+                    autoComplete={false}
+                    type="email"
+                    variant="outlined" 
+                    name="email" 
+                    value={email}
+                    onChange={handleChange}
+                />
+                {message && <label>{message}</label>}
+                <br />
+                <br />
+                <Button size="large" style={{ width: '30%' }} disabled={email.trim(" ").length > 0 ? false: true || disabled} onClick={() => handleSendInvitation()} color="primary" variant="contained">Send Invitation</Button>
+            </div>
+           </Paper>
            <br />
-           <Typography variant="body1" color="primary">Team</Typography>
-           <TableContainer component={Paper}>
-                <Table aria-label="simple table" className={classes.table}>
-                    <TableHead>
-                        <TableRow style={{ backgroundColor: '#EEEEEE' }}>
-                            <TableCell align="left" style={{ minWidth: '11vw' }}>
-                                <Typography variant="body1">Email</Typography>
-                            </TableCell>
-                            <TableCell align="right" style={{ paddingRight: 0 }}>
-                                <Typography variant="body1">Access</Typography>
-                            </TableCell>
-                            <TableCell align="right">
-                                <Typography variant="body1">Promote</Typography>
-                            </TableCell>
-                            <TableCell align="right">
-                                <Typography variant="body1">Delete</Typography>
-                            </TableCell>
-                        </TableRow>
-                    </TableHead>
-                </Table>
-           </TableContainer>
-           <TableContainer className={classes.tableContainer}>
-                <Table aria-label="simple table" className={classes.table}>
-                    <TableBody className={classes.list}>
-                        {users && users.users && Object.keys(users.users).map(item => {
-                            return (
-                                <TableRow className={classes.cell} key={item}>
-                                    <TableCell>
-                                        {users.users[item].email}
-                                    </TableCell>
-                                    <TableCell align="center">
-                                        <Switch
-                                            checked={users.users[item].dashboardAcccess}
-                                            onChange={() => handleSwitchChange(item)}
-                                            name={item}
-                                            color="primary"
-                                            inputProps={{ 'aria-label': 'secondary checkbox' }}
-                                        />
-                                    </TableCell>
-                                    <TableCell align="center">
-                                        <Select className={classes.select} variant="outlined" value={users.users[item].userType} onChange={(e) => handleUserType(e, item)} >
-                                            <MenuItem value="admin">Admin</MenuItem>
-                                            <MenuItem value="staff">Staff</MenuItem>
-                                        </Select>
-                                    </TableCell>
-                                    <TableCell align="center">
-                                        <IconButton style={{ color: '#FF0000' }} onClick={() => handleDelete(item)} color="error">
-                                            <AiOutlineDelete  />
-                                        </IconButton>
-                                    </TableCell>
-                                </TableRow>
-                            );
-                        })}
-                    </TableBody>
-                </Table>
-           </TableContainer>
+           <Paper elevation={5}>
+            <TableContainer>
+                    <Table aria-label="simple table" className={classes.table}>
+                        <TableHead>
+                            <TableRow style={{ backgroundColor: '#C19277' }}>
+                                <TableCell align="left" style={{ width: '24vw' }}>
+                                    <Typography variant="body1">Email</Typography>
+                                </TableCell>
+                                <TableCell align="right" style={{ paddingRight: 0 }}>
+                                    <Typography variant="body1">Access</Typography>
+                                </TableCell>
+                                <TableCell align="right">
+                                    <Typography variant="body1">Promote</Typography>
+                                </TableCell>
+                                <TableCell align="right">
+                                    <Typography variant="body1">Delete</Typography>
+                                </TableCell>
+                            </TableRow>
+                        </TableHead>
+                    </Table>
+            </TableContainer>
+            <TableContainer className={classes.tableContainer}>
+                    <Table aria-label="simple table" className={classes.table}>
+                        <TableBody className={classes.list}>
+                            {users && users.users && Object.keys(users.users).map(item => {
+                                return (
+                                    <TableRow className={classes.cell} key={item}>
+                                        <TableCell>
+                                            {users.users[item].email}
+                                        </TableCell>
+                                        <TableCell align="center">
+                                            <Switch
+                                                checked={users.users[item].dashboardAcccess}
+                                                onChange={() => handleSwitchChange(item)}
+                                                name={item}
+                                                color="primary"
+                                                inputProps={{ 'aria-label': 'secondary checkbox' }}
+                                            />
+                                        </TableCell>
+                                        <TableCell align="center">
+                                            <Select className={classes.select} variant="outlined" value={users.users[item].userType} onChange={(e) => handleUserType(e, item)} >
+                                                <MenuItem value="admin">Admin</MenuItem>
+                                                <MenuItem value="staff">Staff</MenuItem>
+                                            </Select>
+                                        </TableCell>
+                                        <TableCell align="center">
+                                            <IconButton style={{ color: '#FF0000' }} onClick={() => handleDelete(item)} color="error">
+                                                <AiOutlineDelete  />
+                                            </IconButton>
+                                        </TableCell>
+                                    </TableRow>
+                                );
+                            })}
+                        </TableBody>
+                    </Table>
+            </TableContainer>
+           </Paper>
         </div>
     );
 };
@@ -161,7 +156,6 @@ export default AdminPanel;
 
 const styles = makeStyles((theme) => ({
     root: {
-        // height: '90vh',
         width: '100%',
         overflow: 'hidden',
         paddingTop: theme.spacing(4),
@@ -180,7 +174,7 @@ const styles = makeStyles((theme) => ({
     },
     cell: {
         "&:hover": {
-            backgroundColor: '#EEEEEE'
+            backgroundColor: '#C19277'
         }
     },
     tableContainer: {

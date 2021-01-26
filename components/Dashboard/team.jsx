@@ -54,7 +54,7 @@ const TeamPanel = () => {
     };
 
     React.useEffect(() => {
-        fetchUserFromFirebase()
+        fetchUserFromFirebase();
     }, [ ]);
 
     return (

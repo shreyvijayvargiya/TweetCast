@@ -1,8 +1,9 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Button, List, ListItem } from '@material-ui/core';
+import { Button, List, ListItem, ListItemIcon } from '@material-ui/core';
 import { useRouter } from 'next/router';
 import app from '../../utils/firebase';
+import { AiOutlineSchedule } from 'react-icons/ai';
 
 const Sidebar = () => {
     
@@ -19,7 +20,9 @@ const Sidebar = () => {
             <br />
             <List style={{  width: '100%' }}>
                 <ListItem className={classes.listItem}>
-                    <Button className={classes.button} onClick={() => handleClick('admin')} fullWidth variant={router.query.type === 'admin' ? 'contained': 'text'} color="primary" >Admin</Button>
+                    <Button className={classes.button} onClick={() => handleClick('admin')} fullWidth variant={router.query.type === 'admin' ? 'contained': 'text'} color="primary" >
+                        Admin
+                    </Button>
                 </ListItem>
                 <ListItem className={classes.listItem}>
                     <Button className={classes.button} onClick={() => handleClick('tweets')} fullWidth variant={router.query.type === 'tweets' ? 'contained': 'text'} color="primary">Tweets</Button>
@@ -27,15 +30,7 @@ const Sidebar = () => {
                 <ListItem className={classes.listItem}>
                     <Button className={classes.button} onClick={() => handleClick('timelines')} variant={router.query.type === 'timelines' ? 'contained': 'text'} color="primary" fullWidth>Timelines</Button>
                 </ListItem>
-                {/* <ListItem className={classes.listItem}>
-                    <Button className={classes.button} onClick={() => handleClick('team')} variant={router.query.type === 'team' ? 'contained': 'text'} color="primary" fullWidth>Team</Button>
-                </ListItem> */}
             </List>
-            {/* <div className={classes.logoutButton}>
-                <ListItem>
-                    <Button className={classes.logout} onClick={() => handleLogout()} color="primary" variant="outlined" fullWidth>Logout</Button>
-                </ListItem>
-            </div> */}
         </div>
     );
 };
@@ -61,6 +56,7 @@ const style = makeStyles((theme) => ({
         paddingBottom: theme.spacing(2),
         borderRadius: 0,
         width: '100%',
+        textDecorationStyle: 'lowercase'
     },
     logoutButton: {
         position: 'absolute',
