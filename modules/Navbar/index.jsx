@@ -4,7 +4,7 @@ import { useStyles } from './styles';
 import { useRouter } from 'next/router';
 import { getCookie, removeCookie } from '../../utils/cookie';
 import app from '../../utils/firebase';
-import {removeUserFromStore } from '../../redux/action';
+import { removeUserFromStore } from '../../redux/action';
 
 export default function Navbar() {
   const classes = useStyles();

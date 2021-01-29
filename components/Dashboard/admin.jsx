@@ -95,17 +95,17 @@ const AdminPanel = () => {
             <TableContainer>
                     <Table aria-label="simple table" className={classes.table}>
                         <TableHead>
-                            <TableRow style={{ backgroundColor: '#C19277' }}>
-                                <TableCell align="left" style={{ width: '24vw' }}>
+                            <TableRow style={{ backgroundColor: '#EEEEEE' }}>
+                                <TableCell align="left" style={{ width: '30vw' }}>
                                     <Typography variant="body1">Email</Typography>
                                 </TableCell>
-                                <TableCell align="right" style={{ paddingRight: 0 }}>
+                                <TableCell align="center" style={{ paddingRight: 0 }}>
                                     <Typography variant="body1">Access</Typography>
                                 </TableCell>
-                                <TableCell align="right">
+                                <TableCell align="center">
                                     <Typography variant="body1">Promote</Typography>
                                 </TableCell>
-                                <TableCell align="right">
+                                <TableCell align="center">
                                     <Typography variant="body1">Delete</Typography>
                                 </TableCell>
                             </TableRow>
@@ -137,7 +137,7 @@ const AdminPanel = () => {
                                             </Select>
                                         </TableCell>
                                         <TableCell align="center">
-                                            <IconButton style={{ color: '#FF0000' }} onClick={() => handleDelete(item)} color="error">
+                                            <IconButton style={{ color: '#C19277' }} onClick={() => handleDelete(item)} color="error">
                                                 <AiOutlineDelete  />
                                             </IconButton>
                                         </TableCell>
@@ -174,7 +174,7 @@ const styles = makeStyles((theme) => ({
     },
     cell: {
         "&:hover": {
-            backgroundColor: '#C19277'
+            backgroundColor: '#EEEEEE'
         }
     },
     tableContainer: {

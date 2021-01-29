@@ -175,7 +175,7 @@ const TweetsPanel = () => {
             <br />
             <br />
             <br />
-            <Paper elevation={2} style={{ padding: '10px', backgroundColor: '#C19277'}}>
+            <Paper elevation={2} style={{ padding: '10px', backgroundColor: '#EEEEEE'}}>
                 <Typography>Scheduled Tweet</Typography>
             </Paper>
             <br />

@@ -1,9 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Button, List, ListItem, ListItemIcon } from '@material-ui/core';
+import { Button, List, ListItem } from '@material-ui/core';
 import { useRouter } from 'next/router';
-import app from '../../utils/firebase';
-import { AiOutlineSchedule } from 'react-icons/ai';
 
 const Sidebar = () => {
     
@@ -14,7 +12,6 @@ const Sidebar = () => {
         router.push({ pathname: 'dashboard', query: { type: query} });
     };
     
-   
     return (
         <div className={classes.root}>
             <br />
