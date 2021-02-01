@@ -77,7 +77,6 @@ const AdminPanel = () => {
                     size="small"  
                     color="primary" 
                     style={{ width: '30%' }}
-                    autoComplete={false}
                     type="email"
                     variant="outlined" 
                     name="email" 

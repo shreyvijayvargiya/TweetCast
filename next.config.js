@@ -6,10 +6,10 @@ module.exports = {
         REACT_APP_FIREBASE_PROJECT_ID: "tweetcast",
         REACT_APP_FIREBASE_STORAGE_BUCKET: "tweetcast.appspot.com",
         GOOGLE_CLIENT_ID: "499314077621-n7klfql9rfd8ho7kl26bu6p1vf9fgg5h.apps.googleusercontent.com",
-        consumerKey: "V7JNiTLcwUYFEUjPmgZch7GtD",
-        consumerSecret: "V7JNiTLcwUYFEUjPmgZch7GtD",
-        acessToken: "2567443994-PxwgpM4riXsbTmgT7EitGhN0CZCMZFreUIRMTmK",
-        tokenSecret: "1di5TPMzxUjmafsUlJcMhS5PtVW6qtNjIv3y5UXPNXshi",
-        bearerToken: "AAAAAAAAAAAAAAAAAAAAAB5kMAEAAAAAqg4X%2BbQOQxXyaIe8DqTjb%2Fzo5cE%3DDpNNHWyjOgVe5aE4Rk2zJbQM5nMQprAfon5jiLVfCL66TVCaj5"
+        consumerKey: "tBhkYzwVodzWg2GbO82KOPv40",
+        consumerSecret: "qUMt06sSGptrlW4bFhhsnRJcs09RJEbW0pasmplJpRPvHVPC47",
+        acessToken: "2567443994-Fv9AkncVVZIWekAGlM5xv315hLJgvpN0sK1zCJn",
+        tokenSecret: "6KyXFFt7pjBHKDwdYJX47GBwl7ycccEukvlY1Q0T3tfzN",
+        bearerToken: "AAAAAAAAAAAAAAAAAAAAAB5kMAEAAAAAHaGX9wzP8YRzx%2BthJbk%2Fod8FKcE%3D3KYayUxWB73LXzq5UGpOMXfa2ZCeDKquL8MEHPXe1tsQ4COGyI"
     }
 }

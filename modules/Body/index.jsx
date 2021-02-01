@@ -18,6 +18,7 @@ export const useStyles = makeStyles((theme) => ({
       top: '8%',
       margin: 'auto',
       position: 'absolute',
+      zIndex: 0,
     },
 }));
 

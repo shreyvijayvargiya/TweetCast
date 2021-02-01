@@ -13,16 +13,6 @@ const HomePage = () => {
 		bearer_token: process.env.bearerToken,
 	};
 
-	// const fetchData = async () => {
-	// 	axios.post("https://api.twitter.com/1.1/statuses/update.json", { status: 'new twitter api'} ,
-	// 	{headers: {'Access-Control-Allow-Origin': '*'}}
-	// 	).then((res) => {
-	// 		console.log(res.data);
-	// 	});
-	// }
-	// React.useEffect(() => {
-	// 	fetchData()
-	// })
  	const styles = useStyles();
 	return (
 		<div className={styles.root}>

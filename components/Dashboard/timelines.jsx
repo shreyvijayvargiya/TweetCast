@@ -1,9 +1,15 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Typography, Divider, Tabs, Tab, Box, AppBar } from '@material-ui/core';
-import axios from 'axios';
+import { Typography, Divider, Box, Paper, Avatar, Grid, IconButton, Button, TextField } from '@material-ui/core';
 import Head from 'next/head';
 import { Timeline } from 'react-twitter-widgets'
+import { getTimelineApi } from '../../packages/api/getTimelineApi';
+import { useRouter } from 'next/router';
+import Link from 'next/link';
+import { AiOutlineHeart } from 'react-icons/ai';
+import { GoComment } from 'react-icons/go';
+import { FaRetweet } from 'react-icons/fa';
+
 
 function a11yProps(index) {
     return {
@@ -13,8 +19,10 @@ function a11yProps(index) {
 };
 
 function TabPanel(props) {
+    
+    
     const { children, value, index, ...other } = props;
-  
+    
     return (
       <div
         role="tabpanel"
@@ -34,49 +42,147 @@ function TabPanel(props) {
 
 const Timelines = () => {
     const classes = styles();
+    const [refresh, setRefresh] = React.useState(false);
+    const [tweetTimelineData, setTweetTimelineData] = React.useState(null);
+    const [comment, setComment] = React.useState(null);
     const [value, setValue] = React.useState(0);
+    const router = useRouter();
 
     const handleChange = (event, newValue) => {
       setValue(newValue);
     };
     
+    const fetchTweetTimeline = async () => {
+        const tweetTimeline = await getTimelineApi;
+        setTweetTimelineData(tweetTimeline);
+    };
+
+    React.useEffect(() => {
+        fetchTweetTimeline();
+    }, [ refresh ]);
+
+    const handleRefresh = () => {
+        fetchTweetTimeline()
+    };
+
+    const handleLikeTweet = (id) => {
+        let dbRef = app.database().ref("scheduledLikedOnTweets");
+        dbRef.push({
+            id: id,
+            date: new Date.now(),
+        });
+    };
+    const handleReTweet = (id) => {
+        let dbRef = app.database().ref("scheduledRetweets");
+        dbRef.push({
+            id: id,
+            date: new Date.now(),
+        });
+    };
+    const handleCommentOnTweet = (id) => {
+        let dbRef = app.database().ref("scheduledCommentsOnTweets");
+        dbRef.push({
+            id: id,
+            comment: comment,
+            date: new Date.now(),
+        });
+    };
+
+    const handleCommentChange = e => {
+        const val = e.target.value;
+        setComment(val);
+    };
+
     return (
         <div className={classes.root}>
             <Head>
                 <script src="https://platform.twitter.com/widgets.js"></script>
             </Head>
             <div className={classes.header}>
-                <AppBar position="static">
-                    <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
-                        <Tab label="Profile" {...a11yProps(0)} />
-                        <Tab label="Collection" {...a11yProps(1)} />
-                        <Tab label="List" {...a11yProps(2)} />
-                    </Tabs>
-                </AppBar>
+                <Button color="primary" size="small" variant="outlined" onClick={() => handleRefresh()}>Refresh</Button>
             </div>
             <div className={classes.timeline}>
-                <TabPanel value={value} index={0}>
-                   <Timeline 
-                        dataSource={{
-                            sourceType: 'profile',
-                            screenName: 'treyvijay'
-                        }}
-                   />
-                </TabPanel>
-                <TabPanel value={value} index={1}>
-                    <Timeline
-                        dataSource={{ sourceType: "collection", id: "393773266801659904" }}
-                    />
-                </TabPanel>
-                <TabPanel value={value} index={2}>
-                    <Timeline
-                        dataSource={{
-                        sourceType: "list",
-                        ownerScreenName: "twitter",
-                        id: "214727905"
-                        }}
-                    />
-                </TabPanel>
+                {tweetTimelineData !== null && tweetTimelineData.length > 0 && tweetTimelineData.map(item => {
+                    const urlLink = item.user.url;
+                    return (
+                        <Paper elevation={2} className={classes.timelinePaper}>
+                            <Grid container justify="flex-start">
+                                <Grid>
+                                    <IconButton>
+                                        {urlLink !== undefined && urlLink !== null ? <Link target="_blank" href={urlLink !== undefined && urlLink}>
+                                            <Avatar src={item.user.profile_image_url} />
+                                        </Link>
+                                            :
+                                            <Avatar src={item.user.profile_image_url} />
+                                        }
+                                    </IconButton>
+                                </Grid>
+                                <Grid alignItems="center">
+                                    <Typography variant="h6" style={{ marginTop: 18, marginLeft: 0 }}>{item.user.screen_name}</Typography>
+                                </Grid>
+                            </Grid>
+                            <br />
+                            <Typography style={{ fontWeight: 800 }}>{item.text}</Typography>
+                            {item.entities.urls.length > 0 && item.entities.urls.map(url => {
+                                return (
+                                    <Grid container> 
+                                        <Grid item>
+                                            <a href={url.url}>{url.url}</a>
+                                        </Grid>
+                                    </Grid>
+                                )
+                            })}
+                            {item.entities.hashtags.length > 0 && item.entities.hashtags.map(hashtag => {
+                                return (
+                                    <Box> 
+                                        <a href={hashtag.text}>#{hashtag.text}</a>
+                                    </Box>
+                                )
+                            })}
+                            <br />
+                            {item.entities.media !== undefined && item.entities.media.length > 0 && item.entities.media.map(media => {
+                                return (
+                                    <Box component="div" m={0}> 
+                                        <img src={media.media_url} style={{ width: '80%' }} alt="Image" />
+                                    </Box> 
+                                )
+                            })}
+                            <Grid container>
+                                <Grid item md={2}>
+                                    <IconButton onClick={() => handleLikeTweet(item.id)}>
+                                        <AiOutlineHeart />
+                                    </IconButton>
+                                </Grid>
+                                <Grid item md={2}>
+                                    <IconButton onClick={() => toggleCommentSection(item.id)}>
+                                        <GoComment />
+                                    </IconButton>
+                                {showComment && 
+                                    <div>
+                                        <TextField 
+                                            name="comment"
+                                            placeholder="Enter Comment"
+                                            variant="outlined"
+                                            color="primary"
+                                            onChange={handleCommentChange}
+                                            value={comment}
+                                        />
+                                    <br />
+                                        <Button size="small" onClick={() => handleCommentOnTweet(id)}>
+                                            Schedule Comment
+                                        </Button>
+                                    </div>
+                                }
+                                </Grid>
+                                <Grid item md={2}>
+                                    <IconButton onClick={() => handleReTweet(item.id)}>
+                                        <FaRetweet />
+                                    </IconButton>
+                                </Grid>
+                            </Grid>
+                        </Paper>
+                    )
+                })}
             </div>
         </div>
     );
@@ -93,16 +199,21 @@ const styles = makeStyles((theme) => ({
     },
     timeline: {
         width: '60vw',
-        minHeight: '80vh',
-        maxHeight: '80vh',
+        height: '70vh',
         overflow: 'scroll',
         position: "relative",
         top: '8%',
         border: '1px solid #EEEEEE',
+        padding: theme.spacing(2),
         borderRadius: '4px'
     },
     header : {
         position: "fixed",
         width: '60vw'
+    },
+    timelinePaper: {
+        marginTop: theme.spacing(2),
+        marginBottom: theme.spacing(2),
+        padding: theme.spacing(2)
     }
 }))

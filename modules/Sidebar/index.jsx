@@ -22,10 +22,13 @@ const Sidebar = () => {
                     </Button>
                 </ListItem>
                 <ListItem className={classes.listItem}>
+                    <Button className={classes.button} onClick={() => handleClick('timelines')} variant={router.query.type === 'timelines' ? 'contained': 'text'} color="primary" fullWidth>Timelines</Button>
+                </ListItem>
+                <ListItem className={classes.listItem}>
                     <Button className={classes.button} onClick={() => handleClick('tweets')} fullWidth variant={router.query.type === 'tweets' ? 'contained': 'text'} color="primary">Tweets</Button>
                 </ListItem>
                 <ListItem className={classes.listItem}>
-                    <Button className={classes.button} onClick={() => handleClick('timelines')} variant={router.query.type === 'timelines' ? 'contained': 'text'} color="primary" fullWidth>Timelines</Button>
+                    <Button className={classes.button} onClick={() => handleClick('scheduledTweetsActions')} variant={router.query.type === 'scheduledTweetsActions' ? 'contained': 'text'} color="primary" fullWidth>Schedule Tweets Actions</Button>
                 </ListItem>
             </List>
         </div>
@@ -36,7 +39,7 @@ export default Sidebar;
 
 const style = makeStyles((theme) => ({
     root: {
-        backgroundColor: '#F9F9F9',
+        backgroundColor: 'rgba(129, 129, 129, 0.19)',
         display: 'flex',
         flexDirection: 'column',
         justifyContent:'start',
