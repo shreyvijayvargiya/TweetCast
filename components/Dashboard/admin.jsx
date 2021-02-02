@@ -136,7 +136,7 @@ const AdminPanel = () => {
                                             </Select>
                                         </TableCell>
                                         <TableCell align="center">
-                                            <IconButton style={{ color: '#C19277' }} onClick={() => handleDelete(item)} color="error">
+                                            <IconButton style={{ color: '#C19277' }} onClick={() => handleDelete(item)}>
                                                 <AiOutlineDelete  />
                                             </IconButton>
                                         </TableCell>

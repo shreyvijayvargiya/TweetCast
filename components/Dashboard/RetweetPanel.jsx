@@ -4,6 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import app from '../../utils/firebase';
 import { AiOutlineRetweet } from 'react-icons/ai';
 import { getSingleTweetApi } from '../../packages/api/getSingleTweet';
+import { MdDelete } from 'react-icons/md';
 
 const RetweetPanel = ({ email }) => {
 
@@ -26,19 +27,28 @@ const RetweetPanel = ({ email }) => {
         console.log(data);
     };
     const styles = useStyles();
+
+    const handleDelete = (id) => {
+        let dbRef = app.database().ref("scheduledRetweets/" +  id);
+        dbRef.remove().then((data) => console.log(data, 'retweet scheduled removed'));
+    };
+
     return (
         <TableContainer>
             <Table>
                 <TableHead>
-                    <TableRow>
+                    <TableRow style={{ backgroundColor: '#EEEEEE' }}>
                         <TableCell>
-                            <Typography variant="h6">Email</Typography>
+                            <Typography variant="body1">Email</Typography>
                         </TableCell>
                         <TableCell>
-                            <Typography variant="h6">Show Details</Typography>
+                            <Typography variant="body1">Show Details</Typography>
                         </TableCell>
                         <TableCell>
-                            <Typography variant="h6">Retweet</Typography>
+                            <Typography variant="body1">Retweet</Typography>
+                        </TableCell>
+                        <TableCell>
+                            <Typography variant="body1">Delete</Typography>
                         </TableCell>
                     </TableRow>
                 </TableHead>
@@ -48,13 +58,18 @@ const RetweetPanel = ({ email }) => {
                             <TableRow key={item}>
                                 <TableCell>{email}</TableCell>
                                 <TableCell>
-                                    <Button color="primary" size="small" variant="outlined" onClose={() => handleOpen(retweets[item].tweetId)}>
+                                    <Button color="primary" size="small" variant="outlined" onClick={() => handleOpen(retweets[item].tweetId)}>
                                         Show Details
                                     </Button>
                                 </TableCell>
                                 <TableCell>
                                     <IconButton>
                                         <AiOutlineRetweet />
+                                    </IconButton>
+                                </TableCell>
+                                <TableCell>
+                                    <IconButton onClick={() => handleDelete(item)}>
+                                        <MdDelete />
                                     </IconButton>
                                 </TableCell>
                             </TableRow>

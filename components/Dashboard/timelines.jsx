@@ -48,7 +48,7 @@ const Timelines = () => {
     const [tweetTimelineData, setTweetTimelineData] = React.useState(null);
     const [comment, setComment] = React.useState(null);
     const [showComment, setShowComment] = React.useState(false);
-   
+    const [currentId, setCurrentId] = React.useState("");
     const [value, setValue] = React.useState(0);
     const router = useRouter();
 
@@ -92,6 +92,8 @@ const Timelines = () => {
             comment: comment,
             date: new Date(),
         });
+        setComment("");
+        setShowComment(false)
     };
 
 
@@ -101,6 +103,7 @@ const Timelines = () => {
     };
     const toggleCommentSection = (id) => {
         setShowComment(!showComment);
+        setCurrentId(id)
     };
 
     return (
@@ -163,27 +166,10 @@ const Timelines = () => {
                                         <AiOutlineHeart />
                                     </IconButton>
                                 </Grid>
-                                <Grid item md={2}>
+                                <Grid item md={3}>
                                     <IconButton onClick={() => toggleCommentSection(item.id)}>
                                         <GoComment />
                                     </IconButton>
-                                {showComment && 
-                                    <div>
-                                        <TextField 
-                                            name="comment"
-                                            placeholder="Enter Comment"
-                                            variant="outlined"
-                                            color="primary"
-                                            onChange={handleCommentChange}
-                                            value={comment}
-                                            fullWidth
-                                        />
-                                    <br />
-                                        <Button size="small" fullWidth onClick={() => handleCommentOnTweet(id)}>
-                                            Schedule Comment
-                                        </Button>
-                                    </div>
-                                }
                                 </Grid>
                                 <Grid item md={2}>
                                     <IconButton onClick={() => handleReTweet(item.id)}>
@@ -191,6 +177,25 @@ const Timelines = () => {
                                     </IconButton>
                                 </Grid>
                             </Grid>
+                            {showComment && currentId === item.id && 
+                                <div>
+                                    <TextField 
+                                        name="comment"
+                                        placeholder="Enter Comment"
+                                        variant="outlined"
+                                        color="primary"
+                                        onChange={handleCommentChange}
+                                        value={comment}
+                                        fullWidth
+                                    />
+                                    <br />
+                                    <br />
+                                    <Button color="primary" disabled={comment.trim(" ") <= 0 ? true: false} variant="contained" fullWidth onClick={() => handleCommentOnTweet(item.id)}>
+                                        Schedule Comment
+                                    </Button>
+                                    <br />
+                                </div>
+                            }
                         </Paper>
                     )
                 })}

@@ -61,19 +61,6 @@ const ScheduledTweetsActions = () => {
         });
     };
     
- 
-    const handleChange = (e) => {
-        const value = e.target.value;
-        setEmail(value);
-    };
-    
-    const handleSwitchChange = (id) => {
-        let dbRef = app.database().ref();
-        let childRef = dbRef.child("users").child(id).child("dashboardAcccess");
-        childRef.transaction((val) => {
-            return !val;
-        });
-    };
 
     React.useEffect(() => {
         fetchUserFromFirebaseApi();
@@ -88,7 +75,7 @@ const ScheduledTweetsActions = () => {
     const renderActiveTab = () => {
         if(value === 0) return <LikedPanel email={user.email} setList={setList} />
         else if(value === 1) return <CommentsPanel email={user.email} setList={setList} />
-        else if(value === 2) return <RetweetPanel email={email} setList={setList} />
+        else if(value === 2) return <RetweetPanel email={user.email} setList={setList} />
         else  return <LikedPanel email={email} setList={setList} />
     }
     return (
@@ -106,6 +93,7 @@ const ScheduledTweetsActions = () => {
                     </Grid>
                 </Grid>
             </AppBar>
+            <br />
             {renderActiveTab()}
         </div>
     );

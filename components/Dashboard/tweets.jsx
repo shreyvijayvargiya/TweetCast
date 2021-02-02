@@ -158,7 +158,6 @@ const TweetsPanel = () => {
         reader.onload = () => {
             setMessage(prevState => ({ ...prevState, fileData:reader.result, fileName: fileName, file: file }));
         };
-        console.log(event.target.files[0])
         reader.readAsDataURL(event.target.files[0]);
     };
 

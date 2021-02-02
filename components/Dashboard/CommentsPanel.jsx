@@ -1,10 +1,11 @@
 import React from 'react';
-import { Button, Typography, TableContainer, Table, TableRow, Drawer, TableCell, TableHead, TableBody } from '@material-ui/core';
+import { Button, Typography, TableContainer, Table, TableRow, Drawer, TableCell, TableHead, TableBody, IconButton } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import app from '../../utils/firebase';
 import { AiTwotoneLike } from 'react-icons/ai';
 import { getSingleTweetApi } from '../../packages/api/getSingleTweet';
 import { FaRegCommentDots } from 'react-icons/fa';
+import { MdDelete } from 'react-icons/md';
 
 const CommentsPanel = ({ setList, email }) => {
     
@@ -28,19 +29,26 @@ const CommentsPanel = ({ setList, email }) => {
     };
     const styles = useStyles();
 
+    const handleDelete = (id) => {
+        let dbRef = app.database().ref("scheduledCommentsOnTweets/" +  id);
+        dbRef.remove().then((data) => console.log(data, 'scheduled comments removed'));
+    }
     return (
         <TableContainer>
             <Table>
                 <TableHead>
                     <TableRow>
                         <TableCell>
-                            <Typography variant="h6">Email</Typography>
+                            <Typography variant="body1">Email</Typography>
                         </TableCell>
                         <TableCell>
-                            <Typography variant="h6">Show Details</Typography>
+                            <Typography variant="body1">Show Details</Typography>
                         </TableCell>
                         <TableCell>
-                            <Typography variant="h6">Comment</Typography>
+                            <Typography variant="body1">Comment</Typography>
+                        </TableCell>
+                        <TableCell>
+                            <Typography variant="body1">Delete</Typography>
                         </TableCell>
                     </TableRow>
                 </TableHead>
@@ -50,7 +58,7 @@ const CommentsPanel = ({ setList, email }) => {
                             <TableRow key={item}>
                                 <TableCell>{email}</TableCell>
                                 <TableCell>
-                                    <Button color="primary" size="small" variant="outlined" onClose={() => handleOpen(comments[item].tweetId)}>
+                                    <Button color="primary" size="small" variant="outlined" onClick={() => handleOpen(comments[item].tweetId)}>
                                         Show Details
                                     </Button>
                                 </TableCell>
@@ -59,9 +67,14 @@ const CommentsPanel = ({ setList, email }) => {
                                         <FaRegCommentDots />
                                     </IconButton>
                                 </TableCell>
+                                <TableCell>
+                                    <IconButton onClick={() => handleDelete(item)}>
+                                        <MdDelete />
+                                    </IconButton>
+                                </TableCell>
                             </TableRow>
                         )
-                    })}  
+                    })}
                 </TableBody>
             </Table>
             <Drawer anchor="right" open={open} onClose={() => setOpen(false)}> 
