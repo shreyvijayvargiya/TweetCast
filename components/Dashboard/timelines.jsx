@@ -9,6 +9,8 @@ import Link from 'next/link';
 import { AiOutlineHeart } from 'react-icons/ai';
 import { GoComment } from 'react-icons/go';
 import { FaRetweet } from 'react-icons/fa';
+import app from '../../utils/firebase';
+import { fetchUserFromFirebaseApi } from '../../packages/api/fetchUser';
 
 
 function a11yProps(index) {
@@ -45,6 +47,8 @@ const Timelines = () => {
     const [refresh, setRefresh] = React.useState(false);
     const [tweetTimelineData, setTweetTimelineData] = React.useState(null);
     const [comment, setComment] = React.useState(null);
+    const [showComment, setShowComment] = React.useState(false);
+   
     const [value, setValue] = React.useState(0);
     const router = useRouter();
 
@@ -57,6 +61,8 @@ const Timelines = () => {
         setTweetTimelineData(tweetTimeline);
     };
 
+  
+    
     React.useEffect(() => {
         fetchTweetTimeline();
     }, [ refresh ]);
@@ -68,29 +74,33 @@ const Timelines = () => {
     const handleLikeTweet = (id) => {
         let dbRef = app.database().ref("scheduledLikedOnTweets");
         dbRef.push({
-            id: id,
-            date: new Date.now(),
+            tweetId: id,
+            date: new Date(),
         });
     };
     const handleReTweet = (id) => {
         let dbRef = app.database().ref("scheduledRetweets");
         dbRef.push({
-            id: id,
-            date: new Date.now(),
+            tweetId: id,
+            date: new Date(),
         });
     };
     const handleCommentOnTweet = (id) => {
         let dbRef = app.database().ref("scheduledCommentsOnTweets");
         dbRef.push({
-            id: id,
+            tweetId: id,
             comment: comment,
-            date: new Date.now(),
+            date: new Date(),
         });
     };
+
 
     const handleCommentChange = e => {
         const val = e.target.value;
         setComment(val);
+    };
+    const toggleCommentSection = (id) => {
+        setShowComment(!showComment);
     };
 
     return (
@@ -166,9 +176,10 @@ const Timelines = () => {
                                             color="primary"
                                             onChange={handleCommentChange}
                                             value={comment}
+                                            fullWidth
                                         />
                                     <br />
-                                        <Button size="small" onClick={() => handleCommentOnTweet(id)}>
+                                        <Button size="small" fullWidth onClick={() => handleCommentOnTweet(id)}>
                                             Schedule Comment
                                         </Button>
                                     </div>

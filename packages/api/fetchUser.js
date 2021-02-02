@@ -3,7 +3,7 @@ import app from '../../utils/firebase';
 export const fetchUserFromFirebaseApi = () => {
     app.auth().onAuthStateChanged(user => {
         if(user) {
-            return {email: user.email, userId: user.uuid };
+            return { email: user.email, userId: user.uuid };
        }else {
            return null
        }

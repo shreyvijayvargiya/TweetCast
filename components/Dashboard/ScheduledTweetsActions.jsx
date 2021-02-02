@@ -1,6 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Typography, Button, Snackbar, Paper, TextField, Switch, Tabs, Tab, AppBar, Box, Grid } from '@material-ui/core';
+import { Typography, Button, Snackbar, Paper, TextField, Switch, AppBar, Box, Grid } from '@material-ui/core';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -8,6 +8,9 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import app from '../../utils/firebase';
+import LikedPanel from './LikedPanel';
+import CommentsPanel from './CommentsPanel';
+import RetweetPanel from './RetweetPanel';  
 
 
 function TabPanel(props) {
@@ -37,7 +40,28 @@ const ScheduledTweetsActions = () => {
     const [likedScheduleTweets, setLikedScheduleTweets] = React.useState(null);
     const [disabled, setDisabled] = React.useState(false);
     const [message, setMessage] = React.useState(null);
+    const [user, setUser] = React.useState({
+        email: "",
+        id: ""
+    });
 
+    const [list, setList] = React.useState({
+        liked: null,
+        comments: null,
+        retweets: null
+    })
+
+    const fetchUserFromFirebaseApi = () => {
+        app.auth().onAuthStateChanged(user => {
+            if(user) {
+                setUser(prevState => ({...prevState, email: user.email, userId: user.uuid }));
+           }else {
+               return null
+           }
+        });
+    };
+    
+ 
     const handleChange = (e) => {
         const value = e.target.value;
         setEmail(value);
@@ -51,31 +75,8 @@ const ScheduledTweetsActions = () => {
         });
     };
 
-    const handleSendInvitation = () => {
-        let dbRef = app.database().ref("users");
-        Object.keys(users.users).map(item => {
-            if(users.users[item].email === email){
-                setDisabled(true);
-                setMessage("Email already exist");
-            }else {
-                dbRef.push({
-                    email,
-                    dashboardAcccess: true,
-                    userType: 'staff'
-                });
-                setEmail("");
-                setMessage("Invitation sent successfully");
-            }
-        });
-    };
-
-    const fetchScheduleLikeTweetsFromFirebase = () => {
-        let dbRef = app.database().ref("scheduledLikedOnTweets");
-        dbRef.on("value", snap => setUsers((prevState) => ({ ...prevState, likedScheduleTweets: snap.val() })));
-    };
-
     React.useEffect(() => {
-        // fetchScheduleLikeTweetsFromFirebase();
+        fetchUserFromFirebaseApi();
     }, [ ]);
 
     const [value, setValue] = React.useState(0);
@@ -85,19 +86,14 @@ const ScheduledTweetsActions = () => {
     };
 
     const renderActiveTab = () => {
-        if(value === 0) return <p>Scheduled Liked</p>
-        else if(value === 1) return <p> Scheduled Comments</p>
-        else if(value === 2) return <p>Scheduled Retweets</p>
-        else  return <p>Scheduled Liked</p>
+        if(value === 0) return <LikedPanel email={user.email} setList={setList} />
+        else if(value === 1) return <CommentsPanel email={user.email} setList={setList} />
+        else if(value === 2) return <RetweetPanel email={email} setList={setList} />
+        else  return <LikedPanel email={email} setList={setList} />
     }
     return (
         <div className={classes.root}>
            <AppBar position="static" className={classes.appbar}>
-                {/* <Tabs value={value} onChange={handleTabChange} aria-label="simple tabs example">
-                <Tab label="Scheduled Likes" />
-                <Tab label="Scheduled Comments" />
-                <Tab label="Scheduled Retweets" />
-                </Tabs> */}
                 <Grid container spacing={2}>
                     <Grid item md={4}>
                         <Button color="primary" onClick={() => setValue(0)} variant={value === 0 ? 'contained': 'outlined'}>Scheduled Likes</Button>
@@ -111,69 +107,6 @@ const ScheduledTweetsActions = () => {
                 </Grid>
             </AppBar>
             {renderActiveTab()}
-           {/* <TableContainer>
-                <Table className={classes.table}>
-                    <TableBody>
-                        <TableRow>
-                            <TableCell style={{ border: 'none' }}>
-                                {message && <label>{message}</label>}
-                                <TextField id="component-simple" 
-                                    placeholder="Enter email" 
-                                    size="small"  
-                                    color="primary" 
-                                    fullWidth
-                                    type="email"
-                                    variant="outlined" 
-                                    name="email" 
-                                    value={email}
-                                    onChange={handleChange}
-                                />
-                            </TableCell>
-                            <TableCell align="right" style={{ border: 'none' }}>
-                                <Button disabled={email.trim(" ").length > 0 ? false: true || disabled} onClick={() => handleSendInvitation()} color="primary" variant="contained">Send Invitation</Button>
-                            </TableCell>
-                        </TableRow>
-                    </TableBody>
-                </Table>
-           </TableContainer>
-           <br />
-           <br />
-           <br />
-           <br />
-           <TableContainer component={Paper}>
-                <Table aria-label="simple table" className={classes.table}>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>
-                                <Typography variant="body1">Email</Typography>
-                            </TableCell>
-                            <TableCell align="right">
-                                <Typography variant="body1">Access</Typography>
-                            </TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody className={classes.list}>
-                        {users && users.users && Object.keys(users.users).map(item => {
-                            return (
-                                <TableRow key={item}>
-                                    <TableCell>
-                                        {users.users[item].email}
-                                    </TableCell>
-                                    <TableCell align="right">
-                                        <Switch
-                                            checked={users.users[item].dashboardAcccess}
-                                            onChange={() => handleSwitchChange(item)}
-                                            name={item.id}
-                                            color="primary"
-                                            inputProps={{ 'aria-label': 'secondary checkbox' }}
-                                        />
-                                    </TableCell>
-                                </TableRow>
-                            )
-                        })}
-                    </TableBody>
-                </Table>
-           </TableContainer> */}
         </div>
     );
 };

@@ -162,6 +162,7 @@ const TweetsPanel = () => {
         reader.readAsDataURL(event.target.files[0]);
     };
 
+    
     return (
         <div className={classes.root}>
              <Paper elevation={1} style={{ padding: '10px', borderRadius: 20 }}>
@@ -215,7 +216,8 @@ const TweetsPanel = () => {
                                     <FiCamera />
                                 </Fab>
                             </label>
-                        </>}
+                        </>
+                        }
                     </Grid>
                 </Grid>
                 <br />
