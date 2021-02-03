@@ -5,6 +5,7 @@ import app from '../../utils/firebase';
 import { AiOutlineDelete, AiFillCloseCircle } from 'react-icons/ai';
 import { getSingleTweetApi } from '../../packages/api/getSingleTweet';
 import { MdDelete } from 'react-icons/md';
+import { HiOutlinePencilAlt } from 'react-icons/hi';
 
 const TweetsPanel = ({ email }) => {
 
@@ -51,45 +52,8 @@ const TweetsPanel = ({ email }) => {
     
         return new Blob([ia], {type:mimeString});
     }
-    const handleTweetButton = () => {
-        let dbRef = app.database().ref("tweets");
-        
-        if(message.fileData){
-        let storageRef = app.storage().ref(message.fileName);
-        storageRef.put(message.file).then((snapshot) => {
-            console.log(snapshot)
-        }).catch((err) => console.log(err, 'error in uploading image'));
-        app.storage().ref(message.fileName).getDownloadURL().then((url) => {
-            dbRef.push({
-                message: message.message,
-                email: user ? user.email: "",
-                createdAt: message.createdAt,
-                approved: false,
-                fileName: message.fileName,
-                fileSource: url
-            });
-            setMessage(prevState => ({ ...prevState,  message: "" , storageImageUrl: url }));
-            const formData = new FormData();
-            // console.log(dataURItoBlob(url), 'dataURItoBlob(url)')
-            formData.append("uploadedFile", url);
-            console.log(formData, 'form data');
-        }).catch((error) => {
-            console.log('error in fetching image ', error)
-            return
-        });
-        }else {
-            dbRef.push({
-                message: message.message,
-                email: user ? user.email: "",
-                createdAt: message.createdAt,
-                approved: false,
-                fileName: null,
-                fileSource: null
-            });
-        }
-        setMessage(prevState => ({ ...prevState, message: "" }));
-    };
-
+   
+ 
     const fetchTweets = () => {
         let dbRef = app.database().ref("tweets");
         dbRef.on("value", snap => {
@@ -147,17 +111,7 @@ const TweetsPanel = ({ email }) => {
         setOpen(false);
     };
 
-    const handleUploadClick = (event) => {
-        event.preventDefault();
-        const reader = new FileReader();
-        const fileName = event.target.files[0].name;
-        const file = event.target.files[0];
-
-        reader.onload = () => {
-            setMessage(prevState => ({ ...prevState, fileData:reader.result, fileName: fileName, file: file }));
-        };
-        reader.readAsDataURL(event.target.files[0]);
-    };
+    
 
     const classes = useStyles();
 
@@ -194,7 +148,18 @@ const TweetsPanel = ({ email }) => {
                             return (
                                 <TableRow key={item} className={classes.list}>
                                     <TableCell><Typography>{tweets.tweets[item].email}</Typography></TableCell>
-                                    <TableCell align="center"><Button size="small" color="primary" variant="contained" onClick={() => openModal(item)}>Show Details</Button></TableCell>
+                                    <TableCell align="center">
+                                        <Button 
+                                            size="small" 
+                                            className={classes.button}  
+                                            color="primary" 
+                                            variant="contained" 
+                                            onClick={() => openModal(item)}
+                                            startIcon={<HiOutlinePencilAlt />}
+                                        >
+                                            Show Details
+                                        </Button>
+                                    </TableCell>
                                     <TableCell align="center">
                                         <Switch 
                                             checked={tweets.tweets[item].approved}
@@ -260,5 +225,9 @@ const useStyles = makeStyles((theme) => ({
         height: '100vh',
         width: '20vw',
         padding: theme.spacing(4)
+    },
+    button: {
+        boxShadow: '8px 8px 8px rgba(0, 0, 0, 0.25)',
+        textTransform: 'none'
     }
 }))

@@ -5,6 +5,7 @@ import app from '../../utils/firebase';
 import { AiOutlineRetweet } from 'react-icons/ai';
 import { getSingleTweetApi } from '../../packages/api/getSingleTweet';
 import { MdDelete } from 'react-icons/md';
+import {HiOutlinePencilAlt} from 'react-icons/hi';
 
 const RetweetPanel = ({ email }) => {
 
@@ -58,7 +59,10 @@ const RetweetPanel = ({ email }) => {
                             <TableRow key={item}>
                                 <TableCell>{email}</TableCell>
                                 <TableCell>
-                                    <Button style={{ textTransform: 'none'}} color="primary" size="small" variant="outlined" onClick={() => handleOpen(retweets[item].tweetId)}>
+                                    <Button className={styles.button} 
+                                        color="primary" 
+                                        startIcon={<HiOutlinePencilAlt />}
+                                        size="small" variant="contained" onClick={() => handleOpen(retweets[item].tweetId)}>
                                         Show Details
                                     </Button>
                                 </TableCell>
@@ -134,5 +138,9 @@ export default RetweetPanel;
 const useStyles = makeStyles((theme) => ({
     root: {
         height: '20vh',
+    },
+    button: {
+        boxShadow: '8px 8px 8px rgba(0, 0, 0, 0.25)',
+        textTransform: 'none'
     }
 }))

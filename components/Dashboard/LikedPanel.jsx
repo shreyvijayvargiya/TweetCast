@@ -5,6 +5,8 @@ import app from '../../utils/firebase';
 import { AiTwotoneLike } from 'react-icons/ai';
 import { getSingleTweetApi } from '../../packages/api/getSingleTweet';
 import { MdDelete } from 'react-icons/md';
+import {HiOutlinePencilAlt} from 'react-icons/hi';
+
 
 const LikedPanel = ({ email }) => {
 
@@ -36,7 +38,7 @@ const LikedPanel = ({ email }) => {
         <TableContainer>
             <Table>
                 <TableHead>
-                    <TableRow style={{ backgroundColor: '#EEEEEE' }}>
+                    <TableRow style={{ backgroundColor: '#EEEEEE', borderRadius: 8 }}>
                         <TableCell>
                             <Typography variant="body1">Email</Typography>
                         </TableCell>
@@ -57,7 +59,14 @@ const LikedPanel = ({ email }) => {
                             <TableRow key={item}>
                                 <TableCell>{email}</TableCell>
                                 <TableCell>
-                                    <Button color="primary" size="small" variant="outlined" onClick={() => handleOpen(likes[item].tweetId)}>
+                                    <Button 
+                                        color="primary"  
+                                        size="small" 
+                                        variant="contained" 
+                                        onClick={() => handleOpen(likes[item].tweetId)}
+                                        className={styles.button}
+                                        startIcon={<HiOutlinePencilAlt />}
+                                    >
                                         Show Details
                                     </Button>
                                 </TableCell>
@@ -137,5 +146,9 @@ const useStyles = makeStyles((theme) => ({
         height: '100vh',
         width: '20vw',
         padding: theme.spacing(4)
+    },
+    button: {
+        boxShadow: '8px 8px 8px rgba(0, 0, 0, 0.25)',
+        textTransform: 'none'
     }
 }))

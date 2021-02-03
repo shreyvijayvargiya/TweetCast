@@ -2,10 +2,10 @@ import React from 'react';
 import { Button, Typography, TableContainer, Table, TableRow, Drawer, TableCell, TableHead, TableBody, IconButton } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import app from '../../utils/firebase';
-import { AiTwotoneLike } from 'react-icons/ai';
 import { getSingleTweetApi } from '../../packages/api/getSingleTweet';
 import { FaRegCommentDots } from 'react-icons/fa';
 import { MdDelete } from 'react-icons/md';
+import {HiOutlinePencilAlt} from 'react-icons/hi';
 
 const CommentsPanel = ({ setList, email }) => {
     
@@ -58,7 +58,11 @@ const CommentsPanel = ({ setList, email }) => {
                             <TableRow key={item}>
                                 <TableCell>{email}</TableCell>
                                 <TableCell>
-                                    <Button style={{ textTransform: 'none'}} color="primary" size="small" variant="outlined" onClick={() => handleOpen(comments[item].tweetId)}>
+                                    <Button 
+                                        className={styles.button} color="primary" 
+                                        size="small" 
+                                        starticon={<HiOutlinePencilAlt />}
+                                        variant="contained" onClick={() => handleOpen(comments[item].tweetId)}>
                                         Show Details
                                     </Button>
                                 </TableCell>
@@ -135,6 +139,9 @@ export default CommentsPanel;
 const useStyles = makeStyles((theme) => ({
     root: {
         height: '20vh',
-        
+    },
+    button: {
+        boxShadow: '8px 8px 8px rgba(0, 0, 0, 0.25)',
+        textTransform: 'none'
     }
 }))

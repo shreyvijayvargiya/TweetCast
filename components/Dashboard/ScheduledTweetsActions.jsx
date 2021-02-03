@@ -84,16 +84,16 @@ const ScheduledTweetsActions = () => {
            <AppBar position="static" className={classes.appbar}>
                 <Grid container spacing={2}>
                     <Grid item md={3}>
-                        <Button style={{ textTransform: 'none'}} color="primary" onClick={() => setValue(0)} variant={value === 0 ? 'contained': 'outlined'}>Scheduled Tweets</Button>
+                        <Button className={classes.button} color="primary" onClick={() => setValue(0)} variant={value === 0 ? 'contained': 'outlined'}>Scheduled Tweets</Button>
                     </Grid>
                     <Grid item md={3}>
-                        <Button style={{ textTransform: 'none'}} color="primary" onClick={() => setValue(1)} variant={value === 1 ? 'contained': 'outlined'}>Scheduled Likes</Button>
+                        <Button className={classes.button}  color="primary" onClick={() => setValue(1)} variant={value === 1 ? 'contained': 'outlined'}>Scheduled Likes</Button>
                     </Grid>
                     <Grid item md={3}>
-                        <Button style={{ textTransform: 'none'}} color="primary" onClick={() => setValue(2)} variant={value === 2 ? 'contained': 'outlined'}>Scheduled Comments</Button>
+                        <Button className={classes.button}  color="primary" onClick={() => setValue(2)} variant={value === 2 ? 'contained': 'outlined'}>Scheduled Comments</Button>
                     </Grid>
                     <Grid item md={3}>
-                        <Button style={{ textTransform: 'none'}} color="primary" onClick={() => setValue(3)} variant={value === 3 ? 'contained': 'outlined'}>Scheduled Retweets</Button>
+                        <Button className={classes.button}  color="primary" onClick={() => setValue(3)} variant={value === 3 ? 'contained': 'outlined'}>Scheduled Retweets</Button>
                     </Grid>
                 </Grid>
             </AppBar>
@@ -127,5 +127,9 @@ const styles = makeStyles((theme) => ({
         borderRadius: 8,
         boxShadow: 'none',
         boxShadow: '8px 8px 8px rgba(0, 0, 0, 0.25)'
+    },
+    button: {
+        boxShadow: '8px 8px 8px rgba(0, 0, 0, 0.25)',
+        textTransform: 'none'
     }
 }));
