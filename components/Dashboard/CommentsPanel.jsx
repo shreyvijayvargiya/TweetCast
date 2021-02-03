@@ -37,7 +37,7 @@ const CommentsPanel = ({ setList, email }) => {
         <TableContainer>
             <Table>
                 <TableHead>
-                    <TableRow>
+                    <TableRow style={{ backgroundColor: 'rgba(134, 134, 134, 0.13)' }}>
                         <TableCell>
                             <Typography variant="body1">Email</Typography>
                         </TableCell>
@@ -58,7 +58,7 @@ const CommentsPanel = ({ setList, email }) => {
                             <TableRow key={item}>
                                 <TableCell>{email}</TableCell>
                                 <TableCell>
-                                    <Button color="primary" size="small" variant="outlined" onClick={() => handleOpen(comments[item].tweetId)}>
+                                    <Button style={{ textTransform: 'none'}} color="primary" size="small" variant="outlined" onClick={() => handleOpen(comments[item].tweetId)}>
                                         Show Details
                                     </Button>
                                 </TableCell>

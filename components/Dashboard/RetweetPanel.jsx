@@ -37,7 +37,7 @@ const RetweetPanel = ({ email }) => {
         <TableContainer>
             <Table>
                 <TableHead>
-                    <TableRow style={{ backgroundColor: '#EEEEEE' }}>
+                    <TableRow style={{ backgroundColor: 'rgba(134, 134, 134, 0.13)' }}>
                         <TableCell>
                             <Typography variant="body1">Email</Typography>
                         </TableCell>
@@ -58,7 +58,7 @@ const RetweetPanel = ({ email }) => {
                             <TableRow key={item}>
                                 <TableCell>{email}</TableCell>
                                 <TableCell>
-                                    <Button color="primary" size="small" variant="outlined" onClick={() => handleOpen(retweets[item].tweetId)}>
+                                    <Button style={{ textTransform: 'none'}} color="primary" size="small" variant="outlined" onClick={() => handleOpen(retweets[item].tweetId)}>
                                         Show Details
                                     </Button>
                                 </TableCell>
@@ -134,6 +134,5 @@ export default RetweetPanel;
 const useStyles = makeStyles((theme) => ({
     root: {
         height: '20vh',
-        
     }
 }))

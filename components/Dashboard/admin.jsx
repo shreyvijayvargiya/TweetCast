@@ -69,7 +69,7 @@ const AdminPanel = () => {
         <div className={classes.root}>
            <Typography variant="h5">Admin Account</Typography>
            <br />
-           <Paper elevation={5} style={{ padding: '30px', backgroundColor: '#EEEEEE'}}>
+           <Paper elevation={5} style={{ padding: '30px', backgroundColor: 'rgba(134, 134, 134, 0.13)', boxShadow: '8px 8px 8px rgba(0, 0, 0, 0.25)'}}>
             <Typography variant="body1">Invite users</Typography>
             <div className={classes.table}>
                 <TextField id="component-simple-email" 
@@ -86,7 +86,7 @@ const AdminPanel = () => {
                 {message && <label>{message}</label>}
                 <br />
                 <br />
-                <Button size="large" style={{ width: '30%' }} disabled={email.trim(" ").length > 0 ? false: true || disabled} onClick={() => handleSendInvitation()} color="primary" variant="contained">Send Invitation</Button>
+                <Button size="large" style={{ width: '30%', textTransform: 'none' }} disabled={email.trim(" ").length > 0 ? false: true || disabled} onClick={() => handleSendInvitation()} color="primary" variant="contained">Send Invitation</Button>
             </div>
            </Paper>
            <br />
@@ -94,7 +94,7 @@ const AdminPanel = () => {
             <TableContainer>
                     <Table aria-label="simple table" className={classes.table}>
                         <TableHead>
-                            <TableRow style={{ backgroundColor: '#EEEEEE' }}>
+                            <TableRow style={{ backgroundColor: 'rgba(134, 134, 134, 0.13)' }}>
                                 <TableCell align="left" style={{ width: '30vw' }}>
                                     <Typography variant="body1">Email</Typography>
                                 </TableCell>
@@ -155,10 +155,9 @@ export default AdminPanel;
 
 const styles = makeStyles((theme) => ({
     root: {
-        width: '100%',
-        overflow: 'hidden',
-        paddingTop: theme.spacing(4),
-        paddingLeft: theme.spacing(8)
+        width: '70vw',
+        paddingTop: theme.spacing(0),
+        paddingLeft: theme.spacing(10),
     },
     paper: {
         padding: theme.spacing(2)

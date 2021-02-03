@@ -1,14 +1,12 @@
 import React from 'react';
+import { Button, Typography, TableContainer, Table, TableRow, CircularProgress, TableCell, TableHead, TableBody, IconButton, Drawer, Grid, TextField, Switch } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { TextField, Button, Typography ,Table, TableContainer,Paper, TableBody, TableRow, TableCell, Fab, TableHead, Switch, Modal, Grid, CircularProgress, IconButton, Drawer } from '@material-ui/core';
 import app from '../../utils/firebase';
-import { AiFillCloseCircle, AiOutlineDelete, AiOutlineDropbox } from 'react-icons/ai';
-import { FiCamera } from 'react-icons/fi';
-import { postTweetApi } from '../../packages/api/postTweetApi';
+import { AiOutlineDelete, AiFillCloseCircle } from 'react-icons/ai';
+import { getSingleTweetApi } from '../../packages/api/getSingleTweet';
+import { MdDelete } from 'react-icons/md';
 
-
-
-const TweetsPanel = () => {
+const TweetsPanel = ({ email }) => {
 
     const [message, setMessage] = React.useState({
         message: "",
@@ -27,8 +25,7 @@ const TweetsPanel = () => {
     const [loader, setLoader] = React.useState(false);
     const [edit, setEdit] = React.useState(false);
     const [user, setUser] = React.useState(null);
-    
-    const classes = styles();
+
 
     const handleChange = (e) => {
         const value = e.target.value;
@@ -162,137 +159,106 @@ const TweetsPanel = () => {
         reader.readAsDataURL(event.target.files[0]);
     };
 
-    
+    const classes = useStyles();
+
     return (
-        <div className={classes.root}>
-             <Paper elevation={1} style={{ padding: '10px', borderRadius: 8, backgroundColor: 'rgba(134, 134, 134, 0.13)',  boxShadow: '8px 8px 8px rgba(0, 0, 0, 0.25)' }}>
-                <Typography variant="h6">Create Tweets</Typography>
-                <br />
-                <Grid container spacing={2}>
-                    <Grid item md={9}>
-                        <TextField id="component-simple" 
-                            placeholder="Enter Message" 
-                            size="medium"  
-                            color="primary" 
-                            fullWidth
-                            type="email"
-                            type="text"
-                            variant="outlined" 
-                            name="message"
-                            value={message.message}
-                            onChange={handleChange}
-                        />
-                    </Grid>
-                    {/* <Grid item md={3}>
-                        <TextField id="component-simple" 
-                            placeholder="Select Date " 
-                            size="medium"  
-                            color="primary" 
-                            type="email"
-                            type="date"
-                            variant="outlined" 
-                            name="createdAt"
-                            value={message.createdAt}
-                            onChange={handleChange}
-                        />
-                    </Grid> */}
-                </Grid>
-                <Grid container>
-                    <Grid item md={9} className={classes.uploadContainer}>
-                        {message.fileData  !== null ?
-                            <img style={{ objectFit: 'contain', width: '100%', height: '100%' }} src={message.fileData} alt="Upload Image" />
-                        :
-                        <>
-                            <TextField
-                                className={classes.input}
-                                id="contained-button-file"
-                                multiple
-                                type="file"
-                                variant="outlined" 
-                                onChange={handleUploadClick}
-                            />
-                            <label htmlFor="contained-button-file">
-                                <Fab color="primary" component="span" className={classes.fabButton}>
-                                    <FiCamera />
-                                </Fab>
-                            </label>
-                        </>
+        <div>
+            <TableContainer>
+                <Table>
+                    <TableHead className={classes.table}>
+                        <TableRow style={{ backgroundColor: 'rgba(134, 134, 134, 0.13)' }}>
+                            <TableCell style={{ width: '30vw' }}>
+                                <Typography>Email</Typography>
+                            </TableCell>
+                            <TableCell align="center">
+                                <Typography>Details</Typography>
+                            </TableCell>
+                            <TableCell align="right"> 
+                                <Typography>Approved</Typography>
+                            </TableCell>
+                            <TableCell align="right"> 
+                                <Typography>Delete</Typography>
+                            </TableCell>
+                        </TableRow>
+                    </TableHead>
+                </Table>
+            </TableContainer>
+            <br />
+            <TableContainer>
+                <Table>
+                    <TableBody>
+                        {tweets && tweets.tweets && Object.keys(tweets.tweets).length === 0 && 
+                            <AiOutlineDropbox />
                         }
+                        {tweets && tweets.tweets && Object.keys(tweets.tweets).length > 0 ? Object.keys(tweets.tweets).map(item => {
+                            return (
+                                <TableRow key={item} className={classes.list}>
+                                    <TableCell><Typography>{tweets.tweets[item].email}</Typography></TableCell>
+                                    <TableCell align="center"><Button size="small" color="primary" variant="contained" onClick={() => openModal(item)}>Show Details</Button></TableCell>
+                                    <TableCell align="center">
+                                        <Switch 
+                                            checked={tweets.tweets[item].approved}
+                                            color="primary"
+                                            onChange={(e) => handleChecked(item, e)}
+                                        />
+                                    </TableCell>
+                                    <TableCell align="right">
+                                        <IconButton onClick={() => handleDeleteScheduleTweet(item)}>
+                                            <AiOutlineDelete style={{ color: '#C19277', fontSize: 30 }} />
+                                        </IconButton>
+                                    </TableCell>
+                                </TableRow>
+                            )
+                        })
+                        :
+                        <TableRow style={{ textAlign: 'center' }}>
+                                <TableCell>
+                                    <CircularProgress color="primary" />
+                                </TableCell>
+                            </TableRow>
+                        }
+                    </TableBody>
+                </Table>
+            </TableContainer>
+            <Drawer anchor="right" open={open} onClose={() => setOpen(false)}>
+                <Grid container className={classes.detailsDrawer}>
+                    <Grid item md={10} style={{ padding: '10px' }}>
+                        <Typography variant="h4">Tweet Detail</Typography>
+                    </Grid>
+                    <Grid item md={2}>
+                        <IconButton onClick={() => setOpen(false)}>
+                            <AiFillCloseCircle style={{ color: 'black', fontSize: 30 }} />
+                        </IconButton>
                     </Grid>
                 </Grid>
                 <br />
                 <br />
-                    <Button 
-                        size="large" 
-                        color="primary" 
-                        variant="contained" 
-                        className={classes.button}
-                        onClick={() => handleTweetButton()}
-                        disabled={(message.message).trim(" ").length >0 ? false: true}
-                    >
-                        Schedule Tweet
-                    </Button>
-            </Paper>
+                <Typography color="primary" variant="body1">Message</Typography>
+                <TextField 
+                    name="editableMessage"
+                    onChange={handleChange}
+                    value={message.editableMessage}
+                    color="primary"
+                    fullWidth
+                    variant="outlined"
+                />
+                <br />
+                <br />
+                {message.storageImageUrl !== null && message.fileName !== null && <img src={message.storageImageUrl} style={{ width: '100%', objectFit: 'contain', height: '70%'}} alt="Image" />}
+                <br />
+                <br />
+                {loader ? <CircularProgress color="primary" style={{ color: 'white' }} />: <Button onClick={() => updateMessage()} fullWidth size="large" color="primary" variant="contained">Update</Button>}
+            </Drawer>
         </div>
     );
 };
 export default TweetsPanel;
 
-const styles = makeStyles((theme) => ({
-    root: {
-        overflow: 'hidden',
-        padding: theme.spacing(8),
-        width: '65vw',
-        position: 'relative'
-    },
-    table: {
-        minWidth: 700
-    },
-    list: {
-        maxHeight: '30vh',
-        overflow: 'scroll',
-        "&:hover": {
-            backgroundColor: '#EEEEEE'
-        }
-    },
-    modal: {
-        width: '40%',
-        position: 'absolute',
-        height: '30vh',
-        top: '12%',
-        left: '15%',
-        margin: 'auto',
-        padding: theme.spacing(10),
-        backgroundColor: '#FFFFFF',
-        borderRadius: '20px',
-        boxShadow: '10px 10px 4px #EEEEEE'
-    },
-    fabButton: {
-        margin: 10,
-        fontSize: 30
-    },
-    uploadContainer :{
-        border: '3px dotted #2D2D2D',
-        borderRadius: '10px',
-        padding: theme.spacing(2),
-        marginTop: theme.spacing(2),
-        textAlign: 'center',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
-    input: {
-        display: "none",
-    },
-    button: {
-        borderTopLeftRadius: 0,
-        borderTopRightRadius: 0,
-        borderBottomLeftRadius: 20,
-        borderBottomRightRadius: 20,
-        textTransform: 'none',
 
-    },
-    detailsDrawer: {
-        padding: theme.spacing(5)
+const useStyles = makeStyles((theme) => ({
+    root: {
+        height: '100vh',
+        width: '20vw',
+        padding: theme.spacing(4)
     }
 }))

@@ -16,12 +16,7 @@ export default function Navbar() {
     setToken(uid);
   });
 
-  const handleLogout = () => {
-    removeCookie('uid');
-    removeUserFromStore()
-    app.auth().signOut();
-    router.push('/login')
-  };
+ 
  
   
   return (

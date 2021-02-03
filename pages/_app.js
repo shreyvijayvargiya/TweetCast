@@ -14,8 +14,12 @@ import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import { persistStore, persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 import { PersistGate } from 'redux-persist/integration/react'
+import { useRouter } from 'next/router';
 
 function MyApp({ Component, pageProps }) {
+
+  const router = useRouter();
+
     React.useEffect(() => {
 
         const jssStyles = document.querySelector('#jss-server-side');
@@ -38,7 +42,7 @@ function MyApp({ Component, pageProps }) {
               <Head>
                   <title>TweetCast</title>
               </Head>
-              <Navbar />
+              {router.pathname !== "/dashboard" && <Navbar />}
               <Body>
                 <Component {...pageProps} />
               </Body>

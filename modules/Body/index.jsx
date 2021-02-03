@@ -14,8 +14,7 @@ export default Body;
 
 export const useStyles = makeStyles((theme) => ({
     root: {
-      width: '100%',
-      top: '8%',
+      padding: theme.spacing(2),
       margin: 'auto',
       position: 'absolute',
       zIndex: 0,

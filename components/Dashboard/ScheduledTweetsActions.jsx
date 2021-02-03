@@ -11,7 +11,7 @@ import app from '../../utils/firebase';
 import LikedPanel from './LikedPanel';
 import CommentsPanel from './CommentsPanel';
 import RetweetPanel from './RetweetPanel';  
-
+import TweetsPanel from './ScheduleTweets';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -73,23 +73,27 @@ const ScheduledTweetsActions = () => {
     };
 
     const renderActiveTab = () => {
-        if(value === 0) return <LikedPanel email={user.email} setList={setList} />
-        else if(value === 1) return <CommentsPanel email={user.email} setList={setList} />
-        else if(value === 2) return <RetweetPanel email={user.email} setList={setList} />
-        else  return <LikedPanel email={email} setList={setList} />
+        if(value === 0) return <TweetsPanel email={user.email} />
+        else if(value === 1) return <LikedPanel email={user.email} />
+        else if(value === 2) return <CommentsPanel email={user.email} />
+        else if(value === 3) return <RetweetPanel email={user.email}  />
+        else  return <TweetsPanel email={email} />
     }
     return (
         <div className={classes.root}>
            <AppBar position="static" className={classes.appbar}>
                 <Grid container spacing={2}>
-                    <Grid item md={4}>
-                        <Button color="primary" onClick={() => setValue(0)} variant={value === 0 ? 'contained': 'outlined'}>Scheduled Likes</Button>
+                    <Grid item md={3}>
+                        <Button style={{ textTransform: 'none'}} color="primary" onClick={() => setValue(0)} variant={value === 0 ? 'contained': 'outlined'}>Scheduled Tweets</Button>
                     </Grid>
-                    <Grid item md={4}>
-                        <Button color="primary" onClick={() => setValue(1)} variant={value === 1 ? 'contained': 'outlined'}>Scheduled Comments</Button>
+                    <Grid item md={3}>
+                        <Button style={{ textTransform: 'none'}} color="primary" onClick={() => setValue(1)} variant={value === 1 ? 'contained': 'outlined'}>Scheduled Likes</Button>
                     </Grid>
-                    <Grid item md={4}>
-                        <Button color="primary" onClick={() => setValue(2)} variant={value === 2 ? 'contained': 'outlined'}>Scheduled Retweets</Button>
+                    <Grid item md={3}>
+                        <Button style={{ textTransform: 'none'}} color="primary" onClick={() => setValue(2)} variant={value === 2 ? 'contained': 'outlined'}>Scheduled Comments</Button>
+                    </Grid>
+                    <Grid item md={3}>
+                        <Button style={{ textTransform: 'none'}} color="primary" onClick={() => setValue(3)} variant={value === 3 ? 'contained': 'outlined'}>Scheduled Retweets</Button>
                     </Grid>
                 </Grid>
             </AppBar>
@@ -118,8 +122,9 @@ const styles = makeStyles((theme) => ({
         overflow: 'scroll'
     },
     appbar: {
-        backgroundColor: '#868686',
+        backgroundColor: 'rgba(134, 134, 134, 0.13)',
         padding: theme.spacing(4),
+        borderRadius: 8,
         boxShadow: 'none',
         boxShadow: '8px 8px 8px rgba(0, 0, 0, 0.25)'
     }

@@ -1,8 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Typography, Divider, Box, Paper, Avatar, Grid, IconButton, Button, TextField } from '@material-ui/core';
+import { Typography, Box, Paper, Avatar, Grid, IconButton, Button, TextField } from '@material-ui/core';
 import Head from 'next/head';
-import { Timeline } from 'react-twitter-widgets'
 import { getTimelineApi } from '../../packages/api/getTimelineApi';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
@@ -10,8 +9,7 @@ import { AiOutlineHeart } from 'react-icons/ai';
 import { GoComment } from 'react-icons/go';
 import { FaRetweet } from 'react-icons/fa';
 import app from '../../utils/firebase';
-import { fetchUserFromFirebaseApi } from '../../packages/api/fetchUser';
-
+import { IoMdRefresh } from 'react-icons/io';
 
 function a11yProps(index) {
     return {
@@ -57,12 +55,11 @@ const Timelines = () => {
     };
     
     const fetchTweetTimeline = async () => {
+        setRefresh(true);
         const tweetTimeline = await getTimelineApi;
         setTweetTimelineData(tweetTimeline);
     };
-
-  
-    
+      
     React.useEffect(() => {
         fetchTweetTimeline();
     }, [ refresh ]);
@@ -108,12 +105,9 @@ const Timelines = () => {
 
     return (
         <div className={classes.root}>
-            <Head>
-                <script src="https://platform.twitter.com/widgets.js"></script>
-            </Head>
-            <div className={classes.header}>
-                <Button color="primary" size="small" variant="outlined" onClick={() => handleRefresh()}>Refresh</Button>
-            </div>
+            {/* <div className={classes.header}>
+                <Button color="primary" startIcon={<IoMdRefresh />} size="small" style={{ textTransform: 'none' }}  variant="outlined" onClick={() => handleRefresh()}>Refresh</Button>
+            </div> */}
             <div className={classes.timeline}>
                 {tweetTimelineData !== null && tweetTimelineData.length > 0 && tweetTimelineData.map(item => {
                     const urlLink = item.user.url;
@@ -178,19 +172,20 @@ const Timelines = () => {
                                 </Grid>
                             </Grid>
                             {showComment && currentId === item.id && 
-                                <div>
+                                <div style={{ width: '50%', margin: 'auto' }}>
                                     <TextField 
                                         name="comment"
                                         placeholder="Enter Comment"
                                         variant="outlined"
                                         color="primary"
+                                        size="small"
                                         onChange={handleCommentChange}
                                         value={comment}
                                         fullWidth
                                     />
                                     <br />
                                     <br />
-                                    <Button color="primary" disabled={comment.trim(" ") <= 0 ? true: false} variant="contained" fullWidth onClick={() => handleCommentOnTweet(item.id)}>
+                                    <Button style={{ textTransform: 'none' }} color="primary" disabled={comment !== null && comment.trim(" ") <= 0 ? true: false} variant="contained" fullWidth onClick={() => handleCommentOnTweet(item.id)}>
                                         Schedule Comment
                                     </Button>
                                     <br />
@@ -208,24 +203,29 @@ export default Timelines;
 
 const styles = makeStyles((theme) => ({
     root: {
-        height: '80vh',
         padding: theme.spacing(4),
         position: 'relative',
-        overflow: 'hidden'
+        overflow: 'hidden',
+        paddingTop: theme.spacing(0),
+        paddingLeft: theme.spacing(4),
     },
     timeline: {
-        width: '60vw',
-        height: '70vh',
+        width: '70vw',
+        height: '90vh',
         overflow: 'scroll',
-        position: "relative",
-        top: '8%',
         border: '1px solid #EEEEEE',
         padding: theme.spacing(2),
-        borderRadius: '4px'
+        margin: theme.spacing(2),
+        borderRadius: '4px',
+        backgroundColor: 'rgba(134, 134, 134, 0.13)',
+        borderRadius: 8,
+        boxShadow: '8px 8px 8px rgba(0, 0, 0, 0.25)'
     },
     header : {
-        position: "fixed",
-        width: '60vw'
+        position: 'relative',
+        right: 10,
+        float: 'right',
+        margin: theme.spacing(2),
     },
     timelinePaper: {
         marginTop: theme.spacing(2),
