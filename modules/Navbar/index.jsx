@@ -29,6 +29,7 @@ export default function Navbar() {
             variant={router.pathname === "/login" ? "contained": "text"} 
             className={classes.menuButton} 
             color="primary"
+            size="small"
             onClick={() => router.push('/login')}
             >
               login
@@ -38,6 +39,7 @@ export default function Navbar() {
               variant={router.pathname === '/signup' ? "contained": "text"} 
               className={classes.menuButton} 
               color="primary"
+              size="small"
               onClick={() => router.push('/signup')}
             >
               Signup
@@ -47,6 +49,7 @@ export default function Navbar() {
             variant={router.pathname === '/dashboard' ? "contained": "text"} 
             className={classes.menuButton} 
             color="primary"
+            size="small"
             onClick={() => router.push({ pathname: '/dashboard', query: { type: 'admin' } })}
           >
             Dashboard
@@ -55,6 +58,7 @@ export default function Navbar() {
             variant="text"
             className={classes.menuButton} 
             color="primary"
+            size="small"
             onClick={() => handleLogout()}
           >
             Logout

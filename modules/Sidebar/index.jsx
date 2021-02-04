@@ -32,7 +32,7 @@ const Sidebar = () => {
                     <ListItemIcon>
                         <RiAdminLine color="primary" />
                     </ListItemIcon>
-                    <Button className={classes.button} onClick={() => handleClick('admin')} fullWidth variant={router.query.type === 'admin' ? 'contained': 'text'} size="large" color="primary" >
+                    <Button className={classes.button} onClick={() => handleClick('admin')} fullWidth variant={router.query.type === 'admin' ? 'contained': 'text'} size="small" color="primary" >
                         Admin
                     </Button>
                 </ListItem>
@@ -40,13 +40,13 @@ const Sidebar = () => {
                     <ListItemIcon>
                         <MdNextWeek />
                     </ListItemIcon>
-                    <Button className={classes.button} onClick={() => handleClick('tweets')} fullWidth variant={router.query.type === 'tweets' ? 'contained': 'text'} size="large" color="primary">Create tweet</Button>
+                    <Button className={classes.button} onClick={() => handleClick('tweets')} fullWidth variant={router.query.type === 'tweets' ? 'contained': 'text'} size="small" color="primary">Create tweet</Button>
                 </ListItem>
                 <ListItem className={classes.listItem}>
                     <ListItemIcon>
                         <MdTimeline />
                     </ListItemIcon>
-                    <Button className={classes.button} onClick={() => handleClick('timelines')} variant={router.query.type === 'timelines' ? 'contained': 'text'} size="large"  color="primary" fullWidth>Timelines</Button>
+                    <Button className={classes.button} onClick={() => handleClick('timelines')} variant={router.query.type === 'timelines' ? 'contained': 'text'} size="small"  color="primary" fullWidth>Timelines</Button>
                 </ListItem>
                 <ListItem className={classes.listItem}>
                     <ListItemIcon>
@@ -55,12 +55,12 @@ const Sidebar = () => {
                     <Button className={classes.button} onClick={() => handleClick('scheduledTweetsActions')} variant={router.query.type === 'scheduledTweetsActions' ? 'contained': 'text'} size="small"  color="primary" fullWidth>Scheduled Actions</Button>
                 </ListItem>
             </List>
-            <div style={{ height: '60vh', position: 'relative', width: '100%' }}>
-                <ListItem>
+            <div style={{ height: '32em', position: 'relative', width: '100%' }}>
+                <ListItem className={classes.logout}>
                     <ListItemIcon>
                         <RiLogoutCircleRLine />
                     </ListItemIcon>
-                    <Button className={classes.logoutButton} onClick={() => handleLogout()} size="small" variant="text" color="primary" fullWidth>Logout</Button>
+                    <Button onClick={() => handleLogout()} size="small" variant="text" color="primary" fullWidth>Logout</Button>
                 </ListItem>
             </div>
         </div>
@@ -71,7 +71,6 @@ export default Sidebar;
 
 const style = makeStyles((theme) => ({
     root: {
-        backgroundColor: 'rgba(134, 134, 134, 0.13)',
         display: 'flex',
         flexDirection: 'column',
         justifyContent:'start',
@@ -79,10 +78,14 @@ const style = makeStyles((theme) => ({
         top: '2%',
         bottom: '10px',
         borderRadius: 20,
+        minWidth: '16vw',
         padding: theme.spacing(2),
         overflow: 'hidden',
-        minWidth: '16vw',
-        boxShadow: '4px 4px 4px rgba(129, 129, 129, 0.5)'
+        backgroundColor: 'rgba(134, 134, 134, 0.13)',
+        boxShadow: '8px 8px 8px rgba(129, 129, 129, 0.5)',
+        "&:hover ": {
+            boxShadow: '10px 10px 6px rgba(129, 129, 129, 0.5)',
+        }
     },
     button : {
         paddingTop: theme.spacing(1),
@@ -91,9 +94,13 @@ const style = makeStyles((theme) => ({
         width: '100%',
         textTransform: 'none'
     },
-    
+
     listItem: {
         width: '100%',
         padding: 0
+    },
+    logout: {
+        position: 'absolute',
+        bottom: '0px'
     }
 }))

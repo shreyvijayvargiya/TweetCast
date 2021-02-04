@@ -71,23 +71,32 @@ const AdminPanel = () => {
            <br />
            <Paper elevation={5} style={{ padding: '30px', backgroundColor: 'rgba(134, 134, 134, 0.13)', boxShadow: '8px 8px 8px rgba(0, 0, 0, 0.25)'}}>
             <Typography variant="body1">Invite users</Typography>
-            <div className={classes.table}>
-                <TextField id="component-simple-email" 
-                    placeholder="Enter email" 
-                    size="small"  
-                    color="primary" 
-                    style={{ width: '30%' }}
-                    type="email"
-                    variant="outlined" 
-                    name="email" 
-                    value={email}
-                    onChange={handleChange}
-                />
-                {message && <label>{message}</label>}
-                <br />
-                <br />
-                <Button size="large" style={{ width: '30%', textTransform: 'none' }} disabled={email.trim(" ").length > 0 ? false: true || disabled} onClick={() => handleSendInvitation()} color="primary" variant="contained">Send Invitation</Button>
-            </div>
+            <Table>
+                <TableContainer>
+                    <TableBody>
+                        <TableRow>
+                            <TableCell>
+                                <TextField id="component-simple-email" 
+                                    placeholder="Enter email" 
+                                    size="small"  
+                                    color="primary" 
+                                    style={{ width: '100%' }}
+                                    type="email"
+                                    variant="outlined" 
+                                    name="email" 
+                                    value={email}
+                                    onChange={handleChange}
+                                />
+                                <br />
+                                {message && <label>{message}</label>}
+                            </TableCell>
+                            <TableCell>
+                                <Button size="large" style={{ width: '100%', textTransform: 'none' }} disabled={email.trim(" ").length > 0 ? false: true || disabled} onClick={() => handleSendInvitation()} color="primary" variant="contained">Send Invitation</Button>
+                            </TableCell>
+                        </TableRow>
+                    </TableBody>
+                </TableContainer>
+            </Table>
            </Paper>
            <br />
            <Paper elevation={5}>

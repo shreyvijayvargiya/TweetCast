@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, Typography, TableContainer, Table, TableRow, Avatar, TableCell, TableHead, TableBody, IconButton, Drawer, Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import app from '../../utils/firebase';
-import { AiTwotoneLike } from 'react-icons/ai';
+import { AiTwotoneLike, AiFillCloseCircle } from 'react-icons/ai';
 import { getSingleTweetApi } from '../../packages/api/getSingleTweet';
 import { MdDelete } from 'react-icons/md';
 import {HiOutlinePencilAlt} from 'react-icons/hi';
@@ -25,7 +25,16 @@ const LikedPanel = ({ email }) => {
     
     const handleOpen = (id) => {
         setOpen(true);
-        console.log(getSingleTweetApi(id));
+        const data = getSingleTweetApi(id);
+        data.then((response) => {
+            if(response){
+                const dataArray = response.data;
+                const singleTweet = dataArray.filter(item => { if(item.id === id) return item });
+                console.log(singleTweet);
+            }else{
+                return null
+            }
+        }).catch(error => console.log(error, 'error'));
     };
 
     const styles = useStyles();
@@ -33,7 +42,8 @@ const LikedPanel = ({ email }) => {
     const handleDelete = (id) => {
         let dbRef = app.database().ref("scheduledLikedOnTweets/" +  id);
         dbRef.remove().then((data) => console.log(data, 'liked schedule removed'));
-    }
+    };
+
     return (
         <TableContainer>
             <Table>
@@ -87,7 +97,16 @@ const LikedPanel = ({ email }) => {
             </Table>
             <Drawer anchor="right" open={open} onClose={() => setOpen(false)}> 
                 <div className={styles.root}>
-                    <p>jrfnjr</p>
+                    <Grid container className={styles.detailsDrawer}>
+                        <Grid item md={10} style={{ padding: '10px' }}>
+                            <Typography variant="h6">Tweet Detail</Typography>
+                        </Grid>
+                        <Grid item md={2}>
+                            <IconButton onClick={() => setOpen(false)}>
+                                <AiFillCloseCircle style={{ color: 'black', fontSize: 30 }} />
+                            </IconButton>
+                        </Grid>
+                    </Grid>
                     {item !== null && item.user !== null && 
                         <div>
                         <Grid container justify="flex-start">
@@ -143,12 +162,14 @@ export default LikedPanel;
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        height: '100vh',
-        width: '20vw',
-        padding: theme.spacing(4)
+        width: '30vw',
+        padding: theme.spacing(4),
     },
     button: {
         boxShadow: '8px 8px 8px rgba(0, 0, 0, 0.25)',
         textTransform: 'none'
-    }
+    },
+    detailsDrawer: {
+        padding: theme.spacing(5)
+    },
 }))

@@ -1,12 +1,11 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { TextField, Button, Typography ,Table, TableContainer,Paper, TableBody, TableRow, TableCell, Fab, TableHead, Switch, Modal, Grid, CircularProgress, IconButton, Drawer } from '@material-ui/core';
+import { TextField, Button, Typography,Paper, TableHead, Grid, CircularProgress, IconButton, Fab } from '@material-ui/core';
 import app from '../../utils/firebase';
-import { AiFillCloseCircle, AiOutlineDelete, AiOutlineDropbox } from 'react-icons/ai';
+import { AiFillCloseCircle } from 'react-icons/ai';
 import { FiCamera } from 'react-icons/fi';
 import { postTweetApi } from '../../packages/api/postTweetApi';
-
-
+import { postMediaOnTwitterApi } from '../../packages/api/postMediaApi';
 
 const TweetsPanel = () => {
 
@@ -18,7 +17,8 @@ const TweetsPanel = () => {
         fileData: null,
         fileName: null,
         file: null,
-        storageImageUrl: null
+        storageImageUrl: null,
+        
     });
 
     const [tweets, setTweets] = React.useState(null);
@@ -36,14 +36,13 @@ const TweetsPanel = () => {
         setMessage(prevState => ({ ...prevState, [name]: value }));
     };
     function dataURItoBlob(dataURI) {
-        // convert base64/URLEncoded data component to raw binary data held in a string
+       
         var byteString;
         if (dataURI.split(',')[0].indexOf('base64') >= 0)
             byteString = atob(dataURI.split(',')[1]);
         else
             byteString = unescape(dataURI.split(',')[1]);
-    
-        // separate out the mime component
+
         var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
     
         // write the bytes of the string to a typed array
@@ -55,31 +54,37 @@ const TweetsPanel = () => {
         return new Blob([ia], {type:mimeString});
     }
     const handleTweetButton = () => {
+        setLoader(true);
         let dbRef = app.database().ref("tweets");
         
         if(message.fileData){
-        let storageRef = app.storage().ref(message.fileName);
-        storageRef.put(message.file).then((snapshot) => {
-            console.log(snapshot)
-        }).catch((err) => console.log(err, 'error in uploading image'));
-        app.storage().ref(message.fileName).getDownloadURL().then((url) => {
-            dbRef.push({
-                message: message.message,
-                email: user ? user.email: "",
-                createdAt: message.createdAt,
-                approved: false,
-                fileName: message.fileName,
-                fileSource: url
-            });
-            setMessage(prevState => ({ ...prevState,  message: "" , storageImageUrl: url }));
-            const formData = new FormData();
-            // console.log(dataURItoBlob(url), 'dataURItoBlob(url)')
-            formData.append("uploadedFile", url);
-            console.log(formData, 'form data');
-        }).catch((error) => {
-            console.log('error in fetching image ', error)
-            return
-        });
+            let storageRef = app.storage().ref(message.fileName);
+            storageRef.put(message.file).then((snapshot) => {
+                console.log(snapshot)
+            }).catch((err) => console.log(err, 'error in uploading image'));
+            setTimeout(() => {
+                app.storage().ref(message.fileName).getDownloadURL().then((url) => {
+                    dbRef.push({
+                        message: message.message,
+                        email: user ? user.email: "",
+                        createdAt: message.createdAt,
+                        approved: false,
+                        fileName: message.fileName,
+                        fileSource: url
+                    });
+                    setMessage(prevState => ({ ...prevState,  message: "" , storageImageUrl: url, file: null, fileData
+                :null, fileName: null }));
+                    
+                    const imgBlob = dataURItoBlob(url);
+                    const file = new File([imgBlob], message.fileName, { type: 'image/png'});
+                    postMediaOnTwitterApi(file);
+                    setLoader(false);
+                }).catch((error) => {
+                    console.log('error in fetching image ', error)
+                    setLoader(false);
+                    return
+                });
+            }, 3000)
         }else {
             dbRef.push({
                 message: message.message,
@@ -91,6 +96,7 @@ const TweetsPanel = () => {
             });
         }
         setMessage(prevState => ({ ...prevState, message: "" }));
+        setLoader(false);
     };
 
     const fetchTweets = () => {
@@ -112,43 +118,6 @@ const TweetsPanel = () => {
         fetchTweets();
         fetchUserFromFirebase();
     }, [ ]);
-
-
-    const handleChecked = (id, e) => {
-        const checked = e.target.checked;
-        let dbRef = app.database().ref();
-        let childRef = dbRef.child("tweets").child(id).child("approved");
-        childRef.transaction((val) => {
-            return !val;
-        });
-        const data = {
-            status: tweets.tweets[id].message
-        }
-        postTweetApi(data);
-    }
-
-    const handleDeleteScheduleTweet = (id) => {
-        let dbRef = app.database().ref("tweets/" +  id);
-        dbRef.remove().then((data) => console.log(data));
-    }
-
-    const openModal = (item) => {
-        const value = tweets.tweets[item].message;
-        const imageSource = tweets.tweets[item].fileSource;
-        setMessage(prevState => ({ ...prevState, editableMessage: value, currentId: item, storageImageUrl: imageSource  }))
-        setOpen(true);
-    };
-    const updateMessage = () => {
-        setLoader(true);
-        let dbRef = app.database().ref();
-        let childRef = dbRef.child("tweets").child(message.currentId).child("message");
-        childRef.transaction(() => { 
-            setLoader(false);
-            return message.editableMessage 
-        });
-        setLoader(false);
-        setOpen(false);
-    };
 
     const handleUploadClick = (event) => {
         event.preventDefault();
@@ -198,27 +167,34 @@ const TweetsPanel = () => {
                     </Grid> */}
                 </Grid>
                 <Grid container>
-                    <Grid item md={9} className={classes.uploadContainer}>
-                        {message.fileData  !== null ?
-                            <img style={{ objectFit: 'contain', width: '100%', height: '100%' }} src={message.fileData} alt="Upload Image" />
-                        :
-                        <>
-                            <TextField
-                                className={classes.input}
-                                id="contained-button-file"
-                                multiple
-                                type="file"
-                                variant="outlined" 
-                                onChange={handleUploadClick}
-                            />
-                            <label htmlFor="contained-button-file">
-                                <Fab color="primary" component="span" className={classes.fabButton}>
-                                    <FiCamera />
-                                </Fab>
-                            </label>
-                        </>
+                    {message.fileData  !== null ?
+                        <Grid item md={9} className={classes.uploadContainer}>
+                            <div className={classes.cancelButton}>
+                                <IconButton color="primary" onClick={() => setMessage(prevState => ({...prevState, fileData: null, file: null, fileName: null}))}>
+                                    <AiFillCloseCircle />
+                                </IconButton>
+                            </div>
+                            <div className={classes.imgContainer}>
+                                <img style={{ objectFit: 'contain', width: '100%', height: '100%' }} src={message.fileData} alt="Upload Image" />
+                            </div>
+                        </Grid>
+                            :
+                            <Grid item md={9} className={classes.uploadContainer}>
+                                <TextField
+                                    className={classes.input}
+                                    id="contained-button-file"
+                                    multiple
+                                    type="file"
+                                    variant="outlined" 
+                                    onChange={handleUploadClick}
+                                />
+                                <label htmlFor="contained-button-file">
+                                    <Fab color="primary" component="span" className={classes.fabButton}>
+                                        <FiCamera />
+                                    </Fab>
+                                </label>
+                            </Grid>
                         }
-                    </Grid>
                 </Grid>
                 <br />
                 <br />
@@ -230,7 +206,7 @@ const TweetsPanel = () => {
                         onClick={() => handleTweetButton()}
                         disabled={(message.message).trim(" ").length >0 ? false: true}
                     >
-                        Schedule Tweet
+                        {loader ? <CircularProgress color="primary" />:"Schedule Tweet"}
                     </Button>
             </Paper>
         </div>
@@ -274,25 +250,32 @@ const styles = makeStyles((theme) => ({
     uploadContainer :{
         border: '3px dotted #2D2D2D',
         borderRadius: '10px',
-        padding: theme.spacing(2),
+        padding: theme.spacing(1),
         marginTop: theme.spacing(2),
         textAlign: 'center',
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        position: 'relative'
     },
     input: {
         display: "none",
     },
     button: {
-        borderTopLeftRadius: 0,
-        borderTopRightRadius: 0,
-        borderBottomLeftRadius: 20,
-        borderBottomRightRadius: 20,
         textTransform: 'none',
-
+        width: '75%'
     },
     detailsDrawer: {
         padding: theme.spacing(5)
+    },
+    cancelButton: { 
+        position: 'absolute',
+        right: 0,
+        top: 0,
+        zIndex: 1
+    },
+    imgContainer: {
+        widht: '20em',
+        height: '20em'
     }
 }))

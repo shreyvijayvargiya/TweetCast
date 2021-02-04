@@ -18,6 +18,7 @@ export const useStyles = makeStyles((theme) => ({
       margin: 'auto',
       position: 'absolute',
       zIndex: 0,
+      width: '100%',
     },
 }));
 

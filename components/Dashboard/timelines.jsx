@@ -1,6 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Typography, Box, Paper, Avatar, Grid, IconButton, Button, TextField } from '@material-ui/core';
+import { Typography, Box, Paper, Avatar, Grid, IconButton, Button, TextField, CircularProgress } from '@material-ui/core';
 import Head from 'next/head';
 import { getTimelineApi } from '../../packages/api/getTimelineApi';
 import { useRouter } from 'next/router';
@@ -42,30 +42,29 @@ function TabPanel(props) {
 
 const Timelines = () => {
     const classes = styles();
-    const [refresh, setRefresh] = React.useState(false);
     const [tweetTimelineData, setTweetTimelineData] = React.useState(null);
     const [comment, setComment] = React.useState(null);
     const [showComment, setShowComment] = React.useState(false);
     const [currentId, setCurrentId] = React.useState("");
     const [value, setValue] = React.useState(0);
+    const [loader, setLoader] = React.useState(false);
     const router = useRouter();
-
-    const handleChange = (event, newValue) => {
-      setValue(newValue);
-    };
-    
+ 
     const fetchTweetTimeline = async () => {
-        setRefresh(true);
         const tweetTimeline = await getTimelineApi;
         setTweetTimelineData(tweetTimeline);
+        setTimeout(() => {
+            setLoader(false);
+        }, 2000)
     };
       
     React.useEffect(() => {
         fetchTweetTimeline();
-    }, [ refresh ]);
+    }, [ loader ]);
 
     const handleRefresh = () => {
-        fetchTweetTimeline()
+        setLoader(true);
+        fetchTweetTimeline();
     };
 
     const handleLikeTweet = (id) => {
@@ -105,9 +104,11 @@ const Timelines = () => {
 
     return (
         <div className={classes.root}>
-            {/* <div className={classes.header}>
-                <Button color="primary" startIcon={<IoMdRefresh />} size="small" style={{ textTransform: 'none' }}  variant="outlined" onClick={() => handleRefresh()}>Refresh</Button>
-            </div> */}
+            <div className={classes.header}>
+                <Button color="primary" size="small" style={{ textTransform: 'none' }}  variant="outlined" onClick={() => handleRefresh()}>
+                    {loader ? <CircularProgress size={24} color="primary" />:"Refresh"}
+                </Button>
+            </div>
             <div className={classes.timeline}>
                 {tweetTimelineData !== null && tweetTimelineData.length > 0 && tweetTimelineData.map(item => {
                     const urlLink = item.user.url;
@@ -206,6 +207,7 @@ const styles = makeStyles((theme) => ({
         padding: theme.spacing(4),
         position: 'relative',
         overflow: 'hidden',
+        height: '90vh',
         paddingTop: theme.spacing(0),
         paddingLeft: theme.spacing(4),
     },
@@ -217,13 +219,12 @@ const styles = makeStyles((theme) => ({
         padding: theme.spacing(2),
         margin: theme.spacing(2),
         borderRadius: '4px',
-        backgroundColor: 'rgba(134, 134, 134, 0.13)',
+        // backgroundColor: 'rgba(134, 134, 134, 0.13)',
         borderRadius: 8,
-        boxShadow: '8px 8px 8px rgba(0, 0, 0, 0.25)'
     },
     header : {
         position: 'relative',
-        right: 10,
+        right: 60,
         float: 'right',
         margin: theme.spacing(2),
     },

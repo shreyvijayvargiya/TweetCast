@@ -3,10 +3,12 @@ import { makeStyles } from '@material-ui/core/styles';
 export const useStyles = makeStyles((theme) => ({
     box: {
       width: '100%',
-      margin: 'auto',
+      height: '90vh',
       padding: theme.spacing(4),
       position: 'absolute',
-      top: '30%',
+      left: '0px',
+      right: '0px',
+      top: '35%',
       textAlign: 'center'
     },
     button: {
