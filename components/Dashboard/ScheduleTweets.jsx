@@ -1,11 +1,14 @@
 import React from 'react';
-import { Button, Typography, TableContainer, Table, TableRow, CircularProgress, TableCell, TableHead, TableBody, IconButton, Drawer, Grid, TextField, Switch } from '@material-ui/core';
+import { Button, Typography, TableContainer, Table, TableRow, Snackbar,CircularProgress, TableCell, TableHead, TableBody, IconButton, Drawer, Grid, TextField, Switch } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import app from '../../utils/firebase';
-import { AiOutlineDelete, AiFillCloseCircle } from 'react-icons/ai';
+import { AiOutlineDelete, AiFillCloseCircle, AiOutlineDropbox } from 'react-icons/ai';
 import { getSingleTweetApi } from '../../packages/api/getSingleTweet';
 import { MdDelete } from 'react-icons/md';
-import { HiOutlinePencilAlt } from 'react-icons/hi';
+import { HiOutlinePencilAlt, HiUpload } from 'react-icons/hi';
+import {tweetWithMedia, singleTweetApi} from '../../packages/api/tweetWithMedia';
+import {FaDropbox} from 'react-icons/fa';
+import MuiAlert from '@material-ui/lab/Alert';
 
 const TweetsPanel = ({ email }) => {
 
@@ -22,9 +25,9 @@ const TweetsPanel = ({ email }) => {
 
     const [tweets, setTweets] = React.useState(null);
     const [open, setOpen] = React.useState(false);
-    const [checked, setChecked] = React.useState(false);
+    const [show, setShow] = React.useState(false);
+    const [snackBarMessage, setSnackBarMessage] = React.useState("");
     const [loader, setLoader] = React.useState(false);
-    const [edit, setEdit] = React.useState(false);
     const [user, setUser] = React.useState(null);
 
 
@@ -55,9 +58,11 @@ const TweetsPanel = ({ email }) => {
    
  
     const fetchTweets = () => {
+        setLoader(true);
         let dbRef = app.database().ref("tweets");
         dbRef.on("value", snap => {
-            setTweets((prevState) => ({ ...prevState, tweets: snap.val() }))
+            setTweets((prevState) => ({ ...prevState, tweets: snap.val() }));
+            setLoader(false);
         });
     };
 
@@ -74,19 +79,6 @@ const TweetsPanel = ({ email }) => {
         fetchUserFromFirebase();
     }, [ ]);
 
-
-    const handleChecked = (id, e) => {
-        const checked = e.target.checked;
-        let dbRef = app.database().ref();
-        let childRef = dbRef.child("tweets").child(id).child("approved");
-        childRef.transaction((val) => {
-            return !val;
-        });
-        const data = {
-            status: tweets.tweets[id].message
-        }
-        postTweetApi(data);
-    }
 
     const handleDeleteScheduleTweet = (id) => {
         let dbRef = app.database().ref("tweets/" +  id);
@@ -112,42 +104,68 @@ const TweetsPanel = ({ email }) => {
     };
 
     
+    const handlePostTweet = () => {
+        const imageSource = tweets.tweets[message.currentId].fileSource;
+        if(imageSource !== undefined){
+            tweetWithMedia({ fileUrl: message.storageImageUrl, tweetMessage: message.editableMessage })
+        }else {
+            singleTweetApi(message.editableMessage);
+        };
+        let dbRef = app.database().ref("tweets/" +  message.currentId);
+        dbRef.remove().then((data) => {
+            setShow(true);
+            setOpen(false);
+            setSnackBarMessage("Tweet posted successfully")
+            console.log(data);
+        });
+    };
 
+    function Alert(props) {
+        return <MuiAlert elevation={6} variant="filled" {...props} />;
+    }
     const classes = useStyles();
-
+    
     return (
         <div>
-            <TableContainer>
-                <Table>
-                    <TableHead className={classes.table}>
+            <Snackbar
+                anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'center',
+                }}
+                severity="success"
+                open={show}
+                autoHideDuration={6000}
+                onClose={() => setShow(false)}
+                message={snackBarMessage}
+                
+            >
+                <Alert>{snackBarMessage}</Alert>
+            </Snackbar>
+            <TableContainer className={classes.table}>
+                <Table stickyHeader>
+                    <TableHead>
                         <TableRow style={{ backgroundColor: 'rgba(134, 134, 134, 0.13)' }}>
-                            <TableCell style={{ width: '30vw' }}>
+                            <TableCell>
                                 <Typography>Email</Typography>
                             </TableCell>
                             <TableCell align="center">
                                 <Typography>Details</Typography>
                             </TableCell>
-                            <TableCell align="right"> 
-                                <Typography>Approved</Typography>
-                            </TableCell>
-                            <TableCell align="right"> 
+                            <TableCell align="center"> 
                                 <Typography>Delete</Typography>
                             </TableCell>
                         </TableRow>
                     </TableHead>
-                </Table>
-            </TableContainer>
-            <br />
-            <TableContainer>
-                <Table>
+
                     <TableBody>
-                        {tweets && tweets.tweets && Object.keys(tweets.tweets).length === 0 && 
-                            <AiOutlineDropbox />
-                        }
                         {tweets && tweets.tweets && Object.keys(tweets.tweets).length > 0 ? Object.keys(tweets.tweets).map(item => {
                             return (
-                                <TableRow key={item} className={classes.list}>
-                                    <TableCell><Typography>{tweets.tweets[item].email}</Typography></TableCell>
+                                <TableRow key={item}>
+                                    <TableCell>
+                                        <Typography>
+                                            {tweets.tweets[item].email}
+                                        </Typography>
+                                    </TableCell>
                                     <TableCell align="center">
                                         <Button 
                                             size="small" 
@@ -161,13 +179,6 @@ const TweetsPanel = ({ email }) => {
                                         </Button>
                                     </TableCell>
                                     <TableCell align="center">
-                                        <Switch 
-                                            checked={tweets.tweets[item].approved}
-                                            color="primary"
-                                            onChange={(e) => handleChecked(item, e)}
-                                        />
-                                    </TableCell>
-                                    <TableCell align="right">
                                         <IconButton onClick={() => handleDeleteScheduleTweet(item)}>
                                             <AiOutlineDelete style={{ color: '#C19277', fontSize: 30 }} />
                                         </IconButton>
@@ -175,10 +186,12 @@ const TweetsPanel = ({ email }) => {
                                 </TableRow>
                             )
                         })
-                        :
-                        <TableRow style={{ textAlign: 'center' }}>
-                                <TableCell>
-                                    <CircularProgress color="primary" />
+                            :
+                            <TableRow>
+                                <TableCell style={{ textAlign: 'center' }}>
+                                    <AiOutlineDropbox style={{ fontSize: 30 }} />
+                                    <br />
+                                    <Typography color="primary" variant="caption">No Tweets Found</Typography>
                                 </TableCell>
                             </TableRow>
                         }
@@ -211,9 +224,15 @@ const TweetsPanel = ({ email }) => {
                     <br />
                     <br />
                     {message.storageImageUrl !== null && message.fileName !== null && <img src={message.storageImageUrl} style={{ width: '100%', objectFit: 'contain', height: '70%'}} alt="Image" />}
+                    {loader ? <CircularProgress color="primary" style={{ color: 'white' }} />: <Button onClick={() => updateMessage()} size="medium" fullWidth color="primary" variant="contained">Update</Button>}
                     <br />
                     <br />
-                    {loader ? <CircularProgress color="primary" style={{ color: 'white' }} />: <Button onClick={() => updateMessage()} size="large" fullWidth color="primary" variant="contained">Update</Button>}
+                    <br />
+                    <Button fullWidth>
+                        <IconButton color="primary" onClick={() => handlePostTweet()}>
+                            <HiUpload />
+                        </IconButton>
+                    </Button>
                 </div>
             </Drawer>
         </div>
@@ -246,5 +265,9 @@ const useStyles = makeStyles((theme) => ({
             boxShadow: '6px 6px 6px rgba(0, 0, 0, 0.25)',
             cursor: 'pointer'
         }
+    },
+    table: {
+        height: '80vh',
+        overflow: 'scroll',
     }
 }))

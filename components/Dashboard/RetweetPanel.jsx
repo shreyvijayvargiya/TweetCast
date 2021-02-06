@@ -1,17 +1,21 @@
 import React from 'react';
-import { Button, Typography, TableContainer, Table, TableRow, TableCell, TableHead, TableBody, Drawer, IconButton, Grid } from '@material-ui/core';
+import { Button, Typography, TableContainer, Table, TableRow, TableCell, TableHead, TableBody, Drawer, IconButton, Grid, Snackbar } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import app from '../../utils/firebase';
-import { AiOutlineRetweet, AiFillCloseCircle } from 'react-icons/ai';
+import { AiOutlineRetweet, AiFillCloseCircle, AiOutlineDropbox } from 'react-icons/ai';
 import { getSingleTweetApi } from '../../packages/api/getSingleTweet';
 import { MdDelete } from 'react-icons/md';
 import {HiOutlinePencilAlt} from 'react-icons/hi';
+import { retweetApi } from '../../packages/api/retweetApi';
+
 
 const RetweetPanel = ({ email }) => {
 
     const [retweets, setRetweets] = React.useState(null);
     const [open, setOpen] = React.useState(false);
     const [item, setItem] = React.useState(null);
+    const [show, setShow] = React.useState(false);
+    const [snackBarMessage, setSnackBarMesaage] = React.useState("");
 
     const fetchScheduleCommentsTweetsFromFirebase = () => {
         let dbRef = app.database().ref("scheduledRetweets");
@@ -44,8 +48,26 @@ const RetweetPanel = ({ email }) => {
         dbRef.remove().then((data) => console.log(data, 'retweet scheduled removed'));
     };
 
+    const handleRetweetApi = (id) => {
+        setShow(true)
+        retweetApi(id);
+        handleDelete(id);
+        setOpen(false);
+        setSnackBarMesaage("Retweeted successfullry");
+    }
     return (
         <TableContainer>
+            <Snackbar
+                anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'center',
+                }}
+                open={show}
+                autoHideDuration={6000}
+                onClose={() => setShow(false)}
+                message={snackBarMessage}
+                
+            />
             <Table>
                 <TableHead>
                     <TableRow style={{ backgroundColor: 'rgba(134, 134, 134, 0.13)' }}>
@@ -64,7 +86,7 @@ const RetweetPanel = ({ email }) => {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {retweets && Object.keys(retweets).map(item => {
+                    {retweets && retweets.length > 0 ? Object.keys(retweets).map(item => {
                         return (
                             <TableRow key={item}>
                                 <TableCell>{email}</TableCell>
@@ -77,7 +99,7 @@ const RetweetPanel = ({ email }) => {
                                     </Button>
                                 </TableCell>
                                 <TableCell>
-                                    <IconButton>
+                                    <IconButton onClick={() => handleRetweetApi(item)}>
                                         <AiOutlineRetweet />
                                     </IconButton>
                                 </TableCell>
@@ -88,7 +110,15 @@ const RetweetPanel = ({ email }) => {
                                 </TableCell>
                             </TableRow>
                         )
-                    })}  
+                    }):
+                    <TableRow style={{ width: 700 }}>
+                        <TableCell style={{ textAlign: 'center' }}>
+                            <AiOutlineDropbox style={{ fontSize: 30 }} />
+                            <br />
+                            <Typography color="primary" variant="caption">No Likes Found</Typography>
+                        </TableCell>
+                    </TableRow>
+                }  
                 </TableBody>
             </Table>
             <Drawer anchor="right" open={open} onClose={() => setOpen(false)}> 

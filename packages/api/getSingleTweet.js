@@ -1,12 +1,13 @@
-import axios from 'axios';
 import { headers } from './header';
 
-export const getSingleTweetApi = async (id) => {
+export const getSingleTweetApi = () => {
   var config = {
-    method: 'get',
-    url: 'https://api.twitter.com/1.1/statuses/home_timeline.json',
-    headers: headers
+    method: 'POST',
+    headers: headers,
+    redirect: 'follow'
   };
-  const res = await axios(config);
-  return res.data;
+  fetch("https://api.twitter.com/1.1/statuses/home_timeline.json", config)
+    .then(response => response.text())
+    .then(result => console.log(result))
+    .catch(error => console.log('error', error));
 };

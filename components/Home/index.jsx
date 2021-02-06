@@ -1,18 +1,9 @@
 import React from 'react';
 import { Button, Typography } from '@material-ui/core';
 import { useStyles } from './styles';
-import Box from '@material-ui/core/Box';
-import axios from 'axios';
 
 const HomePage = () => {
-	const tokens = {
-		consumer_key: process.env.consumerKey,
-		sconsuler_secret: process.env.consumerSecret,
-		acess_token: process.env.acessToken,
-		token_scret: process.env.tokenSecret,
-		bearer_token: process.env.bearerToken,
-	};
-
+	
  	const styles = useStyles();
 	return (
 		<div className={styles.root}>
@@ -26,3 +17,6 @@ const HomePage = () => {
 	);
 };
 export default HomePage;
+
+
+

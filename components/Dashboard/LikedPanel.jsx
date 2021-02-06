@@ -2,11 +2,11 @@ import React from 'react';
 import { Button, Typography, TableContainer, Table, TableRow, Avatar, TableCell, TableHead, TableBody, IconButton, Drawer, Grid, Link, Box } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import app from '../../utils/firebase';
-import { AiTwotoneLike, AiFillCloseCircle } from 'react-icons/ai';
+import { AiTwotoneLike, AiFillCloseCircle, AiOutlineDropbox } from 'react-icons/ai';
 import { getSingleTweetApi } from '../../packages/api/getSingleTweet';
 import { MdDelete } from 'react-icons/md';
 import {HiOutlinePencilAlt} from 'react-icons/hi';
-
+import { likeTweetApi } from '../../packages/api/likeTweetApi';
 
 const LikedPanel = ({ email }) => {
 
@@ -47,9 +47,13 @@ const LikedPanel = ({ email }) => {
         dbRef.remove().then((data) => console.log(data, 'liked schedule removed'));
     };
 
+    const handleLikeTweet = id => {
+        likeTweetApi(id);
+    };
+
     return (
         <TableContainer>
-            <Table>
+            <Table stickyHeader>
                 <TableHead>
                     <TableRow style={{ backgroundColor: '#EEEEEE', borderRadius: 8 }}>
                         <TableCell>
@@ -67,7 +71,7 @@ const LikedPanel = ({ email }) => {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {likes && Object.keys(likes).map(item => {
+                    {likes && likes.length > 0 ?  Object.keys(likes).map(item => {
                         return (
                             <TableRow key={item}>
                                 <TableCell>{email}</TableCell>
@@ -84,7 +88,7 @@ const LikedPanel = ({ email }) => {
                                     </Button>
                                 </TableCell>
                                 <TableCell>
-                                    <IconButton>
+                                    <IconButton onClick={() => handleLikeTweet(likes[item].tweetId)}>
                                         <AiTwotoneLike />
                                     </IconButton>
                                 </TableCell>
@@ -95,7 +99,14 @@ const LikedPanel = ({ email }) => {
                                 </TableCell>
                             </TableRow>
                         )
-                    })}  
+                    }):
+                    <div>
+                        <AiOutlineDropbox style={{ fontSize: 30 }} />
+                        <br />
+                        <Typography color="primary" variant="caption">No Likes Found</Typography>
+                    </div>
+
+                }  
                 </TableBody>
             </Table>
             <Drawer anchor="right" open={open} onClose={() => setOpen(false)}> 
@@ -110,7 +121,7 @@ const LikedPanel = ({ email }) => {
                             </IconButton>
                         </Grid>
                     </Grid>
-                    {likeTweet !== null && likeTweet.user !== null && 
+                    {likeTweet && likeTweet.user && 
                         <div className={styles.box}>
                             <Grid container justify="flex-start">
                                 <Grid>

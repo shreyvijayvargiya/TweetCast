@@ -29,37 +29,37 @@ const Sidebar = () => {
             <br />
             <List style={{  width: '100%' }}>
                 <ListItem className={classes.listItem}>
-                    <ListItemIcon>
+                    {/* <ListItemIcon>
                         <RiAdminLine color="primary" />
-                    </ListItemIcon>
+                    </ListItemIcon> */}
                     <Button className={classes.button} onClick={() => handleClick('admin')} fullWidth variant={router.query.type === 'admin' ? 'contained': 'text'} size="small" color="primary" >
                         Admin
                     </Button>
                 </ListItem>
                 <ListItem className={classes.listItem}>
-                    <ListItemIcon>
+                    {/* <ListItemIcon>
                         <MdNextWeek />
-                    </ListItemIcon>
+                    </ListItemIcon> */}
                     <Button className={classes.button} onClick={() => handleClick('tweets')} fullWidth variant={router.query.type === 'tweets' ? 'contained': 'text'} size="small" color="primary">Create tweet</Button>
                 </ListItem>
                 <ListItem className={classes.listItem}>
-                    <ListItemIcon>
+                    {/* <ListItemIcon>
                         <MdTimeline />
-                    </ListItemIcon>
+                    </ListItemIcon> */}
                     <Button className={classes.button} onClick={() => handleClick('timelines')} variant={router.query.type === 'timelines' ? 'contained': 'text'} size="small"  color="primary" fullWidth>Timelines</Button>
                 </ListItem>
                 <ListItem className={classes.listItem}>
-                    <ListItemIcon>
+                    {/* <ListItemIcon>
                         <GrSchedules />
-                    </ListItemIcon>
+                    </ListItemIcon> */}
                     <Button className={classes.button} onClick={() => handleClick('scheduledTweetsActions')} variant={router.query.type === 'scheduledTweetsActions' ? 'contained': 'text'} size="small"  color="primary" fullWidth>Scheduled Actions</Button>
                 </ListItem>
             </List>
             <div style={{ height: '32em', position: 'relative', width: '100%' }}>
                 <ListItem className={classes.logout}>
-                    <ListItemIcon>
+                    {/* <ListItemIcon>
                         <RiLogoutCircleRLine />
-                    </ListItemIcon>
+                    </ListItemIcon> */}
                     <Button onClick={() => handleLogout()} size="small" variant="text" color="primary" fullWidth>Logout</Button>
                 </ListItem>
             </div>
@@ -82,9 +82,9 @@ const style = makeStyles((theme) => ({
         padding: theme.spacing(2),
         overflow: 'hidden',
         backgroundColor: 'rgba(134, 134, 134, 0.13)',
-        boxShadow: '8px 8px 8px rgba(129, 129, 129, 0.5)',
+        boxShadow: '4px 4px 4px rgba(129, 129, 129, 0.5)',
         "&:hover ": {
-            boxShadow: '10px 10px 6px rgba(129, 129, 129, 0.5)',
+            boxShadow: '5px 5px 3px rgba(129, 129, 129, 0.5)',
         }
     },
     button : {

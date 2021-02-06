@@ -1,11 +1,10 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { TextField, Button, Typography,Paper, TableHead, Grid, CircularProgress, IconButton, Fab } from '@material-ui/core';
+import { TextField, Button, Typography,Paper, Grid, CircularProgress, IconButton, Fab, Snackbar } from '@material-ui/core';
 import app from '../../utils/firebase';
+import MuiAlert from '@material-ui/lab/Alert';
 import { AiFillCloseCircle } from 'react-icons/ai';
 import { FiCamera } from 'react-icons/fi';
-import { postTweetApi } from '../../packages/api/postTweetApi';
-import { postMediaOnTwitterApi } from '../../packages/api/postMediaApi';
 
 const TweetsPanel = () => {
 
@@ -20,6 +19,9 @@ const TweetsPanel = () => {
         storageImageUrl: null,
         
     });
+    function Alert(props) {
+        return <MuiAlert elevation={6} variant="filled" {...props} />;
+    }
 
     const [tweets, setTweets] = React.useState(null);
     const [open, setOpen] = React.useState(false);
@@ -27,6 +29,8 @@ const TweetsPanel = () => {
     const [loader, setLoader] = React.useState(false);
     const [edit, setEdit] = React.useState(false);
     const [user, setUser] = React.useState(null);
+    const [show, setShow] = React.useState(false);
+    const [snackBarMessage, setSnackBarMessage] = React.useState("");
     
     const classes = styles();
 
@@ -35,24 +39,7 @@ const TweetsPanel = () => {
         const name = e.target.name;
         setMessage(prevState => ({ ...prevState, [name]: value }));
     };
-    function dataURItoBlob(dataURI) {
-       
-        var byteString;
-        if (dataURI.split(',')[0].indexOf('base64') >= 0)
-            byteString = atob(dataURI.split(',')[1]);
-        else
-            byteString = unescape(dataURI.split(',')[1]);
-
-        var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
     
-        // write the bytes of the string to a typed array
-        var ia = new Uint8Array(byteString.length);
-        for (var i = 0; i < byteString.length; i++) {
-            ia[i] = byteString.charCodeAt(i);
-        }
-    
-        return new Blob([ia], {type:mimeString});
-    }
     const handleTweetButton = () => {
         setLoader(true);
         let dbRef = app.database().ref("tweets");
@@ -75,9 +62,9 @@ const TweetsPanel = () => {
                     setMessage(prevState => ({ ...prevState,  message: "" , storageImageUrl: url, file: null, fileData
                 :null, fileName: null }));
                     
-                    const imgBlob = dataURItoBlob(url);
-                    const file = new File([imgBlob], message.fileName, { type: 'image/png'});
-                    postMediaOnTwitterApi(file);
+                    // const imgBlob = dataURItoBlob(url);
+                    // const file = new File([imgBlob], message.fileName, { type: 'image/png'});
+
                     setLoader(false);
                 }).catch((error) => {
                     console.log('error in fetching image ', error)
@@ -96,6 +83,8 @@ const TweetsPanel = () => {
             });
         }
         setMessage(prevState => ({ ...prevState, message: "" }));
+        setShow(true);
+        setSnackBarMessage("Tweet scheduled successfully");
         setLoader(false);
     };
 
@@ -117,6 +106,7 @@ const TweetsPanel = () => {
     React.useEffect(() => {
         fetchTweets();
         fetchUserFromFirebase();
+
     }, [ ]);
 
     const handleUploadClick = (event) => {
@@ -134,6 +124,17 @@ const TweetsPanel = () => {
     
     return (
         <div className={classes.root}>
+            <Snackbar
+                anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'center',
+                }}
+                open={show}
+                autoHideDuration={6000}
+                onClose={() => setShow(false)}
+            >
+                <Alert>{snackBarMessage}</Alert>
+            </Snackbar>
              <Paper elevation={1} style={{ padding: '10px', borderRadius: 8, backgroundColor: 'rgba(134, 134, 134, 0.13)',  boxShadow: '8px 8px 8px rgba(0, 0, 0, 0.25)' }}>
                 <Typography variant="h6">Create Tweets</Typography>
                 <br />
@@ -248,7 +249,7 @@ const styles = makeStyles((theme) => ({
         fontSize: 30
     },
     uploadContainer :{
-        border: '3px dotted #2D2D2D',
+        border: '1px dotted #2D2D2D',
         borderRadius: '10px',
         padding: theme.spacing(1),
         marginTop: theme.spacing(2),

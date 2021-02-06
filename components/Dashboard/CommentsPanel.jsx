@@ -6,7 +6,7 @@ import { getSingleTweetApi } from '../../packages/api/getSingleTweet';
 import { FaRegCommentDots } from 'react-icons/fa';
 import { MdDelete } from 'react-icons/md';
 import {HiOutlinePencilAlt} from 'react-icons/hi';
-import { AiFillCloseCircle } from 'react-icons/ai';
+import { AiFillCloseCircle, AiOutlineDropbox } from 'react-icons/ai';
 
 const CommentsPanel = ({ setList, email }) => {
     
@@ -82,7 +82,7 @@ const CommentsPanel = ({ setList, email }) => {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {comments && Object.keys(comments).map(item => {
+                    {comments && comments.length > 0 ? Object.keys(comments).map(item => {
                         return (
                             <TableRow key={item}>
                                 <TableCell>{email}</TableCell>
@@ -107,7 +107,16 @@ const CommentsPanel = ({ setList, email }) => {
                                 </TableCell>
                             </TableRow>
                         )
-                    })}
+                    })
+                    :
+                    <TableRow>
+                        <TableCell>
+                            <AiOutlineDropbox style={{ fontSize: 30 }} />
+                            <br />
+                            <Typography color="primary" variant="caption">No Likes Found</Typography>
+                        </TableCell>
+                    </TableRow>
+                    }
                 </TableBody>
             </Table>
             <Drawer anchor="right" open={open} onClose={() => setOpen(false)}> 

@@ -2,7 +2,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Typography, Box, Paper, Avatar, Grid, IconButton, Button, TextField, CircularProgress } from '@material-ui/core';
 import Head from 'next/head';
-import { getTimelineApi } from '../../packages/api/getTimelineApi';
+import { getTimelineApi, getTimeline } from '../../packages/api/getTimelineApi';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { AiOutlineHeart } from 'react-icons/ai';
@@ -10,6 +10,7 @@ import { GoComment } from 'react-icons/go';
 import { FaRetweet } from 'react-icons/fa';
 import app from '../../utils/firebase';
 import { IoMdRefresh } from 'react-icons/io';
+import { AiOutlineDropbox } from 'react-icons/ai';
 
 function a11yProps(index) {
     return {
@@ -50,9 +51,13 @@ const Timelines = () => {
     const [loader, setLoader] = React.useState(false);
     const router = useRouter();
  
-    const fetchTweetTimeline = async () => {
-        const tweetTimeline = await getTimelineApi;
-        setTweetTimelineData(tweetTimeline);
+    const fetchTweetTimeline = () => {
+        const timeline = getTimeline();
+        if(timeline){
+            setTweetTimelineData(timeline)
+        }else {
+            setTweetTimelineData(null)
+        }
         setTimeout(() => {
             setLoader(false);
         }, 2000)
@@ -104,13 +109,8 @@ const Timelines = () => {
 
     return (
         <div className={classes.root}>
-            <div className={classes.header}>
-                <Button color="primary" size="small" style={{ textTransform: 'none' }}  variant="outlined" onClick={() => handleRefresh()}>
-                    {loader ? <CircularProgress size={24} color="primary" />:"Refresh"}
-                </Button>
-            </div>
             <div className={classes.timeline}>
-                {tweetTimelineData !== null && tweetTimelineData.length > 0 && tweetTimelineData.map(item => {
+                {tweetTimelineData && tweetTimelineData.length > 0 ? tweetTimelineData.map(item => {
                     const urlLink = item.user.url;
                     return (
                         <Paper elevation={2} className={classes.timelinePaper}>
@@ -194,7 +194,15 @@ const Timelines = () => {
                             }
                         </Paper>
                     )
-                })}
+                }):
+                <Grid container>
+                    <Grid item md={12} style={{ textAlign: 'center'}}>
+                        <AiOutlineDropbox style={{ fontSize: 100 }} />
+                        <br />
+                        <Typography variant="caption" style={{ color: 'red' }}> Server is under maintainence, please try after some time</Typography>
+                    </Grid>
+                </Grid>
+            }
             </div>
         </div>
     );

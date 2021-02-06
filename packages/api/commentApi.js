@@ -1,6 +1,6 @@
-export const retweetApi = (id) => {
-    const url = '/api/singleTweet';
-    const body = { id: id };
+export const commentApi = (id, message) => {
+    const url = '/api/commentTweet';
+    const body = { id: id, message };
     const config = {
         body: JSON.stringify(body),
         method: 'POST'
