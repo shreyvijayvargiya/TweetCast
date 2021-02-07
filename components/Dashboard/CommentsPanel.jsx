@@ -29,24 +29,34 @@ const CommentsPanel = ({ setList, email }) => {
     
     const handleOpen = (id, commentId) => {
         setOpen(true);
-        // getSingleTweet(id);
-        const singleTweet = timelineData.filter(element => {
-            if(element.id === id) return element
+        getSingleTweetApi(id).then((data) => {
+            setItem(data.data)
+        }).catch(error => {
+            console.log(error);
+            setItem(null)
         });
-        // console.log(singleTweet[0], 'singletweet');
-        setItem(singleTweet[0]);
-        // getSingleTweetApi(id);
-        // getSingleTweetApi(id).then((response) => {
-        //     if(response){
-        //         console.log(response, 'response');
-        //         return null
-        //     }
-        // }).catch(error => console.log(error, 'error'));
         let dbRef = app.database().ref("scheduledCommentsOnTweets/" +  commentId);
         dbRef.on("value",snap => {
             setComment(snap.val().comment);
         });
     };
+    // const handleOpen = (id, commentId) => {
+    //     setOpen(true);
+    //     // getSingleTweet(id);
+    //     const singleTweet = timelineData.filter(element => {
+    //         if(element.id === id) return element
+    //     });
+    //     // console.log(singleTweet[0], 'singletweet');
+    //     setItem(singleTweet[0]);
+    //     // getSingleTweetApi(id);
+    //     // getSingleTweetApi(id).then((response) => {
+    //     //     if(response){
+    //     //         console.log(response, 'response');
+    //     //         return null
+    //     //     }
+    //     // }).catch(error => console.log(error, 'error'));
+       
+    // };
     const styles = useStyles();
 
     const handleDelete = (id) => {
@@ -65,7 +75,12 @@ const CommentsPanel = ({ setList, email }) => {
             setLoader(false);
             return comment 
         });
-    }
+    };
+
+    const handlePostComment = () => {
+
+    };
+    
     return (
         <TableContainer>
             <Table>
@@ -100,7 +115,7 @@ const CommentsPanel = ({ setList, email }) => {
                                     </Button>
                                 </TableCell>
                                 <TableCell>
-                                    <IconButton>
+                                    <IconButton onClick={() => handlePostComment(comments[item].tweetId)}>
                                         <FaRegCommentDots />
                                     </IconButton>
                                 </TableCell>

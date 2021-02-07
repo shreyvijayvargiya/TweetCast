@@ -6,7 +6,7 @@ import { AiOutlineRetweet, AiFillCloseCircle, AiOutlineDropbox } from 'react-ico
 import { getSingleTweetApi } from '../../packages/api/getSingleTweet';
 import { MdDelete } from 'react-icons/md';
 import {HiOutlinePencilAlt} from 'react-icons/hi';
-import { retweetApi } from '../../packages/api/retweetApi';
+import { retweetMethod } from '../../packages/api/retweetApi';
 import { useSelector } from 'react-redux';
 import Link from 'next/link';
 
@@ -18,7 +18,6 @@ const RetweetPanel = ({ email }) => {
     const [item, setItem] = React.useState(null);
     const [show, setShow] = React.useState(false);
     const [snackBarMessage, setSnackBarMesaage] = React.useState("");
-    const timelineData = useSelector(state => state.timelineData);
 
     const fetchScheduleCommentsTweetsFromFirebase = () => {
         let dbRef = app.database().ref("scheduledRetweets");
@@ -31,23 +30,14 @@ const RetweetPanel = ({ email }) => {
     
     const handleOpen = (id) => {
         setOpen(true);
-        const singleTweet = timelineData.filter(element => {
-            if(element.id === id) return element
+        getSingleTweetApi(id).then((data) => {
+            setItem(data.data)
+        }).catch(error => {
+            console.log(error);
+            setItem(null)
         });
-        setItem(singleTweet[0]);
-        // const data = getSingleTweetApi(id);
-        // data.then((response) => {
-        //     if(response){
-        //         const dataArray = response;
-        //         const singleTweet = dataArray.filter(item => { 
-        //             if(item.id === id) return item 
-        //         });
-        //         setItem(singleTweet[0]);
-        //     }else{
-        //         return null
-        //     }
-        // }).catch(error => console.log(error, 'error'));
     };
+
     const styles = useStyles();
 
     const handleDelete = (id) => {
@@ -56,8 +46,9 @@ const RetweetPanel = ({ email }) => {
     };
 
     const handleRetweetApi = (id) => {
+        console.log(id)
         setShow(true)
-        retweetApi(id);
+        retweetMethod(id)
         handleDelete(id);
         setOpen(false);
         setSnackBarMesaage("Retweeted successfullry");
@@ -106,7 +97,7 @@ const RetweetPanel = ({ email }) => {
                                     </Button>
                                 </TableCell>
                                 <TableCell>
-                                    <IconButton onClick={() => handleRetweetApi(item)}>
+                                    <IconButton onClick={() => handleRetweetApi(retweets[item].tweetId)}>
                                         <AiOutlineRetweet />
                                     </IconButton>
                                 </TableCell>

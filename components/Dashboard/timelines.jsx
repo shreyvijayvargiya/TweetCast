@@ -57,7 +57,7 @@ const Timelines = () => {
         setSnackBarMessage("Retweet scheduled successfully");
         setShow(true);
     };
-    const handleCommentOnTweet = (id) => {
+    const handleCommentOnTweet = (id)=> {
         let dbRef = app.database().ref("scheduledCommentsOnTweets");
         dbRef.push({
             tweetId: id,
@@ -96,6 +96,7 @@ const Timelines = () => {
             <div className={classes.timeline}>
                 {tweetTimelineData && tweetTimelineData.length > 0 ? tweetTimelineData.map(item => {
                     const urlLink = item.user.url;
+                    const id = item.id_str;
                     return (
                         <Paper key={item.id} elevation={2} className={classes.timelinePaper}>
                             <Grid container justify="flex-start">
@@ -141,22 +142,22 @@ const Timelines = () => {
                             })}
                             <Grid container>
                                 <Grid item md={2}>
-                                    <IconButton onClick={() => handleLikeTweet(item.id)}>
+                                    <IconButton onClick={() => handleLikeTweet(item.id_str)}>
                                         {item.favorited ? <AiFillHeart styel={{ color: 'pink' }} />:<AiOutlineHeart />}
                                     </IconButton>
                                 </Grid>
                                 <Grid item md={3}>
-                                    <IconButton onClick={() => toggleCommentSection(item.id)}>
+                                    <IconButton onClick={() => toggleCommentSection(id)}>
                                         <GoComment  />
                                     </IconButton>
                                 </Grid>
                                 <Grid item md={2}>
-                                    <IconButton onClick={() => handleReTweet(item.id)}>
+                                    <IconButton onClick={() => handleReTweet(id)}>
                                         <FaRetweet style={{ fill: item.retweeted ?  'green': 'black' }} />
                                     </IconButton>
                                 </Grid>
                             </Grid>
-                            {showComment && currentId === item.id && 
+                            {showComment && currentId === item.id_str && 
                                 <div style={{ width: '50%', margin: 'auto' }}>
                                     <TextField 
                                         name="comment"
@@ -170,7 +171,7 @@ const Timelines = () => {
                                     />
                                     <br />
                                     <br />
-                                    <Button style={{ textTransform: 'none' }} color="primary" disabled={comment !== null && comment.trim(" ") <= 0 ? true: false} variant="contained" fullWidth onClick={() => handleCommentOnTweet(item.id)}>
+                                    <Button style={{ textTransform: 'none' }} color="primary" disabled={comment !== null && comment.trim(" ") <= 0 ? true: false} variant="contained" fullWidth onClick={() => handleCommentOnTweet(id)}>
                                         Schedule Comment
                                     </Button>
                                     <br />

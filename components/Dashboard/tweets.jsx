@@ -38,14 +38,7 @@ const TweetsPanel = () => {
     const dispatch = useDispatch();
     
 
-    const setTimelineDataInStore = () => {
-        getTimeline().then((data) => {
-            dispatch(setTimelineInRedux(data));
-        }).catch((error) => {
-            console.log(error, 'error in fetching timeline data');
-            dispatch(setTimelineInRedux(null))
-        })
-    };
+    
     
     const classes = styles();
 
@@ -121,7 +114,6 @@ const TweetsPanel = () => {
     React.useEffect(() => {
         fetchTweets();
         fetchUserFromFirebase();
-        setTimelineDataInStore();
     }, [ ]);
 
     const handleUploadClick = (event) => {

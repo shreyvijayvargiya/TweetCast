@@ -8,12 +8,15 @@ import AdminPanel from './admin';
 import Timelines from './timelines';
 import TeamPanel from './team';
 import ScheduledTweetsActions from './ScheduledTweetsActions';
-
+import {getTimelineApi} from '../../packages/api/getTimelineApi';
+import {useDispatch} from 'react-redux';
+import {setTimelineInRedux} from '../../redux/action';
 
 const Dashboard = () => {
     
     const router = useRouter();
     const type = router.query.type;
+    const dispatch = useDispatch();
 
     const Panel = () => {
         if(type === 'admin') return <AdminPanel />
@@ -24,6 +27,17 @@ const Dashboard = () => {
         else return <AdminPanel />
     };
     const styles = useStyles(); 
+
+    const fetchTimlineAndStoreInRedux = () => {
+        getTimelineApi().then(data => {
+            dispatch(setTimelineInRedux(data.data.body.data));
+        }).catch(error => console.log(error, 'error'))
+    }
+
+    React.useEffect(() => {
+        fetchTimlineAndStoreInRedux();
+    }, []);
+
     return (
         <Grid container className={styles.root} spacing={2}>
             <Grid item md={2}>

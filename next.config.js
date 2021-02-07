@@ -8,17 +8,8 @@ module.exports = {
         GOOGLE_CLIENT_ID: "499314077621-n7klfql9rfd8ho7kl26bu6p1vf9fgg5h.apps.googleusercontent.com",
         consumerKey: "KFhRrUOgwJN6DZswK3JmLLAPh",
         consumerSecret: "vxYwy0hnrqmitB2ur48StbKYPTU5RbmQUshzSscU9ojotjcmjh",
-        acessToken: "2567443994-eRKcEIqibJFXXQa2PTkVJKC92beE7Fl3O4OmXBR",
-        tokenSecret: "N79T2Idnvsx80g5tFyQABGkmZUrK48oVuRy5f9T1rrfBx",
-        bearerToken: "AAAAAAAAAAAAAAAAAAAAAB5kMAEAAAAALMPBXcfwZjqQYcNDbFK5NDxk%2FFI%3DvgovVwNXms8Kfj77HAC48R43ZivV15OP88BUxR36R78BWyOTHJ"
+        acessToken: "2567443994-mgLJsYk2LH5MB0zIrV5KqIzuPoBcha76CpOCE8j",
+        tokenSecret: "ffY4pdaFzquwlpfX55NbCHjxtCmmvFFlzR2oAQ2q3ffc8",
+        bearerToken: "AAAAAAAAAAAAAAAAAAAAAB5kMAEAAAAAFk4%2BKwlL9ea%2BlZE5KSjOYpk9Vco%3DjjIP34iq41pL0Xno93YK9f9fgbCusFlP8IMrXF9pSxiFDwGOtl"
     },
-    webpack: (config, { isServer }) => {
-        // Fixes npm packages that depend on `fs` module
-        if (!isServer) {
-          config.node = {
-            fs: 'empty'
-          }
-        }
-        return config
-    }
 }

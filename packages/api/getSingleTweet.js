@@ -1,24 +1,23 @@
 import { headers } from './header';
 import axios from 'axios';
 
-export const getSingleTweetApi = async(id) => {
+export const getSingleTweetApi = (id) => {  
   var config = {
     method: 'get',
-    url: 'https://api.twitter.com/1.1/statuses/show.json?id=' + id,
-    headers: headers
+    url: `https://api.twitter.com/1.1/statuses/show.json?id=${id}`,
+    headers: { 
+      'Authorization': `Bearer ${process.env.bearerToken}`, 
+      'Cookie': 'personalization_id="v1_pwyPY+0T59dt6PGVVcsBcA=="; guest_id=v1%3A161073722487533724; lang=en'
+    }
   };
-  try {
-    const response = await axios.get(config.url, {headers: config.headers});
-    return response
-  }catch(err) {
-    console.log(err)
-    return err
-  }
+  
+  return axios(config);
+
 };
 
 export const getSingleTweet = (id) => {
   const dataUrl = 'https://api.twitter.com/1.1/statuses/show.json?id=' + id;
-  const url = '/api/getSingleTweet';
+  const url = 'http://localhost:3000/api/getSingleTweet';
   const body = {
     dataUrl:  dataUrl
   }

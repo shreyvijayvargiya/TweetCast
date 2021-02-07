@@ -8,30 +8,24 @@ const client = new Twitter({
 });
 
 module.exports = async(req, res) => {
-    let response = {
+    let responseObject = {
+        status: "",
+        message: "",
         data: [],
-        status: null,
-        message: null,
-        error: false
-    }
+    };
     try {
         const parsedBody = req.body;
         function clientCallback() {
             return new Promise((resolve, reject) => {
                 client.get(parsedBody.body.dataUrl, (error, data) => {
-                    if(error) {
-                        response.error= true;
-                        response.status = false;
-                        response.message = 'Error in fetching commented tweet, please try again';
-                    }
-                    response.status = true;
-                    response.data = data;            
+                    if(error) reject(error)
+                    resolve(data)       
                 });
             })
         };
         const res = await clientCallback();
-        console.log(res, 'res');
-        res.send(response);
+        responseObject.data = res;
+        res.json({body: responseObject });
     }catch(err) {
         res.send(err)
     }

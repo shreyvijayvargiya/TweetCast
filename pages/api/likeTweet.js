@@ -1,4 +1,4 @@
-module.exports = (req, res) => {
+module.exports = async(req, res) => {
 
     const Twitter = require('twitter');
 
@@ -8,9 +8,21 @@ module.exports = (req, res) => {
         access_token_key: process.env.acessToken,
         access_token_secret: process.env.tokenSecret
     });
-    const parsedBody = JSON.parse(req.body);
-    const tweetId = parsedBody.id;
-    var tweetId = parsedBody.id;
-    const response = client.post('favorites/create.json' + tweetId)
+    const id = JSON.parse(req.body);
+    
+    const url = `favorites/create.json`;
+    console.log(url, 'url');
+    const shootPromise = () => {
+        return new Promise((resolve, reject) => {
+            client.post(url, { id: id }, (error, data) => {
+                if(error) {
+                    console.log(error, 'error')
+                    reject(error)
+                }
+                resolve(data)
+            })
+        })
+    };
+    const response = await shootPromise();
     res.send(response);
 }

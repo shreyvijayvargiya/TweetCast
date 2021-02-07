@@ -1,13 +1,14 @@
 import React from 'react';
-import { Button, Typography, TableContainer, Table, TableRow, Avatar, TableCell, TableHead, TableBody, IconButton, Drawer, Grid, Link, Box } from '@material-ui/core';
+import { Button, Typography, TableContainer, Table, TableRow, Avatar, TableCell, TableHead, TableBody, IconButton, Drawer, Grid, Link, Box, Snackbar } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import app from '../../utils/firebase';
 import { AiTwotoneLike, AiFillCloseCircle, AiOutlineDropbox } from 'react-icons/ai';
-import { getSingleTweetApi } from '../../packages/api/getSingleTweet';
+import { getSingleTweetApi, getSingleTweet } from '../../packages/api/getSingleTweet';
 import { MdDelete } from 'react-icons/md';
 import {HiOutlinePencilAlt} from 'react-icons/hi';
-import { likeTweetApi } from '../../packages/api/likeTweetApi';
+import { likeTweetApi, likeTweetMethod } from '../../packages/api/likeTweetApi';
 import { useSelector } from 'react-redux';
+import MuiAlert from '@material-ui/lab/Alert';
 
 const LikedPanel = ({ email }) => {
 
@@ -15,34 +16,31 @@ const LikedPanel = ({ email }) => {
     const [likeTweet, setLikeTweet] = React.useState(null);
     const [open, setOpen] = React.useState(false);
     const timelineData = useSelector(state => state.timelineData);
+    const [show, setShow] = React.useState(false);
+    const [snackBarMessage, setSnackBarMessage] = React.useState("");
 
     const fetchScheduleLikeTweetsFromFirebase = () => {
         let dbRef = app.database().ref("scheduledLikedOnTweets");
         dbRef.on("value", snap => setLikes(snap.val()));
     };
     
+    function Alert(props) {
+        return <MuiAlert elevation={6} variant="filled" {...props} />;
+    };
+    
+
     React.useState(() => {
         fetchScheduleLikeTweetsFromFirebase();
     }, [ ]);
     
     const handleOpen = (id) => {
         setOpen(true);
-        // const data = getSingleTweetApi(id);
-        const singleTweet = timelineData.filter(element => {
-            if(element.id === id) return element
+        getSingleTweetApi(id).then((data) => {
+            setLikeTweet(data.data)
+        }).catch(error => {
+            console.log(error);
+            setLikeTweet(null)
         });
-        setLikeTweet(singleTweet[0]);
-        // data.then((response) => {
-        //     if(response){
-        //         const dataArray = response;
-        //         const singleTweet = dataArray.filter(item => { 
-        //             if(item.id === id) return item 
-        //         });
-        //         setLikeTweet(singleTweet[0]);
-        //     }else{
-        //         return null
-        //     }
-        // }).catch(error => console.log(error, 'error'));
     };
 
     const styles = useStyles();
@@ -52,13 +50,32 @@ const LikedPanel = ({ email }) => {
         dbRef.remove().then((data) => console.log(data, 'liked schedule removed'));
     };
 
-    const handleLikeTweet = id => {
-        likeTweetApi(id);
+    const handleLikeTweet = (id, tweetId) => {
+        likeTweetMethod(id).then((data) => {
+            setShow(true);
+            handleDelete(tweetId);
+            setSnackBarMessage("Tweet liked successfully")
+        }).catch((error) => {
+            console.log('error in liking tweeet', error);
+        });
     };
-
 
     return (
         <TableContainer>
+            <Snackbar
+                anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'center',
+                }}
+                severity="success"
+                open={show}
+                autoHideDuration={6000}
+                onClose={() => setShow(false)}
+                message={snackBarMessage}
+                
+            >
+                <Alert>{snackBarMessage}</Alert>
+            </Snackbar>
             <Table stickyHeader>
                 <TableHead>
                     <TableRow style={{ backgroundColor: '#EEEEEE', borderRadius: 8 }}>
@@ -94,7 +111,7 @@ const LikedPanel = ({ email }) => {
                                     </Button>
                                 </TableCell>
                                 <TableCell>
-                                    <IconButton onClick={() => handleLikeTweet(likes[item].tweetId)}>
+                                    <IconButton onClick={() => handleLikeTweet(likes[item].tweetId, item)}>
                                         <AiTwotoneLike />
                                     </IconButton>
                                 </TableCell>

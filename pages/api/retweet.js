@@ -1,4 +1,4 @@
-module.exports = (req, res) => {
+module.exports = async(req, res) => {
 
     const Twitter = require('twitter');
 
@@ -9,8 +9,21 @@ module.exports = (req, res) => {
         access_token_secret: process.env.tokenSecret
     });
     const parsedBody = JSON.parse(req.body);
+    const tweetId = parsedBody.id;
+    
+    const shootPromise = () => {
+        return new Promise((resolve, reject) => {
+            client.post('statuses/retweet' + tweetId, (error, tweets) => {
+                if(error) {
+                    console.log(error, 'error')
+                    reject(error)
+                }
+                resolve(tweets)
+            })
+        })
+    }
 
-    var tweetId = parsedBody.id;
-    const response = client.post('statuses/retweet/' + tweetId)
+    const response = await shootPromise();
+    console.log(response, 'response');
     res.send(response);
 }

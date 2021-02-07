@@ -16,20 +16,20 @@ module.exports = async (req, res) => {
             data: [],
         };
 
-        const cbFunction = (error, tweets) => {
+        const shootPromise = () => {
             return new Promise((resolve, reject) => {
-                resolve(tweets)
-                reject(error)
-        })};
+                client.get('statuses/home_timeline.json', (error, tweets, response) => {
+                    if(error) reject(error)
+                    resolve(tweets)
+                })
+            })
+        }
 
-        await client.get('statuses/home_timeline.json', cbFunction().then(tweets => {
-            console.log('promise')
-            responseObject.data = tweets;
-            responseObject.status = true;
-            responseObject.message = 'Tweet fetched successfully';
-        }));
-        console.log('response')
-        res.send(responseObject);
+        const response = await shootPromise();
+        responseObject.data = response;
+        res.json({
+            body: responseObject,
+        });
     }catch(e) {
         res.send(e);
     }
