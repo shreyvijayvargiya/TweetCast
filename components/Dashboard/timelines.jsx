@@ -1,76 +1,43 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Typography, Box, Paper, Avatar, Grid, IconButton, Button, TextField, CircularProgress } from '@material-ui/core';
-import Head from 'next/head';
-import { getTimelineApi, getTimeline } from '../../packages/api/getTimelineApi';
+import { Typography, Box, Paper, Avatar, Grid, IconButton, Button, TextField, CircularProgress, Snackbar } from '@material-ui/core';
+import MuiAlert from '@material-ui/lab/Alert';
+import { getTimeline } from '../../packages/api/getTimelineApi';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import { AiOutlineHeart } from 'react-icons/ai';
+import { AiOutlineHeart, AiFillHeart } from 'react-icons/ai';
 import { GoComment } from 'react-icons/go';
 import { FaRetweet } from 'react-icons/fa';
 import app from '../../utils/firebase';
-import { IoMdRefresh } from 'react-icons/io';
 import { AiOutlineDropbox } from 'react-icons/ai';
+import { setTimelineInRedux } from '../../redux/action';
+import { useSelector } from 'react-redux';
 
-function a11yProps(index) {
-    return {
-      id: `simple-tab-${index}`,
-      'aria-controls': `simple-tabpanel-${index}`,
-    };
-};
-
-function TabPanel(props) {
-    
-    
-    const { children, value, index, ...other } = props;
-    
-    return (
-      <div
-        role="tabpanel"
-        hidden={value !== index}
-        id={`simple-tabpanel-${index}`}
-        aria-labelledby={`simple-tab-${index}`}
-        {...other}
-      >
-        {value === index && (
-          <Box p={3}>
-            <Typography>{children}</Typography>
-          </Box>
-        )}
-      </div>
-    );
-};
 
 const Timelines = () => {
+
     const classes = styles();
     const [tweetTimelineData, setTweetTimelineData] = React.useState(null);
     const [comment, setComment] = React.useState(null);
     const [showComment, setShowComment] = React.useState(false);
     const [currentId, setCurrentId] = React.useState("");
-    const [value, setValue] = React.useState(0);
-    const [loader, setLoader] = React.useState(false);
-    const router = useRouter();
- 
+    const [show, setShow] = React.useState(false);
+    const [snackBarMessage, setSnackBarMessage] = React.useState("");
+
+    const timelineData =  useSelector(state=> state.timelineData);
+    
+    function Alert(props) {
+        return <MuiAlert elevation={6} variant="filled" {...props} />;
+    };
+
+
     const fetchTweetTimeline = () => {
-        const timeline = getTimeline();
-        if(timeline){
-            setTweetTimelineData(timeline)
-        }else {
-            setTweetTimelineData(null)
-        }
-        setTimeout(() => {
-            setLoader(false);
-        }, 2000)
+        setTweetTimelineData(timelineData);
     };
       
     React.useEffect(() => {
         fetchTweetTimeline();
-    }, [ loader ]);
-
-    const handleRefresh = () => {
-        setLoader(true);
-        fetchTweetTimeline();
-    };
+    });
 
     const handleLikeTweet = (id) => {
         let dbRef = app.database().ref("scheduledLikedOnTweets");
@@ -78,6 +45,8 @@ const Timelines = () => {
             tweetId: id,
             date: new Date(),
         });
+        setSnackBarMessage("Like scheduled successfully");
+        setShow(true);
     };
     const handleReTweet = (id) => {
         let dbRef = app.database().ref("scheduledRetweets");
@@ -85,6 +54,8 @@ const Timelines = () => {
             tweetId: id,
             date: new Date(),
         });
+        setSnackBarMessage("Retweet scheduled successfully");
+        setShow(true);
     };
     const handleCommentOnTweet = (id) => {
         let dbRef = app.database().ref("scheduledCommentsOnTweets");
@@ -94,7 +65,9 @@ const Timelines = () => {
             date: new Date(),
         });
         setComment("");
-        setShowComment(false)
+        setShowComment(false);
+        setSnackBarMessage("Comment scheduled successfully");
+        setShow(true);
     };
 
 
@@ -109,11 +82,22 @@ const Timelines = () => {
 
     return (
         <div className={classes.root}>
+            <Snackbar
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'center',
+                }}
+                open={show}
+                autoHideDuration={6000}
+                onClose={() => setShow(false)}
+            >
+                <Alert>{snackBarMessage}</Alert>
+            </Snackbar>
             <div className={classes.timeline}>
                 {tweetTimelineData && tweetTimelineData.length > 0 ? tweetTimelineData.map(item => {
                     const urlLink = item.user.url;
                     return (
-                        <Paper elevation={2} className={classes.timelinePaper}>
+                        <Paper key={item.id} elevation={2} className={classes.timelinePaper}>
                             <Grid container justify="flex-start">
                                 <Grid>
                                     <IconButton>
@@ -158,17 +142,17 @@ const Timelines = () => {
                             <Grid container>
                                 <Grid item md={2}>
                                     <IconButton onClick={() => handleLikeTweet(item.id)}>
-                                        <AiOutlineHeart />
+                                        {item.favorited ? <AiFillHeart styel={{ color: 'pink' }} />:<AiOutlineHeart />}
                                     </IconButton>
                                 </Grid>
                                 <Grid item md={3}>
                                     <IconButton onClick={() => toggleCommentSection(item.id)}>
-                                        <GoComment />
+                                        <GoComment  />
                                     </IconButton>
                                 </Grid>
                                 <Grid item md={2}>
                                     <IconButton onClick={() => handleReTweet(item.id)}>
-                                        <FaRetweet />
+                                        <FaRetweet style={{ fill: item.retweeted ?  'green': 'black' }} />
                                     </IconButton>
                                 </Grid>
                             </Grid>

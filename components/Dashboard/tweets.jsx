@@ -5,6 +5,9 @@ import app from '../../utils/firebase';
 import MuiAlert from '@material-ui/lab/Alert';
 import { AiFillCloseCircle } from 'react-icons/ai';
 import { FiCamera } from 'react-icons/fi';
+import {getTimeline} from '../../packages/api/getTimelineApi';
+import {useDispatch} from 'react-redux';
+import {setTimelineInRedux} from '../../redux/action';
 
 const TweetsPanel = () => {
 
@@ -19,10 +22,11 @@ const TweetsPanel = () => {
         storageImageUrl: null,
         
     });
+    
     function Alert(props) {
         return <MuiAlert elevation={6} variant="filled" {...props} />;
     }
-
+    
     const [tweets, setTweets] = React.useState(null);
     const [open, setOpen] = React.useState(false);
     const [checked, setChecked] = React.useState(false);
@@ -31,6 +35,17 @@ const TweetsPanel = () => {
     const [user, setUser] = React.useState(null);
     const [show, setShow] = React.useState(false);
     const [snackBarMessage, setSnackBarMessage] = React.useState("");
+    const dispatch = useDispatch();
+    
+
+    const setTimelineDataInStore = () => {
+        getTimeline().then((data) => {
+            dispatch(setTimelineInRedux(data));
+        }).catch((error) => {
+            console.log(error, 'error in fetching timeline data');
+            dispatch(setTimelineInRedux(null))
+        })
+    };
     
     const classes = styles();
 
@@ -106,7 +121,7 @@ const TweetsPanel = () => {
     React.useEffect(() => {
         fetchTweets();
         fetchUserFromFirebase();
-
+        setTimelineDataInStore();
     }, [ ]);
 
     const handleUploadClick = (event) => {

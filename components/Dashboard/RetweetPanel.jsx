@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Typography, TableContainer, Table, TableRow, TableCell, TableHead, TableBody, Drawer, IconButton, Grid, Snackbar } from '@material-ui/core';
+import { Button, Typography, TableContainer, Table, TableRow, TableCell, TableHead, TableBody, Drawer, IconButton, Grid, Snackbar, Avatar } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import app from '../../utils/firebase';
 import { AiOutlineRetweet, AiFillCloseCircle, AiOutlineDropbox } from 'react-icons/ai';
@@ -7,6 +7,8 @@ import { getSingleTweetApi } from '../../packages/api/getSingleTweet';
 import { MdDelete } from 'react-icons/md';
 import {HiOutlinePencilAlt} from 'react-icons/hi';
 import { retweetApi } from '../../packages/api/retweetApi';
+import { useSelector } from 'react-redux';
+import Link from 'next/link';
 
 
 const RetweetPanel = ({ email }) => {
@@ -16,6 +18,7 @@ const RetweetPanel = ({ email }) => {
     const [item, setItem] = React.useState(null);
     const [show, setShow] = React.useState(false);
     const [snackBarMessage, setSnackBarMesaage] = React.useState("");
+    const timelineData = useSelector(state => state.timelineData);
 
     const fetchScheduleCommentsTweetsFromFirebase = () => {
         let dbRef = app.database().ref("scheduledRetweets");
@@ -28,18 +31,22 @@ const RetweetPanel = ({ email }) => {
     
     const handleOpen = (id) => {
         setOpen(true);
-        const data = getSingleTweetApi(id);
-        data.then((response) => {
-            if(response){
-                const dataArray = response;
-                const singleTweet = dataArray.filter(item => { 
-                    if(item.id === id) return item 
-                });
-                setItem(singleTweet[0]);
-            }else{
-                return null
-            }
-        }).catch(error => console.log(error, 'error'));
+        const singleTweet = timelineData.filter(element => {
+            if(element.id === id) return element
+        });
+        setItem(singleTweet[0]);
+        // const data = getSingleTweetApi(id);
+        // data.then((response) => {
+        //     if(response){
+        //         const dataArray = response;
+        //         const singleTweet = dataArray.filter(item => { 
+        //             if(item.id === id) return item 
+        //         });
+        //         setItem(singleTweet[0]);
+        //     }else{
+        //         return null
+        //     }
+        // }).catch(error => console.log(error, 'error'));
     };
     const styles = useStyles();
 
@@ -86,7 +93,7 @@ const RetweetPanel = ({ email }) => {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {retweets && retweets.length > 0 ? Object.keys(retweets).map(item => {
+                    {retweets && Object.keys(retweets).length > 0 ? Object.keys(retweets).map(item => {
                         return (
                             <TableRow key={item}>
                                 <TableCell>{email}</TableCell>

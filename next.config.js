@@ -10,7 +10,7 @@ module.exports = {
         consumerSecret: "vxYwy0hnrqmitB2ur48StbKYPTU5RbmQUshzSscU9ojotjcmjh",
         acessToken: "2567443994-eRKcEIqibJFXXQa2PTkVJKC92beE7Fl3O4OmXBR",
         tokenSecret: "N79T2Idnvsx80g5tFyQABGkmZUrK48oVuRy5f9T1rrfBx",
-        bearerToken: "AAAAAAAAAAAAAAAAAAAAAB5kMAEAAAAApV5aHufg6LWzJ2xotnsiKZO1ZVk%3DXSDfLdcSjMtEk1PtjPjA36eWJgLibw4DT8RzIKTKz1sXUht99i"
+        bearerToken: "AAAAAAAAAAAAAAAAAAAAAB5kMAEAAAAALMPBXcfwZjqQYcNDbFK5NDxk%2FFI%3DvgovVwNXms8Kfj77HAC48R43ZivV15OP88BUxR36R78BWyOTHJ"
     },
     webpack: (config, { isServer }) => {
         // Fixes npm packages that depend on `fs` module

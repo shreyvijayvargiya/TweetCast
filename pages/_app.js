@@ -16,6 +16,7 @@ import storage from 'redux-persist/lib/storage'
 import { PersistGate } from 'redux-persist/integration/react'
 import { useRouter } from 'next/router';
 
+
 function MyApp({ Component, pageProps }) {
 
   const router = useRouter();
@@ -33,7 +34,7 @@ function MyApp({ Component, pageProps }) {
       }
     const persistedReducer = persistReducer(persistConfig, userReducer)
     const store = createStore(persistedReducer, applyMiddleware(thunk));
-    const persistor = persistStore(store)
+    const persistor = persistStore(store);
 
     return (
         <Provider store={store}>

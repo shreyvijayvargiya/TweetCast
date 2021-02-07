@@ -19,11 +19,9 @@ export const getTimeline = () => {
     }
   };
   
-  axios(config).then(function (response) {
+  return axios(config).then(function (response) {
     if(response){
       return response.data
-    }else {
-      return null
     }
   })
   .catch(function (error) {

@@ -1,8 +1,9 @@
-import { SET_USER, REMOVE_USER } from './constants';
+import { SET_USER, REMOVE_USER, SET_TIMELINE_DATA } from './constants';
 
 const initialState = {
     email: "",
-    userId: ""
+    userId: "",
+    timelineData: []
 }
 export const userReducer = (state = initialState, action) => {
     switch(action.type){
@@ -15,6 +16,11 @@ export const userReducer = (state = initialState, action) => {
         case REMOVE_USER: {
             return {
                 ...state, email: "", userId: ""
+            }
+        }
+        case SET_TIMELINE_DATA: {
+            return {
+                ...state, timelineData: action.payload
             }
         }
         default:

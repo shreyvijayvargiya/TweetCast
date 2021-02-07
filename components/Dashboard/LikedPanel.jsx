@@ -7,13 +7,14 @@ import { getSingleTweetApi } from '../../packages/api/getSingleTweet';
 import { MdDelete } from 'react-icons/md';
 import {HiOutlinePencilAlt} from 'react-icons/hi';
 import { likeTweetApi } from '../../packages/api/likeTweetApi';
+import { useSelector } from 'react-redux';
 
 const LikedPanel = ({ email }) => {
 
     const [likes, setLikes] = React.useState(null);
     const [likeTweet, setLikeTweet] = React.useState(null);
     const [open, setOpen] = React.useState(false);
-    const [item, setItem] = React.useState(null);
+    const timelineData = useSelector(state => state.timelineData);
 
     const fetchScheduleLikeTweetsFromFirebase = () => {
         let dbRef = app.database().ref("scheduledLikedOnTweets");
@@ -26,18 +27,22 @@ const LikedPanel = ({ email }) => {
     
     const handleOpen = (id) => {
         setOpen(true);
-        const data = getSingleTweetApi(id);
-        data.then((response) => {
-            if(response){
-                const dataArray = response;
-                const singleTweet = dataArray.filter(item => { 
-                    if(item.id === id) return item 
-                });
-                setLikeTweet(singleTweet[0]);
-            }else{
-                return null
-            }
-        }).catch(error => console.log(error, 'error'));
+        // const data = getSingleTweetApi(id);
+        const singleTweet = timelineData.filter(element => {
+            if(element.id === id) return element
+        });
+        setLikeTweet(singleTweet[0]);
+        // data.then((response) => {
+        //     if(response){
+        //         const dataArray = response;
+        //         const singleTweet = dataArray.filter(item => { 
+        //             if(item.id === id) return item 
+        //         });
+        //         setLikeTweet(singleTweet[0]);
+        //     }else{
+        //         return null
+        //     }
+        // }).catch(error => console.log(error, 'error'));
     };
 
     const styles = useStyles();
@@ -50,6 +55,7 @@ const LikedPanel = ({ email }) => {
     const handleLikeTweet = id => {
         likeTweetApi(id);
     };
+
 
     return (
         <TableContainer>
@@ -71,7 +77,7 @@ const LikedPanel = ({ email }) => {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {likes && likes.length > 0 ?  Object.keys(likes).map(item => {
+                    {likes && Object.keys(likes).length > 0 ?  Object.keys(likes).map(item => {
                         return (
                             <TableRow key={item}>
                                 <TableCell>{email}</TableCell>
@@ -99,13 +105,15 @@ const LikedPanel = ({ email }) => {
                                 </TableCell>
                             </TableRow>
                         )
-                    }):
-                    <div>
-                        <AiOutlineDropbox style={{ fontSize: 30 }} />
-                        <br />
-                        <Typography color="primary" variant="caption">No Likes Found</Typography>
-                    </div>
-
+                    })
+                    :
+                    <TableRow>
+                        <TableCell>
+                            <AiOutlineDropbox style={{ fontSize: 30 }} />
+                            <br />
+                            <Typography color="primary" variant="caption">No Likes Found</Typography>
+                        </TableCell>
+                    </TableRow>
                 }  
                 </TableBody>
             </Table>

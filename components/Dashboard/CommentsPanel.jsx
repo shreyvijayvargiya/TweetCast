@@ -1,12 +1,14 @@
 import React from 'react';
-import { Button, Typography, TableContainer, Table, TableRow, Drawer, TableCell, TableHead, TableBody, IconButton, Grid, TextField } from '@material-ui/core';
+import { Button, Typography, TableContainer, Table, TableRow, Drawer, TableCell, TableHead, TableBody, IconButton, Grid, TextField, Avatar } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import app from '../../utils/firebase';
-import { getSingleTweetApi } from '../../packages/api/getSingleTweet';
+import { getSingleTweetApi, getSingleTweet } from '../../packages/api/getSingleTweet';
 import { FaRegCommentDots } from 'react-icons/fa';
 import { MdDelete } from 'react-icons/md';
 import {HiOutlinePencilAlt} from 'react-icons/hi';
 import { AiFillCloseCircle, AiOutlineDropbox } from 'react-icons/ai';
+import {useSelector} from 'react-redux';
+import Link from 'next/link';
 
 const CommentsPanel = ({ setList, email }) => {
     
@@ -14,6 +16,7 @@ const CommentsPanel = ({ setList, email }) => {
     const [open, setOpen] = React.useState(false);
     const [item, setItem] = React.useState(null);
     const [comment, setComment] = React.useState(null);
+    const timelineData = useSelector(state => state.timelineData);
 
     const fetchScheduleCommentsTweetsFromFirebase = () => {
         let dbRef = app.database().ref("scheduledCommentsOnTweets");
@@ -26,18 +29,19 @@ const CommentsPanel = ({ setList, email }) => {
     
     const handleOpen = (id, commentId) => {
         setOpen(true);
-        const data = getSingleTweetApi(id);
-        data.then((response) => {
-            if(response){
-                const dataArray = response;
-                const singleTweet = dataArray.filter(item => { 
-                    if(item.id === id) return item 
-                });
-                console.log(singleTweet[0]);
-                setItem(singleTweet[0]);
-                return null
-            }
-        }).catch(error => console.log(error, 'error'));
+        // getSingleTweet(id);
+        const singleTweet = timelineData.filter(element => {
+            if(element.id === id) return element
+        });
+        // console.log(singleTweet[0], 'singletweet');
+        setItem(singleTweet[0]);
+        // getSingleTweetApi(id);
+        // getSingleTweetApi(id).then((response) => {
+        //     if(response){
+        //         console.log(response, 'response');
+        //         return null
+        //     }
+        // }).catch(error => console.log(error, 'error'));
         let dbRef = app.database().ref("scheduledCommentsOnTweets/" +  commentId);
         dbRef.on("value",snap => {
             setComment(snap.val().comment);
@@ -82,7 +86,7 @@ const CommentsPanel = ({ setList, email }) => {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {comments && comments.length > 0 ? Object.keys(comments).map(item => {
+                    {comments && Object.keys(comments).length > 0 ? Object.keys(comments).map(item => {
                         return (
                             <TableRow key={item}>
                                 <TableCell>{email}</TableCell>
