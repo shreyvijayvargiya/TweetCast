@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Typography, TableContainer, Table, TableRow, Drawer, TableCell, TableHead, TableBody, IconButton, Grid, TextField, Avatar } from '@material-ui/core';
+import { Button, Typography, TableContainer, Table, TableRow, Drawer, TableCell, TableHead, TableBody, IconButton, Grid, TextField, Avatar, Snackbar, Box } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import app from '../../utils/firebase';
 import { getSingleTweetApi, getSingleTweet } from '../../packages/api/getSingleTweet';
@@ -9,6 +9,8 @@ import {HiOutlinePencilAlt} from 'react-icons/hi';
 import { AiFillCloseCircle, AiOutlineDropbox } from 'react-icons/ai';
 import {useSelector} from 'react-redux';
 import Link from 'next/link';
+import MuiAlert from '@material-ui/lab/Alert';
+import {postCommentMethod} from '../../packages/api/commentApi';
 
 const CommentsPanel = ({ setList, email }) => {
     
@@ -17,10 +19,16 @@ const CommentsPanel = ({ setList, email }) => {
     const [item, setItem] = React.useState(null);
     const [comment, setComment] = React.useState(null);
     const timelineData = useSelector(state => state.timelineData);
-
+    const [show, setShow] = React.useState(false);
+    const [snackBarMessage, setSnackBarMessage] = React.useState("");
+    
     const fetchScheduleCommentsTweetsFromFirebase = () => {
         let dbRef = app.database().ref("scheduledCommentsOnTweets");
         dbRef.on("value", snap => setComments(snap.val()));
+    };
+    
+    function Alert(props) {
+        return <MuiAlert elevation={6} variant="filled" {...props} />;
     };
     
     React.useState(() => {
@@ -77,12 +85,34 @@ const CommentsPanel = ({ setList, email }) => {
         });
     };
 
-    const handlePostComment = () => {
-
-    };
+    const handlePostComment = (id, tweetId) => {
+        const message = comments[tweetId].comment;
+        const username = comments[tweetId].username;
+        const in_reply_to_status_id = comments[tweetId].in_reply_to_status_id;
+        postCommentMethod(id, message, username,in_reply_to_status_id ).then((response) => console.log(response, 'response'))
+        .catch((error) => console.log('error', error));
+        setShow(true);
+        handleDelete(tweetId);
+        setSnackBarMessage("Comment successfully");
+    }
+    
     
     return (
         <TableContainer>
+             <Snackbar
+                anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'center',
+                }}
+                severity="success"
+                open={show}
+                autoHideDuration={6000}
+                onClose={() => setShow(false)}
+                message={snackBarMessage}
+                
+            >
+                <Alert>{snackBarMessage}</Alert>
+            </Snackbar>
             <Table>
                 <TableHead>
                     <TableRow style={{ backgroundColor: 'rgba(134, 134, 134, 0.13)' }}>
@@ -115,7 +145,7 @@ const CommentsPanel = ({ setList, email }) => {
                                     </Button>
                                 </TableCell>
                                 <TableCell>
-                                    <IconButton onClick={() => handlePostComment(comments[item].tweetId)}>
+                                    <IconButton onClick={() => handlePostComment(comments[item].tweetId, item)}>
                                         <FaRegCommentDots />
                                     </IconButton>
                                 </TableCell>
@@ -132,7 +162,7 @@ const CommentsPanel = ({ setList, email }) => {
                         <TableCell>
                             <AiOutlineDropbox style={{ fontSize: 30 }} />
                             <br />
-                            <Typography color="primary" variant="caption">No Likes Found</Typography>
+                            <Typography color="primary" variant="caption">No Comments Found</Typography>
                         </TableCell>
                     </TableRow>
                     }

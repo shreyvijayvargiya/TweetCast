@@ -9,7 +9,7 @@ import {HiOutlinePencilAlt} from 'react-icons/hi';
 import { retweetMethod } from '../../packages/api/retweetApi';
 import { useSelector } from 'react-redux';
 import Link from 'next/link';
-
+import MuiAlert from '@material-ui/lab/Alert';
 
 const RetweetPanel = ({ email }) => {
 
@@ -28,6 +28,11 @@ const RetweetPanel = ({ email }) => {
         fetchScheduleCommentsTweetsFromFirebase();
     }, [ ]);
     
+    function Alert(props) {
+        return <MuiAlert elevation={6} variant="filled" {...props} />;
+    };
+    
+    
     const handleOpen = (id) => {
         setOpen(true);
         getSingleTweetApi(id).then((data) => {
@@ -45,14 +50,19 @@ const RetweetPanel = ({ email }) => {
         dbRef.remove().then((data) => console.log(data, 'retweet scheduled removed'));
     };
 
-    const handleRetweetApi = (id) => {
-        console.log(id)
+    const handleRetweetApi = (id, tweetId) => {
         setShow(true)
-        retweetMethod(id)
-        handleDelete(id);
-        setOpen(false);
-        setSnackBarMesaage("Retweeted successfullry");
-    }
+        retweetMethod(id).then((data) => { 
+            console.log(data, 'data')
+            setOpen(false);
+            setSnackBarMesaage("Retweeted successfully");
+            handleDelete(tweetId);
+        }).catch((error) => {
+            setSnackBarMesaage("Retweeted successfullry");
+            console.log(error, 'error in retweeting');
+        });
+    };
+
     return (
         <TableContainer>
             <Snackbar
@@ -60,12 +70,15 @@ const RetweetPanel = ({ email }) => {
                 vertical: 'bottom',
                 horizontal: 'center',
                 }}
+                severity="success"
                 open={show}
                 autoHideDuration={6000}
                 onClose={() => setShow(false)}
                 message={snackBarMessage}
                 
-            />
+            >
+                <Alert>{snackBarMessage}</Alert>
+            </Snackbar>
             <Table>
                 <TableHead>
                     <TableRow style={{ backgroundColor: 'rgba(134, 134, 134, 0.13)' }}>
@@ -97,7 +110,7 @@ const RetweetPanel = ({ email }) => {
                                     </Button>
                                 </TableCell>
                                 <TableCell>
-                                    <IconButton onClick={() => handleRetweetApi(retweets[item].tweetId)}>
+                                    <IconButton onClick={() => handleRetweetApi(retweets[item].tweetId, item)}>
                                         <AiOutlineRetweet />
                                     </IconButton>
                                 </TableCell>

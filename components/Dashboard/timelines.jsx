@@ -57,12 +57,15 @@ const Timelines = () => {
         setSnackBarMessage("Retweet scheduled successfully");
         setShow(true);
     };
-    const handleCommentOnTweet = (id)=> {
+    const handleCommentOnTweet = (id, username, in_reply_to_status_id)=> {
+        console.log(in_reply_to_status_id);
         let dbRef = app.database().ref("scheduledCommentsOnTweets");
         dbRef.push({
             tweetId: id,
             comment: comment,
             date: new Date(),
+            username: username,
+            in_reply_to_status_id: in_reply_to_status_id
         });
         setComment("");
         setShowComment(false);
@@ -97,8 +100,9 @@ const Timelines = () => {
                 {tweetTimelineData && tweetTimelineData.length > 0 ? tweetTimelineData.map(item => {
                     const urlLink = item.user.url;
                     const id = item.id_str;
+                    const in_reply_to_status_id = item.in_reply_to_status_id;
                     return (
-                        <Paper key={item.id} elevation={2} className={classes.timelinePaper}>
+                        <Paper key={item.id_str} elevation={2} className={classes.timelinePaper}>
                             <Grid container justify="flex-start">
                                 <Grid>
                                     <IconButton>
@@ -143,7 +147,7 @@ const Timelines = () => {
                             <Grid container>
                                 <Grid item md={2}>
                                     <IconButton onClick={() => handleLikeTweet(item.id_str)}>
-                                        {item.favorited ? <AiFillHeart styel={{ color: 'pink' }} />:<AiOutlineHeart />}
+                                        {item.favorited ? <AiFillHeart style={{ fill: 'rgb(224, 36, 94)' }} />:<AiOutlineHeart />}
                                     </IconButton>
                                 </Grid>
                                 <Grid item md={3}>
@@ -153,7 +157,7 @@ const Timelines = () => {
                                 </Grid>
                                 <Grid item md={2}>
                                     <IconButton onClick={() => handleReTweet(id)}>
-                                        <FaRetweet style={{ fill: item.retweeted ?  'green': 'black' }} />
+                                        <FaRetweet style={{ color: item.retweeted ?  'green': 'black' }} />
                                     </IconButton>
                                 </Grid>
                             </Grid>
@@ -171,7 +175,7 @@ const Timelines = () => {
                                     />
                                     <br />
                                     <br />
-                                    <Button style={{ textTransform: 'none' }} color="primary" disabled={comment !== null && comment.trim(" ") <= 0 ? true: false} variant="contained" fullWidth onClick={() => handleCommentOnTweet(id)}>
+                                    <Button style={{ textTransform: 'none' }} color="primary" disabled={comment !== null && comment.trim(" ") <= 0 ? true: false} variant="contained" fullWidth onClick={() => handleCommentOnTweet(id, item.user.name, in_reply_to_status_id)}>
                                         Schedule Comment
                                     </Button>
                                     <br />

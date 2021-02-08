@@ -11,7 +11,6 @@ module.exports = async(req, res) => {
     const id = JSON.parse(req.body);
     
     const url = `favorites/create.json`;
-    console.log(url, 'url');
     const shootPromise = () => {
         return new Promise((resolve, reject) => {
             client.post(url, { id: id }, (error, data) => {
