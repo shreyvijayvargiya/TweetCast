@@ -10,6 +10,7 @@ import { RiLogoutCircleRLine } from 'react-icons/ri';
 import { removeCookie } from '../../utils/cookie';
 import app from '../../utils/firebase';
 
+
 const Sidebar = () => {
     
     const classes = style();
@@ -23,7 +24,8 @@ const Sidebar = () => {
         removeCookie('uid');
         app.auth().signOut();
         router.push('/login')
-      };
+    };
+
     return (
         <div className={classes.root}>
             <br />

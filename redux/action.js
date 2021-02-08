@@ -1,4 +1,4 @@
-import { SET_USER, REMOVE_USER, SET_TIMELINE_DATA } from './constants';
+import { SET_USER, REMOVE_USER, SET_TIMELINE_DATA, SET_USERS, SET_ACCESS_DATA } from './constants';
 
 export const setUserInStore = (userData) => {
     return async dispatch => {
@@ -17,4 +17,15 @@ export const setTimelineInRedux = ( timelineData ) => {
     };
 };
 
+
+export const setUsersInStore = (users) => {
+    return async dispatch => {
+        dispatch({ type: SET_USERS, payload: users })
+    }
+};
+export const setAccessDataStore = (accessData) => {
+    return async dispatch => {
+        dispatch({ type: SET_ACCESS_DATA, payload: accessData })
+    }
+}
 

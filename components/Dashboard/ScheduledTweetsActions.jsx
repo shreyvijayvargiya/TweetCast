@@ -1,55 +1,20 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Typography, Button, Snackbar, Paper, TextField, Switch, AppBar, Box, Grid } from '@material-ui/core';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
+import { Typography, Button, AppBar, Box, Grid } from '@material-ui/core';
 import app from '../../utils/firebase';
 import LikedPanel from './LikedPanel';
 import CommentsPanel from './CommentsPanel';
 import RetweetPanel from './RetweetPanel';  
 import TweetsPanel from './ScheduleTweets';
 
-function TabPanel(props) {
-    const { children, value, index, ...other } = props;
-  
-    return (
-      <div
-        role="tabpanel"
-        hidden={value !== index}
-        id={`simple-tabpanel-${index}`}
-        aria-labelledby={`simple-tab-${index}`}
-        {...other}
-      >
-        {value === index && (
-          <Box p={3}>
-            <Typography>{children}</Typography>
-          </Box>
-        )}
-      </div>
-    );
-};
-
 
 const ScheduledTweetsActions = () => {
     const classes = styles();
     const [email, setEmail] = React.useState("");
-    const [likedScheduleTweets, setLikedScheduleTweets] = React.useState(null);
-    const [disabled, setDisabled] = React.useState(false);
-    const [message, setMessage] = React.useState(null);
     const [user, setUser] = React.useState({
         email: "",
         id: ""
     });
-
-    const [list, setList] = React.useState({
-        liked: null,
-        comments: null,
-        retweets: null
-    })
 
     const fetchUserFromFirebaseApi = () => {
         app.auth().onAuthStateChanged(user => {
@@ -67,10 +32,6 @@ const ScheduledTweetsActions = () => {
     }, [ ]);
 
     const [value, setValue] = React.useState(0);
-
-    const handleTabChange = (event, newValue) => {
-      setValue(newValue);
-    };
 
     const renderActiveTab = () => {
         if(value === 0) return <TweetsPanel email={user.email} />

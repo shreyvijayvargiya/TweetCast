@@ -142,7 +142,7 @@ const TweetsPanel = () => {
             >
                 <Alert>{snackBarMessage}</Alert>
             </Snackbar>
-             <Paper elevation={1} style={{ padding: '10px', borderRadius: 8, backgroundColor: 'rgba(134, 134, 134, 0.13)',  boxShadow: '8px 8px 8px rgba(0, 0, 0, 0.25)' }}>
+             <Paper elevation={1} style={{ padding: '10px', borderRadius: 8, backgroundColor: 'white',  boxShadow: '4px 4px 4px rgba(0, 0, 0, 0.25)', border: '1px solid rgba(0, 0, 0, 0.25)' }}>
                 <Typography variant="h6">Create Tweets</Typography>
                 <br />
                 <Grid container spacing={2}>
@@ -160,19 +160,6 @@ const TweetsPanel = () => {
                             onChange={handleChange}
                         />
                     </Grid>
-                    {/* <Grid item md={3}>
-                        <TextField id="component-simple" 
-                            placeholder="Select Date " 
-                            size="medium"  
-                            color="primary" 
-                            type="email"
-                            type="date"
-                            variant="outlined" 
-                            name="createdAt"
-                            value={message.createdAt}
-                            onChange={handleChange}
-                        />
-                    </Grid> */}
                 </Grid>
                 <Grid container>
                     {message.fileData  !== null ?

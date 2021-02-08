@@ -18,7 +18,8 @@ const RetweetPanel = ({ email }) => {
     const [item, setItem] = React.useState(null);
     const [show, setShow] = React.useState(false);
     const [snackBarMessage, setSnackBarMesaage] = React.useState("");
-
+    const accessData = useSelector(state => state.accessData);
+    
     const fetchScheduleCommentsTweetsFromFirebase = () => {
         let dbRef = app.database().ref("scheduledRetweets");
         dbRef.on("value", snap => setRetweets(snap.val()));
@@ -110,7 +111,7 @@ const RetweetPanel = ({ email }) => {
                                     </Button>
                                 </TableCell>
                                 <TableCell>
-                                    <IconButton onClick={() => handleRetweetApi(retweets[item].tweetId, item)}>
+                                    <IconButton disabled={accessData.dashboardAccess ? false: true} onClick={() => handleRetweetApi(retweets[item].tweetId, item)}>
                                         <AiOutlineRetweet />
                                     </IconButton>
                                 </TableCell>

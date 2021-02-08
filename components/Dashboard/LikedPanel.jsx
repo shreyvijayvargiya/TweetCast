@@ -16,6 +16,8 @@ const LikedPanel = ({ email }) => {
     const [likeTweet, setLikeTweet] = React.useState(null);
     const [open, setOpen] = React.useState(false);
     const timelineData = useSelector(state => state.timelineData);
+    const accessData = useSelector(state=> state.accessData);
+
     const [show, setShow] = React.useState(false);
     const [snackBarMessage, setSnackBarMessage] = React.useState("");
 
@@ -112,7 +114,7 @@ const LikedPanel = ({ email }) => {
                                     </Button>
                                 </TableCell>
                                 <TableCell>
-                                    <IconButton onClick={() => handleLikeTweet(likes[item].tweetId, item)}>
+                                    <IconButton disabled={accessData.dashboardAccess ? false: true} onClick={() => handleLikeTweet(likes[item].tweetId, item)}>
                                         <AiTwotoneLike />
                                     </IconButton>
                                 </TableCell>

@@ -19,6 +19,8 @@ const CommentsPanel = ({ setList, email }) => {
     const [item, setItem] = React.useState(null);
     const [comment, setComment] = React.useState(null);
     const timelineData = useSelector(state => state.timelineData);
+    const accessData = useSelector(state => state.accessData);
+
     const [show, setShow] = React.useState(false);
     const [snackBarMessage, setSnackBarMessage] = React.useState("");
     
@@ -145,7 +147,7 @@ const CommentsPanel = ({ setList, email }) => {
                                     </Button>
                                 </TableCell>
                                 <TableCell>
-                                    <IconButton onClick={() => handlePostComment(comments[item].tweetId, item)}>
+                                    <IconButton disabled={accessData.dashboardAccess ? false: true} onClick={() => handlePostComment(comments[item].tweetId, item)}>
                                         <FaRegCommentDots />
                                     </IconButton>
                                 </TableCell>

@@ -8,15 +8,32 @@ import AdminPanel from './admin';
 import Timelines from './timelines';
 import TeamPanel from './team';
 import ScheduledTweetsActions from './ScheduledTweetsActions';
-import {getTimelineApi} from '../../packages/api/getTimelineApi';
-import {useDispatch} from 'react-redux';
-import {setTimelineInRedux} from '../../redux/action';
+import { getTimelineApi } from '../../packages/api/getTimelineApi';
+import { useDispatch, useSelector } from 'react-redux';
+import { setTimelineInRedux, setAccessDataStore, setUsersInStore } from '../../redux/action';
+import app from '../../utils/firebase';
 
 const Dashboard = () => {
     
     const router = useRouter();
     const type = router.query.type;
     const dispatch = useDispatch();
+    const userData = useSelector(state => state);
+
+    const currentUserEmail = useSelector(state => state.email); 
+    
+    const fetchUsers = () => {
+        let dbRef = app.database().ref("users");
+        dbRef.on("value", snap => {
+            const users = snap.val();
+            const data = Object.keys(users).filter(item => {
+                if(users[item].email === currentUserEmail) return item
+            });
+            dispatch(setAccessDataStore(users[data[0]]));
+        });
+    };
+
+    
 
     const Panel = () => {
         if(type === 'admin') return <AdminPanel />
@@ -26,16 +43,20 @@ const Dashboard = () => {
         else if(type === 'scheduledTweetsActions') return <ScheduledTweetsActions />
         else return <AdminPanel />
     };
+
     const styles = useStyles(); 
 
     const fetchTimlineAndStoreInRedux = () => {
         getTimelineApi().then(data => {
             dispatch(setTimelineInRedux(data.data.body.data));
         }).catch(error => console.log(error, 'error'))
-    }
+    };
+
+
 
     React.useEffect(() => {
         fetchTimlineAndStoreInRedux();
+        fetchUsers();
     }, []);
 
     return (
