@@ -10,6 +10,8 @@ module.exports = {
         consumerSecret: "vxYwy0hnrqmitB2ur48StbKYPTU5RbmQUshzSscU9ojotjcmjh",
         acessToken: "2567443994-mgLJsYk2LH5MB0zIrV5KqIzuPoBcha76CpOCE8j",
         tokenSecret: "ffY4pdaFzquwlpfX55NbCHjxtCmmvFFlzR2oAQ2q3ffc8",
-        bearerToken: "AAAAAAAAAAAAAAAAAAAAAB5kMAEAAAAAFk4%2BKwlL9ea%2BlZE5KSjOYpk9Vco%3DjjIP34iq41pL0Xno93YK9f9fgbCusFlP8IMrXF9pSxiFDwGOtl"
+        bearerToken: "AAAAAAAAAAAAAAAAAAAAAB5kMAEAAAAAFk4%2BKwlL9ea%2BlZE5KSjOYpk9Vco%3DjjIP34iq41pL0Xno93YK9f9fgbCusFlP8IMrXF9pSxiFDwGOtl",
+        prodDomain: 'https://tweet-cast.vercel.app',
+        devDomain: 'http://localhost:3000/'
     },
 }

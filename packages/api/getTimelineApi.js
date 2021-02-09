@@ -4,7 +4,7 @@ import axios from 'axios';
 export const getTimelineApi = () => {
   var config = {
     method: 'get',
-    url: 'http://localhost:3000/api/getTimeline',
+    url: `api/getTimeline`,
     headers: { }
   };
 
