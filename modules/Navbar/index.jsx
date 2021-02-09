@@ -34,7 +34,7 @@ export default function Navbar() {
             >
               login
           </Button>}
-          {!token &&
+          {/* {!token &&
             <Button 
               variant={router.pathname === '/signup' ? "contained": "text"} 
               className={classes.menuButton} 
@@ -44,7 +44,7 @@ export default function Navbar() {
             >
               Signup
             </Button>
-          }
+          } */}
           {token && <Button 
             variant={router.pathname === '/dashboard' ? "contained": "text"} 
             className={classes.menuButton} 
