@@ -63,7 +63,6 @@ const LikedPanel = ({ email }) => {
         });
     };
 
-    console.log(accessData.dashboardAcccess, 'accessData.dashboardAccess')
     return (
         <TableContainer>
             <Snackbar

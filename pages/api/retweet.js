@@ -10,9 +10,7 @@ module.exports = async(req, res) => {
     });
     const parsedBody = JSON.parse(req.body);
     const tweetId = parsedBody.id;
-    
-    console.log(parsedBody)
-    const url = `statuses/retweet/${tweetId}.json`
+
     const shootPromise = () => {
         return new Promise((resolve, reject) => {
             client.post(`statuses/retweet/${parsedBody}.json`, (error, tweets) => {

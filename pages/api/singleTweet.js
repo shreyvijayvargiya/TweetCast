@@ -8,7 +8,7 @@ module.exports = async(req, res) => {
         access_token_key: process.env.acessToken,
         access_token_secret: process.env.tokenSecret
     });
-    const message = req.body.body.message;
+    const message = JSON.parse(req.body.body.message);
     const shootPromise = () => {
         return new Promise((resolve, reject) => {
             client.post('statuses/update.json', { status: message } , (error, data) => {

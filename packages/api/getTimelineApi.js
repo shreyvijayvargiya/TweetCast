@@ -23,7 +23,6 @@ export const getTimeline = () => {
   
   return axios(config).then(function (response) {
     if(response){
-      console.log(response.data)
       return response.data
     }
   })

@@ -15,6 +15,6 @@ export const tweetWithMedia = (data) => {
 
 export const singleTweetApi = (message) => {
     const url = '/api/singleTweet';
-    const body = { message: message };
+    const body = { message: JSON.stringify(message) };
     return axios.post(url, { body: body });
 }

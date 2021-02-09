@@ -6,7 +6,7 @@ const initialState = {
     userType: "",
     timelineData: [],
     users: [],
-    accessData: false
+    accessData: {}
 }
 export const userReducer = (state = initialState, action) => {
     switch(action.type){

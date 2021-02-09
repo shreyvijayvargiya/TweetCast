@@ -54,7 +54,6 @@ const RetweetPanel = ({ email }) => {
     const handleRetweetApi = (id, tweetId) => {
         setShow(true)
         retweetMethod(id).then((data) => { 
-            console.log(data, 'data')
             setOpen(false);
             setSnackBarMesaage("Retweeted successfully");
             handleDelete(tweetId);
