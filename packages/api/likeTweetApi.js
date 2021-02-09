@@ -12,7 +12,7 @@ export const likeTweetApi = async(id) => {
 };
 
 export const likeTweetMethod = (id) => {
-    const url = `${process.env.prodDomain}/api/likeTweet`;
+    const url = `api/likeTweet`;
     const config = {
       method: 'POST',
       body: JSON.stringify(id)

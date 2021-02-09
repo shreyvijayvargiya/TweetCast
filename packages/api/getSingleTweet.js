@@ -17,7 +17,7 @@ export const getSingleTweetApi = (id) => {
 
 export const getSingleTweet = (id) => {
   const dataUrl = 'https://api.twitter.com/1.1/statuses/show.json?id=' + id;
-  const url = `${process.env.prodDomain}api/getSingleTweet`;
+  const url = `api/getSingleTweet`;
   const body = {
     dataUrl:  dataUrl
   }
