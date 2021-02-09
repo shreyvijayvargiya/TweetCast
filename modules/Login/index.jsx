@@ -12,30 +12,29 @@ import { useDispatch } from 'react-redux';
 
 
 const Login = () => {
-    const router = useRouter();
     const [values, setValues] = React.useState({
         email: '',
         password: ''
     });
-    const dispatch = useDispatch();
-
     const [error, setError] = React.useState(null);
     const [disabled, setDisabled] = React.useState(true);
-
     const classes = useStyles();
+    const dispatch = useDispatch();
+    const router = useRouter();
 
-    const handleChange = (event) => {
-        const val = event.target.value;
-        const name = event.target.name;
-        setValues((prevState) => ({ ...prevState, [name]: val }))
-    };
     React.useEffect(() => {
         if(values.email.trim(" ").length > 0 && values.password.trim(" ").length > 0)   {
             setDisabled(false)
         }else {
             setDisabled(true)
         }
-    })
+    });
+
+    const handleChange = (event) => {
+        const val = event.target.value;
+        const name = event.target.name;
+        setValues((prevState) => ({ ...prevState, [name]: val }))
+    };
 
     const handleSubmit = (e) => {
         app.auth().signInWithEmailAndPassword(values.email, values.password).then((res) => {
@@ -45,6 +44,12 @@ const Login = () => {
                 email,
             }
             dispatch(setUserInStore(user));
+            let dbRef = app.database().ref("users");
+            dbRef.push({
+                email: email,
+                dashboardAcccess: true,
+                userType: 'staff'
+            });
             router.push({ pathname: '/dashboard', query: { type: 'tweets'}})
         })
         .catch((error) => setError(error.message));
@@ -66,6 +71,24 @@ const Login = () => {
           }).catch((error) => {
             console.log(error.message)
         });
+    };
+
+    const checkEmailExist = (e) => {
+        const emailValue = e.target.value;
+        let dbRef = app.database().ref("users");
+        dbRef.on('value', snap => {
+            const usersObject = snap.val();
+            const userExist = Object.keys(usersObject).filter(item => {
+                if(usersObject[item].email === emailValue) return item
+            });
+            if(userExist.length > 0){
+                setError('Need invitation from admin to logged in');
+                setDisabled(true);
+            }else {
+                setError("");
+                setDisabled(false)
+            }
+        })
     }
 
     return (
@@ -75,6 +98,8 @@ const Login = () => {
                     <br />
                     <br />
                     {error && <InputLabel>{error}</InputLabel>}
+                    <br />
+                    <br />
                     <InputLabel className={classes.label} htmlFor="component-simple">Email</InputLabel>
                     <TextField 
                         id="component-simple-email" 
@@ -82,7 +107,8 @@ const Login = () => {
                         size="small"  
                         color="primary" 
                         type="email"
-                        variant="outlined" 
+                        variant="outlined"
+                        onBlur={checkEmailExist}
                         name="email" 
                         value={values.email} 
                         onChange={handleChange}
@@ -106,6 +132,7 @@ const Login = () => {
                         name="gogole-login-button"
                         type="primary"
                         color="primary"
+                        size="small"
                         variant="outlined"
                         className={classes.googleButton}
                         onClick={(e) => handleGoogleLogin(e)}

@@ -74,6 +74,24 @@ const AdminPanel = () => {
         // fetchUserFromFirebase();
     }, [ ]);
 
+    const checkEmailExist = (e) => {
+        const emailValue = e.target.value;
+        let dbRef = app.database().ref("users");
+        dbRef.on('value', snap => {
+            const usersObject = snap.val();
+            const userExist = Object.keys(usersObject).filter(item => {
+                if(usersObject[item].email === emailValue) return item
+            });
+            if(userExist.length > 0){
+                setMessage('User already invited');
+                setDisabled(true);
+            }else {
+                setMessage("");
+                setDisabled(false)
+            }
+        })
+    }
+
     return (
         <div className={classes.root}>
            {accessType && accessType.userType === 'admin' ? (
@@ -93,6 +111,7 @@ const AdminPanel = () => {
                                                 color="primary" 
                                                 style={{ width: '100%' }}
                                                 type="email"
+                                                onBlur={checkEmailExist}
                                                 variant="outlined" 
                                                 name="email" 
                                                 value={email}
