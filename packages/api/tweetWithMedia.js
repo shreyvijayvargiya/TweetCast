@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 export const tweetWithMedia = (data) => {
     const url = `/api/tweetWithMedia`;
     
@@ -13,12 +15,6 @@ export const tweetWithMedia = (data) => {
 
 export const singleTweetApi = (message) => {
     const url = '/api/singleTweet';
-    const body = { message:message };
-    const config = {
-        body: JSON.stringify(body),
-        method: 'POST'
-    }
-    fetch(url, config).then((response) => { 
-        return response 
-    });
+    const body = { message: message };
+    return axios.post(url, { body: body });
 }

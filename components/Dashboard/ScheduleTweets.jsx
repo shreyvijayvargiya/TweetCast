@@ -108,17 +108,32 @@ const TweetsPanel = ({ email }) => {
     const handlePostTweet = () => {
         const imageSource = tweets.tweets[message.currentId].fileSource;
         if(imageSource !== undefined){
-            tweetWithMedia({ fileUrl: message.storageImageUrl, tweetMessage: message.editableMessage })
+            tweetWithMedia({ fileUrl: message.storageImageUrl, tweetMessage: message.editableMessage }).then((response) => {
+                let dbRef = app.database().ref("tweets/" +  message.currentId);
+                dbRef.remove().then((data) => {
+                    console.log(data);
+                    setShow(true);
+                    setOpen(false);
+                    setSnackBarMessage("Tweet posted successfully")
+                });
+            }).catch(error => console.log(error, 'error'))
         }else {
-            singleTweetApi(message.editableMessage);
+            singleTweetApi(message.editableMessage).then((response) => {
+                if(response.data.body){
+                   let dbRef = app.database().ref("tweets/" +  message.currentId);
+                   dbRef.remove().then((data) => {
+                       setShow(true);
+                       setOpen(false);
+                       setSnackBarMessage("Tweet posted successfully")
+                   });
+                }
+                console.log(response, 'response')
+            }).catch(error => {
+                console.log(error)
+                alert('Error in posting tweet')
+            });
         };
-        let dbRef = app.database().ref("tweets/" +  message.currentId);
-        dbRef.remove().then((data) => {
-            setShow(true);
-            setOpen(false);
-            setSnackBarMessage("Tweet posted successfully")
-            console.log(data);
-        });
+       
     };
 
     function Alert(props) {
