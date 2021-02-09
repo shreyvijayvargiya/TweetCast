@@ -1,4 +1,3 @@
-import { headers } from './header';
 import axios from 'axios';
 
 export const getSingleTweetApi = (id) => {  
@@ -21,5 +20,9 @@ export const getSingleTweet = (id) => {
   const body = {
     dataUrl:  dataUrl
   }
-  return axios.post(url, { body: body });
+  return axios.post(url, { body: body }).then((response) => {
+    if(response.data) {
+      return response.data
+    }
+  }).catch((error) => console.log(error));
 }

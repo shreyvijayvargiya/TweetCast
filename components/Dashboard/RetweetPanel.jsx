@@ -111,7 +111,7 @@ const RetweetPanel = ({ email }) => {
                                     </Button>
                                 </TableCell>
                                 <TableCell>
-                                    <IconButton disabled={accessData.dashboardAccess ? false: true} onClick={() => handleRetweetApi(retweets[item].tweetId, item)}>
+                                    <IconButton disabled={accessData.dashboardAcccess ? false: true} onClick={() => handleRetweetApi(retweets[item].tweetId, item)}>
                                         <AiOutlineRetweet />
                                     </IconButton>
                                 </TableCell>

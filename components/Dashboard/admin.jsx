@@ -80,7 +80,7 @@ const AdminPanel = () => {
                <div>
                    <Typography variant="h5">Admin Account</Typography>
                     <br />
-                    <Paper elevation={2} style={{ padding: '20px', backgroundColor: 'rgba(134, 134, 134, 0.13)', boxShadow: '8px 8px 8px rgba(0, 0, 0, 0.25)'}}>
+                    <Paper elevation={2} style={{ padding: '20px', backgroundColor: 'rgba(134, 134, 134, 0.13)', boxShadow: '4px 4px 4px rgba(0, 0, 0, 0.25)'}}>
                         <Typography variant="body1">Invite users</Typography>
                         <Table>
                             <TableContainer>

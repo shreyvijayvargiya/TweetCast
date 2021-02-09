@@ -37,12 +37,13 @@ const LikedPanel = ({ email }) => {
     
     const handleOpen = (id) => {
         setOpen(true);
-        getSingleTweetApi(id).then((data) => {
-            setLikeTweet(data.data)
-        }).catch(error => {
-            console.log(error);
-            setLikeTweet(null)
-        });
+        getSingleTweet(id).then((response) => {
+            if(response){
+                setLikeTweet(response.body, 'response')
+            }else {
+                setLikeTweet(null)
+            }
+        }).catch((error) => console.log(error))
     };
 
     const styles = useStyles();
@@ -62,7 +63,7 @@ const LikedPanel = ({ email }) => {
         });
     };
 
-
+    console.log(accessData.dashboardAcccess, 'accessData.dashboardAccess')
     return (
         <TableContainer>
             <Snackbar
@@ -99,7 +100,7 @@ const LikedPanel = ({ email }) => {
                 <TableBody>
                     {likes && Object.keys(likes).length > 0 ?  Object.keys(likes).map(item => {
                         return (
-                            <TableRow key={item}>
+                            <TableRow key={item + 'id'}>
                                 <TableCell>{email}</TableCell>
                                 <TableCell>
                                     <Button 
@@ -114,7 +115,7 @@ const LikedPanel = ({ email }) => {
                                     </Button>
                                 </TableCell>
                                 <TableCell>
-                                    <IconButton disabled={accessData.dashboardAccess ? false: true} onClick={() => handleLikeTweet(likes[item].tweetId, item)}>
+                                    <IconButton disabled={accessData.dashboardAcccess ? false: true} onClick={() => handleLikeTweet(likes[item].tweetId, item)}>
                                         <AiTwotoneLike />
                                     </IconButton>
                                 </TableCell>
@@ -162,7 +163,7 @@ const LikedPanel = ({ email }) => {
                                         }
                                     </IconButton>
                                 </Grid>
-                                <Grid alignIte="center">
+                                <Grid alignItems="center">
                                     <Typography variant="h6" style={{ marginTop: 18, marginLeft: 0 }}>{likeTweet.user.screen_name}</Typography>
                                 </Grid>
                             </Grid>

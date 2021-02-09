@@ -9,7 +9,6 @@ module.exports = async(req, res) => {
         access_token_secret: process.env.tokenSecret
     });
     const parsedBody = req.body.body;
-    const tweetId = parsedBody.id
     const message = parsedBody.message;
     const username = parsedBody.username;
     const in_reply_to_status_id = parsedBody.in_reply_to_status_id && parsedBody.in_reply_to_status_id;
@@ -27,5 +26,5 @@ module.exports = async(req, res) => {
     }
 
     const response = await shootPromise();
-    res.json({ body: response });
+    res.json({ data: response });
 }

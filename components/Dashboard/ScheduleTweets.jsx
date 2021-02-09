@@ -9,6 +9,7 @@ import { HiOutlinePencilAlt, HiUpload } from 'react-icons/hi';
 import {tweetWithMedia, singleTweetApi} from '../../packages/api/tweetWithMedia';
 import {FaDropbox} from 'react-icons/fa';
 import MuiAlert from '@material-ui/lab/Alert';
+import { useSelector } from 'react-redux';
 
 const TweetsPanel = ({ email }) => {
 
@@ -29,7 +30,7 @@ const TweetsPanel = ({ email }) => {
     const [snackBarMessage, setSnackBarMessage] = React.useState("");
     const [loader, setLoader] = React.useState(false);
     const [user, setUser] = React.useState(null);
-
+    const accessData = useSelector(state => state.accessData);
 
     const handleChange = (e) => {
         const value = e.target.value;
@@ -156,7 +157,6 @@ const TweetsPanel = ({ email }) => {
                             </TableCell>
                         </TableRow>
                     </TableHead>
-
                     <TableBody>
                         {tweets && tweets.tweets && Object.keys(tweets.tweets).length > 0 ? Object.keys(tweets.tweets).map(item => {
                             return (
@@ -180,7 +180,7 @@ const TweetsPanel = ({ email }) => {
                                     </TableCell>
                                     <TableCell align="center">
                                         <IconButton onClick={() => handleDeleteScheduleTweet(item)}>
-                                            <AiOutlineDelete style={{ color: '#C19277', fontSize: 30 }} />
+                                            <AiOutlineDelete />
                                         </IconButton>
                                     </TableCell>
                                 </TableRow>
@@ -224,14 +224,12 @@ const TweetsPanel = ({ email }) => {
                     <br />
                     <br />
                     {message.storageImageUrl !== null && message.fileName !== null && <img src={message.storageImageUrl} style={{ width: '100%', objectFit: 'contain', height: '70%'}} alt="Image" />}
-                    {loader ? <CircularProgress color="primary" style={{ color: 'white' }} />: <Button onClick={() => updateMessage()} size="medium" fullWidth color="primary" variant="contained">Update</Button>}
+                    {loader ? <CircularProgress color="primary" style={{ color: 'white' }} />: <Button onClick={() => updateMessage()} size="medium" fullWidth color="primary" variant="outlined">Update</Button>}
                     <br />
                     <br />
                     <br />
-                    <Button fullWidth>
-                        <IconButton color="primary" onClick={() => handlePostTweet()}>
-                            <HiUpload />
-                        </IconButton>
+                    <Button fullWidth startIcon={<HiUpload />} color="primary" variant="contained" disabled={accessData.dashboardAcccess ? false: true} onClick={() => handlePostTweet()}>
+                        Post Tweet
                     </Button>
                 </div>
             </Drawer>

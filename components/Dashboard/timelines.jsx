@@ -39,14 +39,19 @@ const Timelines = () => {
         fetchTweetTimeline();
     });
 
-    const handleLikeTweet = (id) => {
-        let dbRef = app.database().ref("scheduledLikedOnTweets");
-        dbRef.push({
-            tweetId: id,
-            date: new Date(),
-        });
-        setSnackBarMessage("Like scheduled successfully");
-        setShow(true);
+    const handleLikeTweet = (id, likedStatus) => {
+        if(likedStatus){
+            setShow(true);
+            setSnackBarMessage("You have already liked this tweet");
+        }else {
+            let dbRef = app.database().ref("scheduledLikedOnTweets");
+            dbRef.push({
+                tweetId: id,
+                date: new Date(),
+            });
+            setSnackBarMessage("Like scheduled successfully");
+            setShow(true);
+        }
     };
     const handleReTweet = (id) => {
         let dbRef = app.database().ref("scheduledRetweets");
@@ -146,7 +151,7 @@ const Timelines = () => {
                             })}
                             <Grid container>
                                 <Grid item md={2}>
-                                    <IconButton onClick={() => handleLikeTweet(item.id_str)}>
+                                    <IconButton onClick={() => handleLikeTweet(item.id_str, item.favorited)}>
                                         {item.favorited ? <AiFillHeart style={{ fill: 'rgb(224, 36, 94)' }} />:<AiOutlineHeart />}
                                     </IconButton>
                                 </Grid>

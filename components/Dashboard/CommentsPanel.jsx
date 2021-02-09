@@ -91,11 +91,13 @@ const CommentsPanel = ({ setList, email }) => {
         const message = comments[tweetId].comment;
         const username = comments[tweetId].username;
         const in_reply_to_status_id = comments[tweetId].in_reply_to_status_id;
-        postCommentMethod(id, message, username,in_reply_to_status_id ).then((response) => console.log(response, 'response'))
+        postCommentMethod(id, message, username,in_reply_to_status_id ).then((response) => {
+            console.log(response, 'response');
+            setShow(true);
+            handleDelete(tweetId);
+            setSnackBarMessage("Comment successfully");
+        })
         .catch((error) => console.log('error', error));
-        setShow(true);
-        handleDelete(tweetId);
-        setSnackBarMessage("Comment successfully");
     }
     
     
@@ -147,7 +149,7 @@ const CommentsPanel = ({ setList, email }) => {
                                     </Button>
                                 </TableCell>
                                 <TableCell>
-                                    <IconButton disabled={accessData.dashboardAccess ? false: true} onClick={() => handlePostComment(comments[item].tweetId, item)}>
+                                    <IconButton disabled={accessData.dashboardAcccess ? false: true} onClick={() => handlePostComment(comments[item].tweetId, item)}>
                                         <FaRegCommentDots />
                                     </IconButton>
                                 </TableCell>

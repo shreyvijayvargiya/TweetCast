@@ -12,6 +12,21 @@ module.exports = {
         tokenSecret: "ffY4pdaFzquwlpfX55NbCHjxtCmmvFFlzR2oAQ2q3ffc8",
         bearerToken: "AAAAAAAAAAAAAAAAAAAAAB5kMAEAAAAAFk4%2BKwlL9ea%2BlZE5KSjOYpk9Vco%3DjjIP34iq41pL0Xno93YK9f9fgbCusFlP8IMrXF9pSxiFDwGOtl",
         prodDomain: 'https://tweet-cast.vercel.app',
-        devDomain: 'http://localhost:3000/'
+        devDomain: 'http://localhost:3000/',
+
+        async headers() {
+            return [
+              {
+                // matching all API routes
+                source: ["/api/(.*)", "https://api.twitter.com/1.1/statuses/show.json?" ],
+                headers: [
+                  { key: "Access-Control-Allow-Credentials", value: "true" },
+                  { key: "Access-Control-Allow-Origin", value: "*" },
+                  { key: "Access-Control-Allow-Methods", value: "GET,OPTIONS,PATCH,DELETE,POST,PUT" },
+                  { key: "Access-Control-Allow-Headers", value: "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version" },
+                ]
+              }
+            ]
+        }
     },
 }
