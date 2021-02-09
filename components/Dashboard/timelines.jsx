@@ -63,8 +63,8 @@ const Timelines = () => {
         setShow(true);
     };
     const handleCommentOnTweet = (id, username, in_reply_to_status_id)=> {
-        console.log(in_reply_to_status_id);
         let dbRef = app.database().ref("scheduledCommentsOnTweets");
+        console.log(in_reply_to_status_id, 'in_reply_to_status_id')
         dbRef.push({
             tweetId: id,
             comment: comment,
@@ -105,7 +105,7 @@ const Timelines = () => {
                 {tweetTimelineData && tweetTimelineData.length > 0 ? tweetTimelineData.map(item => {
                     const urlLink = item.user.url;
                     const id = item.id_str;
-                    const in_reply_to_status_id = item.in_reply_to_status_id;
+                    const in_reply_to_status_id = item.id;
                     return (
                         <Paper key={item.id_str} elevation={2} className={classes.timelinePaper}>
                             <Grid container justify="flex-start">
@@ -180,7 +180,7 @@ const Timelines = () => {
                                     />
                                     <br />
                                     <br />
-                                    <Button style={{ textTransform: 'none' }} color="primary" disabled={comment !== null && comment.trim(" ") <= 0 ? true: false} variant="contained" fullWidth onClick={() => handleCommentOnTweet(id, item.user.name, in_reply_to_status_id)}>
+                                    <Button style={{ textTransform: 'none' }} color="primary" disabled={comment !== null && comment.trim(" ") <= 0 ? true: false} variant="contained" fullWidth onClick={() => handleCommentOnTweet(id, item.user.screen_name, in_reply_to_status_id)}>
                                         Schedule Comment
                                     </Button>
                                     <br />

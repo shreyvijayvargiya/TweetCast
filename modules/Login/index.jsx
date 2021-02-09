@@ -65,9 +65,22 @@ const Login = () => {
                 userId: res.user.uid,
                 email: res.user.email,
             }
-            setCookie('uid', res.user.uid, 14);
-            dispatch(setUserInStore(user));
-            router.push({ pathname: '/dashboard', query: { type: 'tweets'}})
+            let dbRef = app.database().ref("users");
+            dbRef.on('value', snap => {
+                const usersObject = snap.val();
+                const userExist = Object.keys(usersObject).filter(item => {
+                    if(usersObject[item].email === res.user.email) return item
+                });
+                if(userExist.length > 0){
+                    setError("");
+                    setCookie('uid', res.user.uid, 14);
+                    dispatch(setUserInStore(user));
+                    router.push({ pathname: '/dashboard', query: { type: 'tweets'}})
+                }else {
+                    setError('Need invitation from admin to logged in');
+                    setDisabled(true);
+                }
+            });
           }).catch((error) => {
             console.log(error.message)
         });

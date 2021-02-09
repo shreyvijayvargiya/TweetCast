@@ -11,6 +11,7 @@ import {useSelector} from 'react-redux';
 import Link from 'next/link';
 import MuiAlert from '@material-ui/lab/Alert';
 import {postCommentMethod} from '../../packages/api/commentApi';
+import { SignalCellular0Bar } from '@material-ui/icons';
 
 const CommentsPanel = ({ setList, email }) => {
     
@@ -39,34 +40,24 @@ const CommentsPanel = ({ setList, email }) => {
     
     const handleOpen = (id, commentId) => {
         setOpen(true);
-        getSingleTweetApi(id).then((data) => {
-            setItem(data.data)
+        getSingleTweet(id).then((data) => {
+            if(data){
+                setItem(data.body)
+            }else {
+                setItem(null)
+            }
         }).catch(error => {
             console.log(error);
             setItem(null)
         });
         let dbRef = app.database().ref("scheduledCommentsOnTweets/" +  commentId);
         dbRef.on("value",snap => {
-            setComment(snap.val().comment);
+            if(snap.val()){
+                setComment(snap.val().comment);
+            }
         });
     };
-    // const handleOpen = (id, commentId) => {
-    //     setOpen(true);
-    //     // getSingleTweet(id);
-    //     const singleTweet = timelineData.filter(element => {
-    //         if(element.id === id) return element
-    //     });
-    //     // console.log(singleTweet[0], 'singletweet');
-    //     setItem(singleTweet[0]);
-    //     // getSingleTweetApi(id);
-    //     // getSingleTweetApi(id).then((response) => {
-    //     //     if(response){
-    //     //         console.log(response, 'response');
-    //     //         return null
-    //     //     }
-    //     // }).catch(error => console.log(error, 'error'));
-       
-    // };
+    
     const styles = useStyles();
 
     const handleDelete = (id) => {
@@ -80,7 +71,7 @@ const CommentsPanel = ({ setList, email }) => {
     };
     const handleUpdateComment = (commentId) => {
         let dbRef = app.database().ref();
-        let childRef = dbRef.child("scheduledCommentsOnTweets").child(commentId).child("comment");
+        let childRef = dbRef.child("scheduledCommentsOnTweets/" + commentId).child(commentId).child("comment");
         childRef.transaction(() => { 
             setLoader(false);
             return comment 

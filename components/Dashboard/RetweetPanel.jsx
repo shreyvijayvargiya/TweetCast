@@ -1,9 +1,9 @@
 import React from 'react';
-import { Button, Typography, TableContainer, Table, TableRow, TableCell, TableHead, TableBody, Drawer, IconButton, Grid, Snackbar, Avatar } from '@material-ui/core';
+import { Button, Typography, TableContainer, Table, TableRow, TableCell, TableHead, TableBody, Drawer, IconButton, Grid, Snackbar, Avatar, Box } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import app from '../../utils/firebase';
 import { AiOutlineRetweet, AiFillCloseCircle, AiOutlineDropbox } from 'react-icons/ai';
-import { getSingleTweetApi } from '../../packages/api/getSingleTweet';
+import { getSingleTweet } from '../../packages/api/getSingleTweet';
 import { MdDelete } from 'react-icons/md';
 import {HiOutlinePencilAlt} from 'react-icons/hi';
 import { retweetMethod } from '../../packages/api/retweetApi';
@@ -36,8 +36,12 @@ const RetweetPanel = ({ email }) => {
     
     const handleOpen = (id) => {
         setOpen(true);
-        getSingleTweetApi(id).then((data) => {
-            setItem(data.data)
+        getSingleTweet(id).then((data) => {
+            if(data){
+                setItem(data.body)
+            }else {
+                setItem(null)
+            }
         }).catch(error => {
             console.log(error);
             setItem(null)

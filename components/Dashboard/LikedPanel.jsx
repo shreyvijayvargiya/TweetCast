@@ -2,13 +2,16 @@ import React from 'react';
 import { Button, Typography, TableContainer, Table, TableRow, Avatar, TableCell, TableHead, TableBody, IconButton, Drawer, Grid, Link, Box, Snackbar } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import app from '../../utils/firebase';
+import { useDispatch } from 'react-redux';
 import { AiTwotoneLike, AiFillCloseCircle, AiOutlineDropbox } from 'react-icons/ai';
 import { getSingleTweetApi, getSingleTweet } from '../../packages/api/getSingleTweet';
+import { getTimelineApi } from '../../packages/api/getTimelineApi';
 import { MdDelete } from 'react-icons/md';
 import {HiOutlinePencilAlt} from 'react-icons/hi';
 import { likeTweetApi, likeTweetMethod } from '../../packages/api/likeTweetApi';
 import { useSelector } from 'react-redux';
 import MuiAlert from '@material-ui/lab/Alert';
+import { setTimelineInRedux } from '../../redux/action';
 
 const LikedPanel = ({ email }) => {
 
@@ -17,7 +20,7 @@ const LikedPanel = ({ email }) => {
     const [open, setOpen] = React.useState(false);
     const timelineData = useSelector(state => state.timelineData);
     const accessData = useSelector(state=> state.accessData);
-
+    const dispatch = useDispatch()
     const [show, setShow] = React.useState(false);
     const [snackBarMessage, setSnackBarMessage] = React.useState("");
 
@@ -52,12 +55,18 @@ const LikedPanel = ({ email }) => {
         let dbRef = app.database().ref("scheduledLikedOnTweets/" +  id);
         dbRef.remove().then((data) => console.log(data, 'liked schedule removed'));
     };
+    const fetchTimlineAndStoreInRedux = () => {
+        getTimelineApi().then(data => {
+            dispatch(setTimelineInRedux(data.data.body.data));
+        }).catch(error => console.log(error, 'error'))
+    };
 
     const handleLikeTweet = (id, tweetId) => {
         likeTweetMethod(id).then((data) => {
             setShow(true);
             handleDelete(tweetId);
-            setSnackBarMessage("Tweet liked successfully")
+            setSnackBarMessage("Tweet liked successfully");
+            fetchTimlineAndStoreInRedux()
         }).catch((error) => {
             console.log('error in liking tweeet', error);
         });
