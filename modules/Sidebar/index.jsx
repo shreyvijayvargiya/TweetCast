@@ -9,7 +9,7 @@ import { MdNextWeek } from 'react-icons/md';
 import { RiLogoutCircleRLine } from 'react-icons/ri';
 import { removeCookie } from '../../utils/cookie';
 import app from '../../utils/firebase';
-
+import { useSelector } from 'react-redux';
 
 const Sidebar = () => {
     
@@ -26,6 +26,8 @@ const Sidebar = () => {
         router.push('/login')
     };
 
+    const accessData = useSelector(state => state.accessData);
+
     return (
         <div className={classes.root}>
             <br />
@@ -34,9 +36,9 @@ const Sidebar = () => {
                     {/* <ListItemIcon>
                         <RiAdminLine color="primary" />
                     </ListItemIcon> */}
-                    <Button className={classes.button} onClick={() => handleClick('admin')} fullWidth variant={router.query.type === 'admin' ? 'contained': 'text'} size="small" color="primary" >
+                    {accessData.userType === 'admin' ? <Button className={classes.button} onClick={() => handleClick('admin')} fullWidth variant={router.query.type === 'admin' ? 'contained': 'text'} size="small" color="primary" >
                         Admin
-                    </Button>
+                    </Button>: null}
                 </ListItem>
                 <ListItem className={classes.listItem}>
                     {/* <ListItemIcon>

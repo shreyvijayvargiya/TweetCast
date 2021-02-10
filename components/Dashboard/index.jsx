@@ -19,6 +19,7 @@ const Dashboard = () => {
     const type = router.query.type;
     const dispatch = useDispatch();
     const userData = useSelector(state => state);
+    const accessData = useSelector(state => state.accessData);
 
     const currentUserEmail = useSelector(state => state.email); 
     
@@ -34,15 +35,15 @@ const Dashboard = () => {
         });
     };
 
-    
+    console.log(accessData, 'accessData')
 
     const Panel = () => {
-        if(type === 'admin') return <AdminPanel />
+        if(type === 'admin') return (accessData.userType === 'admin' ? <AdminPanel />: null)
         else if(type === 'tweets') return <TweetsPanel />
         else if(type === 'timelines') return <Timelines />
         else if(type === 'team') return <TeamPanel />
         else if(type === 'scheduledTweetsActions') return <ScheduledTweetsActions />
-        else return <AdminPanel />
+        else return null
     };
 
     const styles = useStyles(); 
