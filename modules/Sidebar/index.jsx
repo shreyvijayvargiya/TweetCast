@@ -15,6 +15,7 @@ const Sidebar = () => {
     
     const classes = style();
     const router = useRouter();
+    const accessData = useSelector(state =>  state.accessData);
 
     const handleClick = (query) => {
         router.push({ pathname: 'dashboard', query: { type: query} });
@@ -26,14 +27,13 @@ const Sidebar = () => {
         router.push('/login')
     };
 
-    const accessData = useSelector(state => state.accessData);
 
     return (
         <div className={classes.root}>
             <br />
             <List style={{  width: '100%' }}>
                 <ListItem className={classes.listItem}>
-                    {accessData.userType === 'admin' ? <Button className={classes.button} onClick={() => handleClick('admin')} fullWidth variant={router.query.type === 'admin' ? 'contained': 'text'} size="small" color="primary" >
+                    {accessData && accessData.userType === 'admin' ? <Button className={classes.button} onClick={() => handleClick('admin')} fullWidth variant={router.query.type === 'admin' ? 'contained': 'text'} size="small" color="primary" >
                         Admin
                     </Button>: null}
                 </ListItem>

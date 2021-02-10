@@ -70,7 +70,13 @@ const styles = makeStyles((theme) => ({
     root: {
         width: '70vw',
         overflow: 'hidden',
-        padding: theme.spacing(8)
+        padding: theme.spacing(8),
+        [theme.breakpoints.down('md')]: {
+            width: '100vw',
+            marginTop: theme.spacing(1),
+            padding: 0
+        }
+        
     },
     paper: {
         padding: theme.spacing(2)

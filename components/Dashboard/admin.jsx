@@ -1,6 +1,6 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import { Typography, Button, IconButton, Paper, Grid, TextField, Switch, Select, MenuItem } from '@material-ui/core';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
+import { Typography, Button, IconButton, Paper, Grid, TextField, Switch, Select, MenuItem, useMediaQuery } from '@material-ui/core';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -14,11 +14,13 @@ import { BsFillLockFill } from 'react-icons/bs';
 
 const AdminPanel = () => {
     const classes = styles();
+    const theme = useTheme();
     const [email, setEmail] = React.useState("");
     const [users, setUsers] = React.useState(null);
     const [disabled, setDisabled] = React.useState(false);
     const [message, setMessage] = React.useState(null);
     const [accessType, setAccessType] = React.useState(null);
+    const matches = useMediaQuery(theme.breakpoints.down('sm'));
 
     const handleChange = (e) => {
         const value = e.target.value;
@@ -100,33 +102,36 @@ const AdminPanel = () => {
                     <br />
                     <Paper elevation={2} style={{ padding: '20px', backgroundColor: 'rgba(134, 134, 134, 0.13)', boxShadow: '4px 4px 4px rgba(0, 0, 0, 0.25)'}}>
                         <Typography variant="body1">Invite users</Typography>
-                        <Table>
-                            <TableContainer>
-                                <TableBody>
-                                    <TableRow>
-                                        <TableCell>
-                                            <TextField id="component-simple-email" 
-                                                placeholder="Enter email" 
-                                                size="small"  
-                                                color="primary" 
-                                                style={{ width: '100%' }}
-                                                type="email"
-                                                onBlur={checkEmailExist}
-                                                variant="outlined" 
-                                                name="email" 
-                                                value={email}
-                                                onChange={handleChange}
-                                            />
-                                            <br />
-                                            {message && <label>{message}</label>}
-                                        </TableCell>
-                                        <TableCell>
-                                            <Button size="large" style={{ width: '100%', textTransform: 'none' }} disabled={email.trim(" ").length > 0 ? false: true || disabled} onClick={() => handleSendInvitation()} color="primary" variant="contained">Send Invitation</Button>
-                                        </TableCell>
-                                    </TableRow>
-                                </TableBody>
-                            </TableContainer>
-                        </Table>
+                        <Grid container>
+                           <Grid item md={4} sm={10} xs={10}> 
+                                <TextField id="component-simple-email" 
+                                    placeholder="Enter email" 
+                                    size="small"  
+                                    color="primary" 
+                                    style={{ width: '100%', margin: 10 }}
+                                    type="email"
+                                    onBlur={checkEmailExist}
+                                    variant="outlined" 
+                                    name="email" 
+                                    value={email}
+                                    onChange={handleChange}
+                                />
+                                <br />
+                                {message && <label>{message}</label>}
+                            </Grid>
+                            <Grid item md={4} sm={10} xs={10}>
+                                <Button size="large" 
+                                    style={{ textTransform: 'none', margin: 10}} 
+                                    fullWidth
+                                    disabled={email.trim(" ").length > 0 ? false: true || disabled} 
+                                    onClick={() => handleSendInvitation()} 
+                                    color="primary" 
+                                    variant="contained"
+                                >
+                                    Send Invitation
+                                </Button>
+                            </Grid>
+                        </Grid>
                     </Paper>
                     <br />
                     <Paper elevation={5}>
@@ -134,7 +139,7 @@ const AdminPanel = () => {
                                 <Table aria-label="simple table" className={classes.table}>
                                     <TableHead>
                                         <TableRow style={{ backgroundColor: 'rgba(134, 134, 134, 0.13)' }}>
-                                            <TableCell align="left" style={{ width: '30vw' }}>
+                                            <TableCell align="left" style={{ width: !matches ? '30vw': '25vw' }}>
                                                 <Typography variant="body1">Email</Typography>
                                             </TableCell>
                                             <TableCell align="center" style={{ paddingRight: 0 }}>
@@ -156,7 +161,7 @@ const AdminPanel = () => {
                                         {users && users.users && Object.keys(users.users).map(item => {
                                             return (
                                                 <TableRow className={classes.cell} key={item}>
-                                                    <TableCell>
+                                                    <TableCell style={{ width: !matches ? '30vw': '20vw' }}>
                                                         {users.users[item].email}
                                                     </TableCell>
                                                     <TableCell align="center">
@@ -207,6 +212,10 @@ const styles = makeStyles((theme) => ({
         width: '70vw',
         paddingTop: theme.spacing(0),
         paddingLeft: theme.spacing(10),
+        [theme.breakpoints.down('md')]: {
+            width: '100vw',
+            padding: 0,
+        }
     },
     paper: {
         padding: theme.spacing(2)

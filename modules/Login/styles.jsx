@@ -15,7 +15,12 @@ export const useStyles = makeStyles((theme) => ({
       display: 'flex',
       justifyContent: 'center',
       flexDirection: 'column',
-      textAlign: 'center'
+      textAlign: 'center',
+      [theme.breakpoints.down('md')]: {
+        width: '80vw',
+        padding: 0,
+        top: '15%'
+      }
     },
     topbar:{
       backgroundColor: '#F9F9F9',

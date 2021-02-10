@@ -146,7 +146,7 @@ const TweetsPanel = () => {
                 <Typography variant="h6">Create Tweets</Typography>
                 <br />
                 <Grid container spacing={2}>
-                    <Grid item md={9}>
+                    <Grid item md={9} sm={12} xs={12}>
                         <TextField id="component-simple" 
                             placeholder="Enter Message" 
                             size="medium"  
@@ -163,7 +163,7 @@ const TweetsPanel = () => {
                 </Grid>
                 <Grid container>
                     {message.fileData  !== null ?
-                        <Grid item md={9} className={classes.uploadContainer}>
+                        <Grid item md={9} sm={12} xs={12} className={classes.uploadContainer}>
                             <div className={classes.cancelButton}>
                                 <IconButton color="primary" onClick={() => setMessage(prevState => ({...prevState, fileData: null, file: null, fileName: null}))}>
                                     <AiFillCloseCircle />
@@ -214,7 +214,12 @@ const styles = makeStyles((theme) => ({
         overflow: 'hidden',
         padding: theme.spacing(8),
         width: '65vw',
-        position: 'relative'
+        position: 'relative',
+        [theme.breakpoints.down('md')]: {
+            width: '100vw',
+            marginTop: theme.spacing(1),
+            padding: 0
+        }
     },
     table: {
         minWidth: 700
@@ -251,14 +256,20 @@ const styles = makeStyles((theme) => ({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        position: 'relative'
+        position: 'relative',
+        [theme.breakpoints.down('md')]: {
+            width: '100%',
+        }
     },
     input: {
         display: "none",
     },
     button: {
         textTransform: 'none',
-        width: '75%'
+        width: '75%',
+        [theme.breakpoints.down('md')]: {
+            width: '100%',
+        }
     },
     detailsDrawer: {
         padding: theme.spacing(5)
@@ -271,6 +282,14 @@ const styles = makeStyles((theme) => ({
     },
     imgContainer: {
         widht: '20em',
-        height: '20em'
+        height: '20em',
+        
+    },
+    paper: {
+        [theme.breakpoints.down('md')]: {
+            width: '100%',
+            marginTop: theme.spacing(1),
+            padding: 0
+        }
     }
 }))

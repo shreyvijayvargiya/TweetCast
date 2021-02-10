@@ -19,6 +19,7 @@ export const useStyles = makeStyles((theme) => ({
       position: 'absolute',
       zIndex: 0,
       width: '100%',
+      height: 'fit-content'
     },
 }));
 

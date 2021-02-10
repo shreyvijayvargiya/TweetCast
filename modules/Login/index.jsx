@@ -109,9 +109,7 @@ const Login = () => {
             <div className={classes.box}>
                     <Typography variant="h6">Sign In</Typography>
                     <br />
-                    <br />
                     {error && <InputLabel>{error}</InputLabel>}
-                    <br />
                     <br />
                     <InputLabel className={classes.label} htmlFor="component-simple">Email</InputLabel>
                     <TextField 

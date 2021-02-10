@@ -1,8 +1,9 @@
 import React from 'react';
-import { Grid, Button } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import { Grid, Drawer, useMediaQuery, IconButton } from '@material-ui/core';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 import { Sidebar } from '../../modules';
 import { useRouter } from 'next/router';
+import { AiOutlineBars } from 'react-icons/ai';
 import TweetsPanel from './tweets';
 import AdminPanel from './admin';
 import Timelines from './timelines';
@@ -10,19 +11,20 @@ import TeamPanel from './team';
 import ScheduledTweetsActions from './ScheduledTweetsActions';
 import { getTimelineApi } from '../../packages/api/getTimelineApi';
 import { useDispatch, useSelector } from 'react-redux';
-import { setTimelineInRedux, setAccessDataStore, setUsersInStore } from '../../redux/action';
+import { setTimelineInRedux, setAccessDataStore } from '../../redux/action';
 import app from '../../utils/firebase';
 
 const Dashboard = () => {
     
     const router = useRouter();
+    const theme = useTheme();
+    const matches = useMediaQuery(theme.breakpoints.down('sm'));
     const type = router.query.type;
     const dispatch = useDispatch();
-    const userData = useSelector(state => state);
     const accessData = useSelector(state => state.accessData);
-
     const currentUserEmail = useSelector(state => state.email); 
-    
+    const [open, setOpen] = React.useState(false); 
+
     const fetchUsers = () => {
         let dbRef = app.database().ref("users");
         dbRef.on("value", snap => {
@@ -52,8 +54,6 @@ const Dashboard = () => {
         }).catch(error => console.log(error, 'error'))
     };
 
-
-
     React.useEffect(() => {
         fetchTimlineAndStoreInRedux();
         fetchUsers();
@@ -61,10 +61,18 @@ const Dashboard = () => {
 
     return (
         <Grid container className={styles.root} spacing={2}>
-            <Grid item md={2}>
-                <Sidebar />
+            <Grid item md={2} sm={1} xs={1}>
+                {!matches ? <Sidebar />:
+                 <Drawer open={open} onClose={() => setOpen(false)}>
+                    <Sidebar />
+                 </Drawer>}
             </Grid>
-            <Grid item md={10}>
+            <Grid item md={10} sm={12} xs={12} style={{ padding: '12px'}}>
+                {matches && <div className={styles.barIcon}>
+                    <IconButton onClick={() => setOpen(true)}>
+                        <AiOutlineBars />
+                    </IconButton>
+                </div>}
                 <div className={styles.panel}>
                     <Panel />
                 </div>
@@ -88,5 +96,12 @@ const useStyles = makeStyles(theme => ({
     panel: {
         overflow: 'scroll',
         height: '90vh',
+        paddingTop: 10
+    },
+    barIcon: {
+        width: '100%',
+        position: 'absolute',
+        top: '0px',
+        left: '10px',
     }
 }))

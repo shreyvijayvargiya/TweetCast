@@ -19,5 +19,10 @@ export const useStyles = makeStyles((theme) => ({
       width: '100%',
       height: '80vh',
       position: 'relative',
+      [theme.breakpoints.down('md')]: {
+        width: '100vw',
+        marginTop: theme.spacing(1),
+        padding: 0
+    }
     }
 }));

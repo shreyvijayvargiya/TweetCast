@@ -212,6 +212,9 @@ const styles = makeStyles((theme) => ({
         height: '90vh',
         paddingTop: theme.spacing(0),
         paddingLeft: theme.spacing(4),
+        [theme.breakpoints.down('md')]: {
+            padding: 0
+        }
     },
     timeline: {
         width: '70vw',
@@ -221,8 +224,10 @@ const styles = makeStyles((theme) => ({
         padding: theme.spacing(2),
         margin: theme.spacing(2),
         borderRadius: '4px',
-        // backgroundColor: 'rgba(134, 134, 134, 0.13)',
         borderRadius: 8,
+        [theme.breakpoints.down('md')]: {
+            width: '90vw',
+        }
     },
     header : {
         position: 'relative',
