@@ -11,7 +11,7 @@ const HomePage = () => {
 				<Typography variant="h2">TweetCast</Typography>
 				<Typography variant="h6">An application to manage your twitter account</Typography>
 				<br />
-				{/* <Button variant="outlined" size="large" className={styles.button} color="primary">GET STARTED</Button> */}
+				{/* <Button variant="outlined" size="large" className={styles.button} color="primary" >GET STARTED</Button> */}
 			</div>
 		</div>
 	);

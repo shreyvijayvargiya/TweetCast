@@ -34,34 +34,14 @@ export default function Navbar() {
             >
               login
           </Button>}
-          {/* {!token &&
-            <Button 
-              variant={router.pathname === '/signup' ? "contained": "text"} 
-              className={classes.menuButton} 
-              color="primary"
-              size="small"
-              onClick={() => router.push('/signup')}
-            >
-              Signup
-            </Button>
-          } */}
           {token && <Button 
             variant={router.pathname === '/dashboard' ? "contained": "text"} 
             className={classes.menuButton} 
             color="primary"
             size="small"
-            onClick={() => router.push({ pathname: '/dashboard', query: { type: 'admin' } })}
+            onClick={() => router.push({ pathname: '/dashboard', query: { type: 'tweets' } })}
           >
             Dashboard
-          </Button>}
-          {token && <Button 
-            variant="text"
-            className={classes.menuButton} 
-            color="primary"
-            size="small"
-            onClick={() => handleLogout()}
-          >
-            Logout
           </Button>}
         </Toolbar>
       </AppBar>

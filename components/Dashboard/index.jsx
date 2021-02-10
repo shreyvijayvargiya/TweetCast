@@ -35,8 +35,6 @@ const Dashboard = () => {
         });
     };
 
-    console.log(accessData, 'accessData')
-
     const Panel = () => {
         if(type === 'admin') return (accessData.userType === 'admin' ? <AdminPanel />: null)
         else if(type === 'tweets') return <TweetsPanel />

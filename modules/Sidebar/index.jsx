@@ -33,17 +33,11 @@ const Sidebar = () => {
             <br />
             <List style={{  width: '100%' }}>
                 <ListItem className={classes.listItem}>
-                    {/* <ListItemIcon>
-                        <RiAdminLine color="primary" />
-                    </ListItemIcon> */}
                     {accessData.userType === 'admin' ? <Button className={classes.button} onClick={() => handleClick('admin')} fullWidth variant={router.query.type === 'admin' ? 'contained': 'text'} size="small" color="primary" >
                         Admin
                     </Button>: null}
                 </ListItem>
                 <ListItem className={classes.listItem}>
-                    {/* <ListItemIcon>
-                        <MdNextWeek />
-                    </ListItemIcon> */}
                     <Button className={classes.button} onClick={() => handleClick('tweets')} fullWidth variant={router.query.type === 'tweets' ? 'contained': 'text'} size="small" color="primary">Create tweet</Button>
                 </ListItem>
                 <ListItem className={classes.listItem}>
