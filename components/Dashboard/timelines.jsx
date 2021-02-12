@@ -1,26 +1,34 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Typography, Box, Paper, Avatar, Grid, IconButton, Button, TextField, CircularProgress, Snackbar, Container } from '@material-ui/core';
+import { Typography, Box, Paper, Avatar, Grid, IconButton, Button, TextField, CircularProgress, Snackbar, Container, Select, Menu, ListItem,ListItemIcon, ListItemText } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab'
 import MuiAlert from '@material-ui/lab/Alert';
 import { getTimeline, getTimelineApi } from '../../packages/api/getTimelineApi';
+import { getSingleTweet } from '../../packages/api/getSingleTweet';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { AiOutlineHeart, AiFillHeart } from 'react-icons/ai';
 import { GoComment } from 'react-icons/go';
 import { FaRetweet } from 'react-icons/fa';
 import app from '../../utils/firebase';
-import { AiOutlineDropbox } from 'react-icons/ai';
-import { setTimelineInRedux } from '../../redux/action';
+import { AiOutlineDropbox, AiOutlineLink } from 'react-icons/ai';
+import { setTimelineInRedux , setSearchUserProfileInStore } from '../../redux/action';
 import { useDispatch, useSelector } from 'react-redux';
 import { searchTweet } from '../../packages/api/searchTweets';
 import { followUser, unFollowUser } from '../../packages/api/followTweet';
 import { searchUsersApi } from '../../packages/api/searchUsers';
+import {getUserProfile} from '../../packages/api/getUserProfile';
+import {AiFillCloseCircle} from 'react-icons/ai';
+import { BsCalendar } from 'react-icons/bs';
+import { IoLocationSharp } from 'react-icons/io5';
+
+
 
 const Timelines = () => {
 
     const classes = styles();
     const dispatch = useDispatch();
+    const [state, setState] = React.useState(true);
     const [tweetTimelineData, setTweetTimelineData] = React.useState(null);
     const [comment, setComment] = React.useState(null);
     const [search, setSearch]= React.useState("");
@@ -33,8 +41,11 @@ const Timelines = () => {
     const [show, setShow] = React.useState(false);
     const [snackBarMessage, setSnackBarMessage] = React.useState("");
     const [followState, setFollowState] = React.useState(true);
-
+    const searchRef = React.useRef();
+    
     const timelineData =  useSelector(state=> state.timelineData);
+    const userProfileStore = useSelector(state => state.userProfile);
+    const [userProfile, setUserProfile] = React.useState(userProfileStore);
     
     function Alert(props) {
         return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -49,17 +60,32 @@ const Timelines = () => {
     });
 
     const toggleFollowState = (state, id) => {
-        setFollowState(!followState);
-        if(state){
+        if(!state){
             followUser(id);
             getTimelineApi().then(data => {
                 dispatch(setTimelineInRedux(data.data.body.data));
             }).catch(error => console.log(error, 'error'));
         }else {
-            unFollowUser(id);
-            getTimelineApi().then(data => {
-                dispatch(setTimelineInRedux(data.data.body.data));
-            }).catch(error => console.log(error, 'error'))
+            unFollowUser(id).then((response) => {
+                if(response.data){
+                    getTimelineApi().then(data => {
+                        dispatch(setTimelineInRedux(data.data.body.data));
+                    }).catch(error => console.log(error, 'error'))
+                }
+            }).catch((error) => console.log(error));
+        };
+    };
+    const toggleFollowStateInSearch = (state, id, screen_name) => {
+        if(!state){
+            followUser(id).then((data) => {
+                dispatch(setSearchUserProfileInStore(data.data.body.data))
+            }).catch((error) => console.log(error, 'in following'));
+        }else {
+            unFollowUser(id).then((data) => {
+                if(data){
+                    dispatch(setSearchUserProfileInStore(data.data.body.data))
+                }
+            }).catch((error) => console.log(error));
         };
     };
 
@@ -112,6 +138,7 @@ const Timelines = () => {
     };
 
     const handleSearchChange = (e) => {
+        setState(true);
         const val = e.target.value;
         setSearch(val);
         searchTweet(val).then(data => {
@@ -123,32 +150,28 @@ const Timelines = () => {
         });
     };
     const handleSearchUsersChange = (e) => {
-        setLoading(true);
         const val = e.target.value;
+        if(val.trim("").length ===0){
+            setState(true);
+            return
+        };
+        setSearchUsers(val);
         searchUsersApi(val).then(data => {
             if(data.data && data.data.body && data.data.body.data){
                 setOptions(data.data.body.data);
                 setLoading(false);
-                // dispatch(setTimelineInRedux(data.data.body.data))
             }else {
                 setLoading(false);
-                // setTweetTimelineData(null)
             }
         });
+       
     };
-    const handleSearchUserBlur = (e) => {
-        const val = e.target.value;
-        setSearchUsers(val);
-        const newTimelineData = timelineData.filter(item => {
-            console.log(item);
-            if((item.name).toUppercase() === val.toUppercase()){
-                return item
-            };
-        });
-        console.log(newTimelineData)
-        if(newTimelineData.length > 0){
-            dispatch(setTweetTimelineData(newTimelineData));
-        }
+   
+    const handleUserSelected = (id, screen_name) => {
+        setState(false);
+        getUserProfile(screen_name).then((data) => {
+            dispatch(setSearchUserProfileInStore(data.data.body.data));
+        }).catch((error) => console.log(error, 'error'));
     }
     return (
         <div className={classes.root}>
@@ -169,15 +192,14 @@ const Timelines = () => {
                         name="search"
                         variant="outlined"
                         value={search}
-                        style={{ margin: 10, backgroundColor: '#EEEEEE' }}
+                        style={{ margin: 10, backgroundColor: 'rgba(134, 134, 134, 0.05)' }}
                         placeholder="Search tweet"
                         size="small"
                         onChange={handleSearchChange}
                         fullWidth
-
                     />
                 </Grid>
-                {/* <Grid item md={4} alignItems="center">
+                <Grid item md={4} alignItems="center">
                     <Autocomplete
                         id="select-users"
                         style={{ width: 300 }}
@@ -188,16 +210,28 @@ const Timelines = () => {
                         onClose={() => {
                             setOpen(false);
                         }}
-                        onBlur={handleSearchUserBlur}
-                        getOptionSelected={(option, value) => option.name === value.name}
+                        getOptionSelected={(option, value) => option.name === value.name }
                         getOptionLabel={(option) => option.name}
                         options={options}
+                        handleHomeEndKeys={true}
                         loading={loading}
+                        renderOption={(item) => (
+                            <Grid container alignItems="center" style={{ padding: '10px' }} onClick={() => handleUserSelected(item.id, item.screen_name)}>
+                                <Grid item alignItems="center">
+                                    <Avatar src={item.profile_image_url} /> 
+                                </Grid>
+                                <Grid item alignItems="center">
+                                   <Typography style={{ marginLeft: 10 }}>{item.name}</Typography>
+                                </Grid>
+                            </Grid>
+                        )}
+                        closeIcon={<AiFillCloseCircle onClick={() => setState(true) } />}
                         renderInput={(params) => (
                             <TextField
                                 {...params}
                                 size="small"
-                                style={{ marginTop: 10, backgroundColor: '#EEEEEE' }}
+                                ref={searchRef}
+                                style={{ marginTop: 10, backgroundColor: 'rgba(134, 134, 134, 0.05)' }}
                                 onChange={handleSearchUsersChange}
                                 label="Search users"
                                 variant="outlined"
@@ -213,12 +247,13 @@ const Timelines = () => {
                             />
                         )}
                     />
-                </Grid> */}
+                </Grid>
             </Grid>
+            {state ? 
             <div className={classes.timeline}>
                 {tweetTimelineData && tweetTimelineData.length > 0 ? tweetTimelineData.map(item => {
-                    const urlLink = item.user.url;
                     const id = item.id_str;
+                    const urlLink = item.user.url;
                     const in_reply_to_status_id = item.id;
                     const following = item.following;
                     return (
@@ -237,7 +272,7 @@ const Timelines = () => {
                                 <Grid alignItems="flex-start" md={8}>
                                     <Typography variant="h6" style={{ marginTop: 18, marginLeft: 0 }}>{item.user.screen_name}</Typography>
                                 </Grid>
-                                <Grid item md={1} alignItems="left">
+                                <Grid item md={1} alignItems="flex-start">
                                     <Button 
                                         variant="outlined" 
                                         size="small"
@@ -254,7 +289,7 @@ const Timelines = () => {
                                 return (
                                     <Grid container> 
                                         <Grid item>
-                                            <a href={url.url}>{url.url}</a>
+                                            <a href={url.url} target="_blank">{url.url}</a>
                                         </Grid>
                                     </Grid>
                                 )
@@ -262,7 +297,7 @@ const Timelines = () => {
                             {item.entities.hashtags.length > 0 && item.entities.hashtags.map(hashtag => {
                                 return (
                                     <Box> 
-                                        <a href={hashtag.text}>#{hashtag.text}</a>
+                                        <a href={hashtag.text} target="_blank">#{hashtag.text}</a>
                                     </Box>
                                 )
                             })}
@@ -287,7 +322,7 @@ const Timelines = () => {
                                 </Grid>
                                 <Grid item md={2}>
                                     <IconButton onClick={() => handleReTweet(id)}>
-                                        <FaRetweet style={{ color: item.retweeted ?  'green': 'black' }} />
+                                        <FaRetweet style={{ color: item.retweeted &&  'green' }} />
                                     </IconButton>
                                 </Grid>
                             </Grid>
@@ -323,6 +358,49 @@ const Timelines = () => {
                 </Grid>
             }
             </div>
+            :
+            <div className={classes.timeline}>
+                {userProfile && (
+                        <Paper key={userProfile.id_str} elevation={2} className={classes.timelinePaper}>
+                            {userProfile.profile_banner_url && <div className={classes.profileBg}>
+                                <img src={userProfile.profile_banner_url} style={{ objectFit: 'fill', width: '100%', height: '100%' }} />
+                            </div>}
+                            <Grid container justify="flex-start" alignItems="center">
+                                <Grid item md={1}>
+                                    <IconButton>
+                                        <Avatar src={userProfile.profile_image_url} />
+                                    </IconButton>
+                                </Grid>
+                                <Grid alignItems="flex-start" md={8}>
+                                    <Typography variant="h6" style={{ marginTop: 0, marginLeft: 0 }}>{userProfile.screen_name}</Typography>
+                                    <Typography variant="caption">{userProfile.description}</Typography>
+                                </Grid>
+                                <Grid item md={1} alignItems="flex-start">
+                                    <Button 
+                                        variant="outlined" 
+                                        size="small"
+                                        style={{ textTransform: 'none' }}
+                                        onClick={() => toggleFollowStateInSearch(userProfile.following, userProfile.id_str, userProfile.screen_name)}
+                                    >
+                                        {userProfile.following ? "UnFollow": "Following"}
+                                    </Button>
+                                </Grid>
+                            </Grid>
+                            <br />
+                            <Grid container spacing={3} justify="flex-start" alignItems="center" style={{ padding: 10 }}>
+                                <Grid item>
+                                    {userProfile.location && <Typography variant="body1"> <IoLocationSharp />{userProfile.location}</Typography>}
+                                </Grid>
+                                <Grid item>
+                                    {userProfile.url && <a target="_blank" href={userProfile.url}><AiOutlineLink /> Website</a>}
+                                </Grid>
+                                <Grid item>
+                                    {userProfile.location && <Typography variant="body1"><BsCalendar /> Joined  {userProfile.created_at.split(" ")[1]} { userProfile.created_at.split(" ")[5]}</Typography>}
+                                </Grid>
+                            </Grid>
+                        </Paper>
+                )}
+            </div>}
         </div>
     );
 };
@@ -354,9 +432,9 @@ const styles = makeStyles((theme) => ({
     },
     timeline: {
         width: '70vw',
-        height: '90vh',
         overflow: 'scroll',
-        border: '1px solid #EEEEEE',
+        height: '90vh',
+        overflowY: 'scroll',
         padding: theme.spacing(2),
         margin: theme.spacing(2),
         borderRadius: '4px',
@@ -375,5 +453,10 @@ const styles = makeStyles((theme) => ({
         marginTop: theme.spacing(2),
         marginBottom: theme.spacing(2),
         padding: theme.spacing(2)
+    },
+    profileBg: {
+        width: '100%',
+        height: '40vh',
+
     }
 }))

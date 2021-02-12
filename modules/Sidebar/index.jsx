@@ -2,14 +2,15 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Button, List, ListItem, ListItemIcon } from '@material-ui/core';
 import { useRouter } from 'next/router';
-import { RiAdminLine } from 'react-icons/ri';
 import { GrSchedules } from 'react-icons/gr';
 import { MdTimeline } from 'react-icons/md';
 import { MdNextWeek } from 'react-icons/md';
-import { RiLogoutCircleRLine } from 'react-icons/ri';
+import { RiLogoutCircleRLine, RiAdminLine } from 'react-icons/ri';
 import { removeCookie } from '../../utils/cookie';
 import app from '../../utils/firebase';
 import { useSelector } from 'react-redux';
+import { IoCreate } from 'react-icons/io5';
+
 
 const Sidebar = () => {
     
@@ -33,24 +34,24 @@ const Sidebar = () => {
             <br />
             <List style={{  width: '100%' }}>
                 <ListItem className={classes.listItem}>
-                    {accessData && accessData.userType === 'admin' ? <Button className={classes.button} onClick={() => handleClick('admin')} fullWidth variant={router.query.type === 'admin' ? 'contained': 'text'} size="small" color="primary" >
+                    {accessData && accessData.userType === 'admin' ? <Button startIcon={<RiAdminLine />} className={classes.button} onClick={() => handleClick('admin')} fullWidth variant={router.query.type === 'admin' ? 'contained': 'text'} size="large" color="primary" >
                         Admin
                     </Button>: null}
                 </ListItem>
                 <ListItem className={classes.listItem}>
-                    <Button className={classes.button} onClick={() => handleClick('tweets')} fullWidth variant={router.query.type === 'tweets' ? 'contained': 'text'} size="small" color="primary">Create tweet</Button>
+                    <Button className={classes.button} startIcon={<IoCreate />} onClick={() => handleClick('tweets')} fullWidth variant={router.query.type === 'tweets' ? 'contained': 'text'} size="large" color="primary">Create tweet</Button>
                 </ListItem>
                 <ListItem className={classes.listItem}>
                     {/* <ListItemIcon>
                         <MdTimeline />
                     </ListItemIcon> */}
-                    <Button className={classes.button} onClick={() => handleClick('timelines')} variant={router.query.type === 'timelines' ? 'contained': 'text'} size="small"  color="primary" fullWidth>Timelines</Button>
+                    <Button startIcon={<MdTimeline />} className={classes.button} onClick={() => handleClick('timelines')} variant={router.query.type === 'timelines' ? 'contained': 'text'} size="large"  color="primary" fullWidth>Timelines</Button>
                 </ListItem>
                 <ListItem className={classes.listItem}>
                     {/* <ListItemIcon>
                         <GrSchedules />
                     </ListItemIcon> */}
-                    <Button className={classes.button} onClick={() => handleClick('scheduledTweetsActions')} variant={router.query.type === 'scheduledTweetsActions' ? 'contained': 'text'} size="small"  color="primary" fullWidth>Scheduled Actions</Button>
+                    <Button startIcon={<GrSchedules />} className={classes.button} onClick={() => handleClick('scheduledTweetsActions')} variant={router.query.type === 'scheduledTweetsActions' ? 'contained': 'text'} size="large"  color="primary" fullWidth>Scheduled Actions</Button>
                 </ListItem>
             </List>
             <div style={{ height: '32em', position: 'relative', width: '100%' }}>
@@ -58,7 +59,7 @@ const Sidebar = () => {
                     {/* <ListItemIcon>
                         <RiLogoutCircleRLine />
                     </ListItemIcon> */}
-                    <Button onClick={() => handleLogout()} size="small" variant="text" color="primary" fullWidth>Logout</Button>
+                    <Button startIcon={<RiLogoutCircleRLine />} onClick={() => handleLogout()} size="large" variant="text" color="primary" fullWidth>Logout</Button>
                 </ListItem>
             </div>
         </div>
@@ -73,17 +74,17 @@ const style = makeStyles((theme) => ({
         flexDirection: 'column',
         justifyContent:'start',
         alignItems: 'center',
-        top: '2%',
-        bottom: '10px',
-        borderRadius: 20,
+        borderRight: '1px solid rgba(134, 134, 134, 0.13)',
+        height: '100vh',
+        borderRadius: 0,
         minWidth: '16vw',
         padding: theme.spacing(2),
         overflow: 'hidden',
-        backgroundColor: 'rgba(134, 134, 134, 0.13)',
-        boxShadow: '4px 4px 4px rgba(129, 129, 129, 0.5)',
-        "&:hover ": {
-            boxShadow: '5px 5px 3px rgba(129, 129, 129, 0.5)',
-        }
+        backgroundColor: 'rgba(134, 134, 134, 0.05)',
+        // boxShadow: '4px 4px 4px rgba(129, 129, 129, 0.5)',
+        // "&:hover ": {
+        //     boxShadow: '5px 5px 3px rgba(129, 129, 129, 0.5)',
+        // }
     },
     button : {
         paddingTop: theme.spacing(1),

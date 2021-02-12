@@ -1,4 +1,3 @@
-import {headers} from './header';
 import axios from 'axios';
 
 export const getTimelineApi = () => {

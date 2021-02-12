@@ -1,3 +1,5 @@
+
+
 module.exports = async (req, res) => {
     try {
         const Twitter = require('twitter');
@@ -13,23 +15,24 @@ module.exports = async (req, res) => {
             message: "",
             data: [],
         };
-        const user_id = JSON.parse(req.body.body.user_id);
-        console.log(user_id)
+        const screen_name = JSON.parse(req.body.body);
+        
         const shootPromise = () => {
             return new Promise((resolve, reject) => {
-                client.post("friendships/destroy.json", { user_id: user_id } , (error, tweets, response) => {
+                client.get('users/show.json', { screen_name: screen_name },(error, tweets, response) => {
                     if(error) reject(error)
                     resolve(tweets)
                 })
             })
-        };
+        }
+
         const response = await shootPromise();
         responseObject.data = response;
         res.json({
             body: responseObject,
         });
     }catch(e) {
-        console.log(e, 'error')
+        console.log(e, 'eee')
         res.send(e);
     }
 }

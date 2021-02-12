@@ -1,4 +1,4 @@
-import { SET_USER, REMOVE_USER, SET_TIMELINE_DATA, SET_USERS, SET_ACCESS_DATA } from './constants';
+import { SET_USER, REMOVE_USER, SET_TIMELINE_DATA, SET_USERS, SET_ACCESS_DATA, SET_USER_PROFILE } from './constants';
 
 const initialState = {
     email: "",
@@ -6,7 +6,8 @@ const initialState = {
     userType: "",
     timelineData: [],
     users: [],
-    accessData: {}
+    accessData: {},
+    userProfile: {}
 }
 export const userReducer = (state = initialState, action) => {
     switch(action.type){
@@ -37,6 +38,12 @@ export const userReducer = (state = initialState, action) => {
             return {
                 ...state,
                 accessData: action.payload
+            }
+        }
+        case SET_USER_PROFILE: {
+            return {
+                ...state, 
+                userProfile: action.payload
             }
         }
         default:

@@ -61,7 +61,7 @@ const Dashboard = () => {
 
     return (
         <Grid container className={styles.root} spacing={2}>
-            <Grid item md={2} sm={1} xs={1}>
+            <Grid item md={2} sm={1} xs={1} style={{ height: '100vh' }}>
                 {!matches ? <Sidebar />:
                  <Drawer open={open} onClose={() => setOpen(false)}>
                     <Sidebar />

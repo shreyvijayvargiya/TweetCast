@@ -102,7 +102,7 @@ const AdminPanel = () => {
                     <br />
                     <Paper elevation={2} style={{ padding: '20px', backgroundColor: 'rgba(134, 134, 134, 0.13)', boxShadow: '4px 4px 4px rgba(0, 0, 0, 0.25)'}}>
                         <Typography variant="body1">Invite users</Typography>
-                        <Grid container>
+                        <Grid container spacing={2}>
                            <Grid item md={4} sm={10} xs={10}> 
                                 <TextField id="component-simple-email" 
                                     placeholder="Enter email" 
