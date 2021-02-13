@@ -90,7 +90,7 @@ const TweetsPanel = () => {
                 fileSource: null
             });
         }
-        setMessage(prevState => ({ ...prevState, message: "" }));
+        setMessage(prevState => ({ ...prevState, message: "", file: null, fileData: null, fileName: null }));
         setShow(true);
         setSnackBarMessage("Tweet scheduled successfully");
         setLoader(false);

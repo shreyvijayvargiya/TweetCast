@@ -171,7 +171,7 @@ const RetweetPanel = ({ email }) => {
                                 return (
                                     <Grid container> 
                                         <Grid item>
-                                            <a href={url.url}>{url.url}</a>
+                                            <a href={url.url} target="_blank">{url.url}</a>
                                         </Grid>
                                     </Grid>
                                 )
@@ -179,7 +179,7 @@ const RetweetPanel = ({ email }) => {
                             {item.entities.hashtags.length > 0 && item.entities.hashtags.map(hashtag => {
                                 return (
                                     <Box> 
-                                        <a href={hashtag.text}>#{hashtag.text}</a>
+                                        <a href={hashtag.text} target="_blank">#{hashtag.text}</a>
                                     </Box>
                                 )
                             })}

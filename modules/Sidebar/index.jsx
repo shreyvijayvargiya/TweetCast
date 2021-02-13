@@ -1,6 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Button, List, ListItem, ListItemIcon } from '@material-ui/core';
+import { Button, List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import { useRouter } from 'next/router';
 import { GrSchedules } from 'react-icons/gr';
 import { MdTimeline } from 'react-icons/md';
@@ -28,40 +28,47 @@ const Sidebar = () => {
         router.push('/login')
     };
 
+    console.log(accessData)
 
     return (
         <div className={classes.root}>
             <br />
-            <List style={{  width: '100%' }}>
+            <List style={{  width: '100%', height: '100vh', position:'relative' }}>
                 <ListItem className={classes.listItem}>
-                    {accessData && accessData.userType === 'admin' ? <Button startIcon={<RiAdminLine />} className={classes.button} onClick={() => handleClick('admin')} fullWidth variant={router.query.type === 'admin' ? 'contained': 'text'} size="large" color="primary" >
+                    <ListItemIcon>
+                        <RiAdminLine color="primary" />
+                    </ListItemIcon>
+                    {accessData && accessData.userType === 'admin' ? <Button className={classes.button} onClick={() => handleClick('admin')} fullWidth variant={router.query.type === 'admin' ? 'contained': 'text'} size="small" color="primary" >
                         Admin
                     </Button>: null}
                 </ListItem>
                 <ListItem className={classes.listItem}>
-                    <Button className={classes.button} startIcon={<IoCreate />} onClick={() => handleClick('tweets')} fullWidth variant={router.query.type === 'tweets' ? 'contained': 'text'} size="large" color="primary">Create tweet</Button>
+                    <ListItemIcon>
+                        <IoCreate />
+                    </ListItemIcon>
+                    <Button className={classes.button} onClick={() => handleClick('tweets')} fullWidth variant={router.query.type === 'tweets' ? 'contained': 'text'} size="small" color="primary">Create tweet</Button>
                 </ListItem>
                 <ListItem className={classes.listItem}>
-                    {/* <ListItemIcon>
+                    <ListItemIcon>
                         <MdTimeline />
-                    </ListItemIcon> */}
-                    <Button startIcon={<MdTimeline />} className={classes.button} onClick={() => handleClick('timelines')} variant={router.query.type === 'timelines' ? 'contained': 'text'} size="large"  color="primary" fullWidth>Timelines</Button>
+                    </ListItemIcon>
+                    <Button className={classes.button} onClick={() => handleClick('timelines')} variant={router.query.type === 'timelines' ? 'contained': 'text'} size="small"  color="primary" fullWidth>Timelines</Button>
                 </ListItem>
                 <ListItem className={classes.listItem}>
-                    {/* <ListItemIcon>
+                    <ListItemIcon>
                         <GrSchedules />
-                    </ListItemIcon> */}
-                    <Button startIcon={<GrSchedules />} className={classes.button} onClick={() => handleClick('scheduledTweetsActions')} variant={router.query.type === 'scheduledTweetsActions' ? 'contained': 'text'} size="large"  color="primary" fullWidth>Scheduled Actions</Button>
+                    </ListItemIcon>
+                    <Button className={classes.button} onClick={() => handleClick('scheduledTweetsActions')} variant={router.query.type === 'scheduledTweetsActions' ? 'contained': 'text'} size="small"  color="primary" fullWidth>Scheduled Actions</Button>
                 </ListItem>
+                <div style={{ position: 'absolute', width: '100%', bottom: 20 }}>
+                    <ListItem className={classes.logout}>
+                        <ListItemIcon>
+                            <RiLogoutCircleRLine />
+                        </ListItemIcon>
+                        <Button onClick={() => handleLogout()} size="small" variant="text" color="primary" fullWidth>Logout</Button>
+                    </ListItem>
+                </div>
             </List>
-            <div style={{ height: '32em', position: 'relative', width: '100%' }}>
-                <ListItem className={classes.logout}>
-                    {/* <ListItemIcon>
-                        <RiLogoutCircleRLine />
-                    </ListItemIcon> */}
-                    <Button startIcon={<RiLogoutCircleRLine />} onClick={() => handleLogout()} size="large" variant="text" color="primary" fullWidth>Logout</Button>
-                </ListItem>
-            </div>
         </div>
     );
 };

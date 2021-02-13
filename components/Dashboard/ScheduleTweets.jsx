@@ -119,7 +119,6 @@ const TweetsPanel = ({ email }) => {
         return <MuiAlert elevation={6} variant="filled" {...props} />;
     }
     const classes = useStyles();
-    
     return (
         <div>
             <Snackbar
@@ -217,7 +216,7 @@ const TweetsPanel = ({ email }) => {
                     />
                     <br />
                     <br />
-                    {message.storageImageUrl !== null && message.fileName !== null && <img src={message.storageImageUrl} style={{ width: '100%', objectFit: 'contain', height: '70%'}} alt="Image" />}
+                    {message.storageImageUrl && <img src={message.storageImageUrl} style={{ width: '100%', objectFit: 'fill', height: '50%'}} alt="Image" />}
                     {loader ? <CircularProgress color="primary" style={{ color: 'white' }} />: <Button onClick={() => updateMessage()} size="medium" fullWidth color="primary" variant="outlined">Update</Button>}
                     <br />
                     <br />

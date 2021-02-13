@@ -10,7 +10,7 @@ export const tweetWithMedia = (data) => {
         method: 'POST',
         body: JSON.stringify(body)
     }
-    fetch(url,config).then((response) => console.log(response, 'response'))
+    return fetch(url, config);
 }
 
 export const singleTweetApi = (message) => {
