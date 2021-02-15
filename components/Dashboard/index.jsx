@@ -21,8 +21,7 @@ const Dashboard = () => {
     const matches = useMediaQuery(theme.breakpoints.down('md'));
     const type = router.query.type;
     const dispatch = useDispatch();
-    const userData = useSelector(state => state);
-    const [accessData, setAccessData] = React.useState(null);
+    const accessData = useSelector(state => state);
     const currentUserEmail = useSelector(state => state.email); 
     const [open, setOpen] = React.useState(false); 
 
@@ -37,34 +36,34 @@ const Dashboard = () => {
             dispatch(setAccessDataStore(users[data[0]]));
         });
     };
-    
 
     const Panel = () => {
-        if(type === 'admin') return (accessData.userType === 'admin' ? <AdminPanel />: null)
+        if(type === 'admin' && accessData.userType === 'admin') return <AdminPanel />
         else if(type === 'tweets') return <TweetsPanel />
         else if(type === 'timelines') return <Timelines />
         else if(type === 'team') return <TeamPanel />
         else if(type === 'scheduledTweetsActions') return <ScheduledTweetsActions />
-        else return null
+        else return <AdminPanel />
     };
 
     const styles = useStyles(); 
 
     const fetchTimlineAndStoreInRedux = () => {
         getTimelineApi().then(data => {
-            dispatch(setTimelineInRedux(data.data.body.data));
+            if(data && data.data && data.data.body && data.data.body.data){
+                dispatch(setTimelineInRedux(data.data.body.data));
+            }
         }).catch(error => console.log(error, 'error'))
     };
 
     React.useEffect(() => {
         fetchTimlineAndStoreInRedux();
         fetchUsers();
-        setAccessData(userData)
     }, []);
 
     return (
         <Grid container className={styles.root} spacing={2}>
-            <Grid item md={0} lg={2} sm={0} xs={0} style={{ height: '100vh' }}>
+            <Grid item lg={2} style={{ height: '100vh' }}>
                 {!matches ? <Sidebar />:
                  <Drawer open={open} onClose={() => setOpen(false)}>
                     <Sidebar />

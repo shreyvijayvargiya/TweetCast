@@ -93,10 +93,12 @@ const AdminPanel = () => {
             }
         })
     }
+    
+    console.log(accessType,'accessType');
 
     return (
         <div className={classes.root}>
-           {accessType && accessType.userType === 'admin' ? (
+           {accessType && accessType.userType === 'admin' && (
                <div>
                    <Typography variant="h5">Admin Account</Typography>
                     <br />
@@ -192,15 +194,7 @@ const AdminPanel = () => {
                         </TableContainer>
                     </Paper>
                </div>
-           ):
-            <Grid container justify="center" style={{ width: '100%', textAlign:'center', padding: 40 }}>
-                <Grid item md={12}>
-                    <BsFillLockFill style={{ fontSize: 80 }} />
-                    <br />
-                    <Typography variant="caption" style={{ color: 'red'}}>Access denied, please ask admin for permission</Typography>
-                </Grid>
-            </Grid>
-           }
+            )}
         </div>
     );
 };
