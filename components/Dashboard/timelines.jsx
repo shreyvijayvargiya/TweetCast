@@ -259,7 +259,7 @@ const Timelines = () => {
                     return (
                         <Paper key={item.id_str} elevation={2} className={classes.timelinePaper}>
                             <Grid container justify="flex-start" alignItems="center">
-                                <Grid item md={1}>
+                                <Grid item md={1} sm={1} lg={1} xs={3}>
                                     <IconButton>
                                         {urlLink !== undefined && urlLink !== null ? <Link target="_blank" href={urlLink !== undefined && urlLink}>
                                             <Avatar src={item.user.profile_image_url} />
@@ -269,10 +269,10 @@ const Timelines = () => {
                                         }
                                     </IconButton>
                                 </Grid>
-                                <Grid alignItems="flex-start" md={8}>
-                                    <Typography variant="h6" style={{ marginTop: 18, marginLeft: 0 }}>{item.user.screen_name}</Typography>
+                                <Grid alignItems="flex-start" md={8} sm={8} lg={8} xs={5}>
+                                    <Typography variant="h6" style={{ marginTop: 0, marginLeft: 0 }}>{item.user.screen_name}</Typography>
                                 </Grid>
-                                <Grid item md={1} alignItems="flex-start">
+                                <Grid item md={1} sm={1} lg={1} xs={2} alignItems="flex-start">
                                     <Button 
                                         variant="outlined" 
                                         size="small"
@@ -427,7 +427,7 @@ const styles = makeStyles((theme) => ({
         padding: '10px',
         margin: theme.spacing(2),
         [theme.breakpoints.down('md')]: {
-            width: '90vw',
+            width: '88vw',
         }
     },
     timeline: {

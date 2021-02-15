@@ -45,16 +45,16 @@ const ScheduledTweetsActions = () => {
            <AppBar position="static" className={classes.appbar}>
                 <Grid container spacing={2}>
                     <Grid item md={3}>
-                        <Button className={classes.button} color="primary" onClick={() => setValue(0)} variant={value === 0 ? 'contained': 'outlined'}>Scheduled Tweets</Button>
+                        <Button className={classes.button} size="small" color="primary" onClick={() => setValue(0)} variant={value === 0 ? 'contained': 'outlined'}>Scheduled Tweets</Button>
                     </Grid>
                     <Grid item md={3}>
-                        <Button className={classes.button}  color="primary" onClick={() => setValue(1)} variant={value === 1 ? 'contained': 'outlined'}>Scheduled Likes</Button>
+                        <Button className={classes.button}  size="small" color="primary" onClick={() => setValue(1)} variant={value === 1 ? 'contained': 'outlined'}>Scheduled Likes</Button>
                     </Grid>
                     <Grid item md={3}>
-                        <Button className={classes.button}  color="primary" onClick={() => setValue(2)} variant={value === 2 ? 'contained': 'outlined'}>Scheduled Comments</Button>
+                        <Button className={classes.button}  size="small" color="primary" onClick={() => setValue(2)} variant={value === 2 ? 'contained': 'outlined'}>Scheduled Comments</Button>
                     </Grid>
                     <Grid item md={3}>
-                        <Button className={classes.button}  color="primary" onClick={() => setValue(3)} variant={value === 3 ? 'contained': 'outlined'}>Scheduled Retweets</Button>
+                        <Button className={classes.button}  size="small" color="primary" onClick={() => setValue(3)} variant={value === 3 ? 'contained': 'outlined'}>Scheduled Retweets</Button>
                     </Grid>
                 </Grid>
             </AppBar>
@@ -76,7 +76,6 @@ const styles = makeStyles((theme) => ({
             marginTop: theme.spacing(1),
             padding: 0
         }
-        
     },
     paper: {
         padding: theme.spacing(2)
@@ -93,7 +92,10 @@ const styles = makeStyles((theme) => ({
         padding: theme.spacing(4),
         borderRadius: 8,
         boxShadow: 'none',
-        boxShadow: '8px 8px 8px rgba(0, 0, 0, 0.25)'
+        boxShadow: '8px 8px 8px rgba(0, 0, 0, 0.25)',
+        [theme.breakpoints.down('md')]: {
+            width: '95%',
+        }
     },
     button: {
         boxShadow: '8px 8px 8px rgba(0, 0, 0, 0.25)',

@@ -1,6 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Button, List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
+import { Button, List, ListItem, ListItemIcon, ListItemText, Typography } from '@material-ui/core';
 import { useRouter } from 'next/router';
 import { GrSchedules } from 'react-icons/gr';
 import { MdTimeline } from 'react-icons/md';
@@ -32,16 +32,21 @@ const Sidebar = () => {
 
     return (
         <div className={classes.root}>
+            <Typography variant="h6" className={classes.title} onClick={() => router.push('/')}>
+                TweetCast
+            </Typography>
             <br />
             <List style={{  width: '100%', height: '100vh', position:'relative' }}>
-                <ListItem className={classes.listItem}>
-                    <ListItemIcon>
-                        <RiAdminLine color="primary" />
-                    </ListItemIcon>
-                    {accessData && accessData.userType === 'admin' ? <Button className={classes.button} onClick={() => handleClick('admin')} fullWidth variant={router.query.type === 'admin' ? 'contained': 'text'} size="small" color="primary" >
-                        Admin
-                    </Button>: null}
-                </ListItem>
+                {accessData && accessData.userType === 'admin' && 
+                    <ListItem className={classes.listItem}>
+                        <ListItemIcon>
+                            <RiAdminLine color="primary" />
+                        </ListItemIcon>
+                        <Button className={classes.button} onClick={() => handleClick('admin')} fullWidth variant={router.query.type === 'admin' ? 'contained': 'text'} size="small" color="primary" >
+                            Admin
+                        </Button>
+                    </ListItem>
+                }
                 <ListItem className={classes.listItem}>
                     <ListItemIcon>
                         <IoCreate />

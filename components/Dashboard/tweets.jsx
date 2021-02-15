@@ -146,7 +146,7 @@ const TweetsPanel = () => {
                 <Typography variant="h6">Create Tweets</Typography>
                 <br />
                 <Grid container spacing={2}>
-                    <Grid item md={9} sm={12} xs={12}>
+                    <Grid item md={12} sm={12} xs={12}>
                         <TextField id="component-simple" 
                             placeholder="Enter Message" 
                             size="medium"  
@@ -163,7 +163,7 @@ const TweetsPanel = () => {
                 </Grid>
                 <Grid container>
                     {message.fileData  !== null ?
-                        <Grid item md={9} sm={12} xs={12} className={classes.uploadContainer}>
+                        <Grid item md={12} sm={12} xs={12} className={classes.uploadContainer}>
                             <div className={classes.cancelButton}>
                                 <IconButton color="primary" onClick={() => setMessage(prevState => ({...prevState, fileData: null, file: null, fileName: null}))}>
                                     <AiFillCloseCircle />
@@ -174,7 +174,7 @@ const TweetsPanel = () => {
                             </div>
                         </Grid>
                             :
-                            <Grid item md={9} className={classes.uploadContainer}>
+                            <Grid item md={12} className={classes.uploadContainer}>
                                 <TextField
                                     className={classes.input}
                                     id="contained-button-file"
@@ -198,6 +198,7 @@ const TweetsPanel = () => {
                         color="primary" 
                         variant="contained" 
                         className={classes.button}
+                        fullWidth
                         onClick={() => handleTweetButton()}
                         disabled={(message.message).trim(" ").length >0 ? false: true}
                     >
@@ -216,7 +217,7 @@ const styles = makeStyles((theme) => ({
         width: '65vw',
         position: 'relative',
         [theme.breakpoints.down('md')]: {
-            width: '100vw',
+            width: '90vw',
             marginTop: theme.spacing(1),
             padding: 0
         }
@@ -266,7 +267,6 @@ const styles = makeStyles((theme) => ({
     },
     button: {
         textTransform: 'none',
-        width: '75%',
         [theme.breakpoints.down('md')]: {
             width: '100%',
         }

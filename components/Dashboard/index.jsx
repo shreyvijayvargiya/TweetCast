@@ -18,10 +18,11 @@ const Dashboard = () => {
     
     const router = useRouter();
     const theme = useTheme();
-    const matches = useMediaQuery(theme.breakpoints.down('sm'));
+    const matches = useMediaQuery(theme.breakpoints.down('md'));
     const type = router.query.type;
     const dispatch = useDispatch();
-    const accessData = useSelector(state => state.accessData);
+    const userData = useSelector(state => state);
+    const [accessData, setAccessData] = React.useState(null);
     const currentUserEmail = useSelector(state => state.email); 
     const [open, setOpen] = React.useState(false); 
 
@@ -36,6 +37,7 @@ const Dashboard = () => {
             dispatch(setAccessDataStore(users[data[0]]));
         });
     };
+    
 
     const Panel = () => {
         if(type === 'admin') return (accessData.userType === 'admin' ? <AdminPanel />: null)
@@ -57,17 +59,18 @@ const Dashboard = () => {
     React.useEffect(() => {
         fetchTimlineAndStoreInRedux();
         fetchUsers();
+        setAccessData(userData)
     }, []);
 
     return (
         <Grid container className={styles.root} spacing={2}>
-            <Grid item md={2} sm={1} xs={1} style={{ height: '100vh' }}>
+            <Grid item md={0} lg={2} sm={0} xs={0} style={{ height: '100vh' }}>
                 {!matches ? <Sidebar />:
                  <Drawer open={open} onClose={() => setOpen(false)}>
                     <Sidebar />
                  </Drawer>}
             </Grid>
-            <Grid item md={10} sm={12} xs={12} style={{ padding: '12px'}}>
+            <Grid item md={11} lg={10} sm={11} xs={11}>
                 {matches && <div className={styles.barIcon}>
                     <IconButton onClick={() => setOpen(true)}>
                         <AiOutlineBars />
@@ -96,12 +99,17 @@ const useStyles = makeStyles(theme => ({
     panel: {
         overflow: 'scroll',
         height: '90vh',
-        paddingTop: 10
+        paddingTop: 10,
+        [theme.breakpoints.down('md')]: {
+            padding: 0,
+            paddingTop: theme.spacing(6),
+            width: '98vw'
+        }
     },
     barIcon: {
         width: '100%',
         position: 'absolute',
         top: '0px',
         left: '10px',
-    }
+    },
 }))

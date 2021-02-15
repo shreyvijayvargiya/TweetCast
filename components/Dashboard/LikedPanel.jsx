@@ -13,13 +13,12 @@ import { useSelector } from 'react-redux';
 import MuiAlert from '@material-ui/lab/Alert';
 import { setTimelineInRedux } from '../../redux/action';
 
-const LikedPanel = ({ email }) => {
+const LikedPanel = () => {
 
     const [likes, setLikes] = React.useState(null);
     const [likeTweet, setLikeTweet] = React.useState(null);
     const [open, setOpen] = React.useState(false);
-    const timelineData = useSelector(state => state.timelineData);
-    const accessData = useSelector(state=> state.accessData);
+    const { email, accessData, timelineData }  = useSelector(state => state);
     const dispatch = useDispatch()
     const [show, setShow] = React.useState(false);
     const [snackBarMessage, setSnackBarMessage] = React.useState("");

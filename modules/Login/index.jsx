@@ -71,14 +71,14 @@ const Login = () => {
                 const userExist = Object.keys(usersObject).filter(item => {
                     if(usersObject[item].email === res.user.email) return item
                 });
-                if(userExist.length > 0){
-                    setError("");
-                    setCookie('uid', res.user.uid, 14);
-                    dispatch(setUserInStore(user));
-                    router.push({ pathname: '/dashboard', query: { type: 'tweets'}})
-                }else {
+                if(userExist.length === 0){
                     setError('Need invitation from admin to logged in');
                     setDisabled(true);
+                }else {
+                    dispatch(setUserInStore(user));
+                    setError("");
+                    setCookie('uid', res.user.uid, 14);
+                    router.push({ pathname: '/dashboard', query: { type: 'tweets'}})
                 }
             });
           }).catch((error) => {

@@ -234,7 +234,6 @@ export default TweetsPanel;
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        height: '100vh',
         width: '20vw',
         padding: theme.spacing(4)
     },
@@ -258,7 +257,9 @@ const useStyles = makeStyles((theme) => ({
         }
     },
     table: {
-        height: '80vh',
         overflow: 'scroll',
+        [theme.breakpoints.down('md')]: {
+           height: '40vh',
+        }
     }
 }))
