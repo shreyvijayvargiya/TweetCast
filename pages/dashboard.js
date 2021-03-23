@@ -13,5 +13,5 @@ export async function getServerSideProps({ req, res}){
         return { props: { }};
     }else {
         return { props: { } }
-    }
-}
+    };
+};

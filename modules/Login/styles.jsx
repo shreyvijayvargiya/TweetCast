@@ -7,7 +7,7 @@ export const useStyles = makeStyles((theme) => ({
       justifyContent: 'center',
     },
     box : {
-      width: '25%',
+      width: '20%',
       margin: 'auto',
       padding: theme.spacing(4),
       position: 'absolute',
@@ -30,10 +30,14 @@ export const useStyles = makeStyles((theme) => ({
       margin: 'auto'
     },
     googleButton: {
-      width: '100%',
-      margin: 'auto',
-      padding: theme.spacing(2)
-    },
+      textTransform: 'none',
+      color: 'black',
+      padding: theme.spacing(1),
+      border: '1px solid #2d2d2d',
+      "&:hover": {
+        backgroundColor: '#EEEEEE'
+      }
+  },
     title: {
      flexGrow: 1,
      color: "black"
@@ -41,7 +45,7 @@ export const useStyles = makeStyles((theme) => ({
     input: {
       width: '100%',
       margin: 'auto',
-      marginTop: theme.spacing(2),
+      marginTop: theme.spacing(1),
       marginBottom: theme.spacing(2)
     },
     label : {

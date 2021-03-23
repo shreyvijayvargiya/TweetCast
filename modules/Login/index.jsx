@@ -1,15 +1,15 @@
 import React from 'react';
-import { Button, InputLabel, TextField, Typography } from '@material-ui/core';
+import { Button, InputLabel, TextField, Typography, Paper, InputAdornment, IconButton } from '@material-ui/core';
 import { useStyles } from './styles';
 import app from '../../utils/firebase';
 import { setCookie } from '../../utils/cookie';
 import { useRouter } from 'next/router';
-import { AiOutlineGoogle } from 'react-icons/ai';
-import { GoogleLogin } from 'react-google-login';
+import { AiFillEyeInvisible} from 'react-icons/ai';
 import firebase from 'firebase';
 import { setUserInStore } from '../../redux/action';
 import { useDispatch } from 'react-redux';
-
+import { FcGoogle } from 'react-icons/fc';
+import { MdVisibility } from 'react-icons/md';
 
 const Login = () => {
     const [values, setValues] = React.useState({
@@ -18,6 +18,7 @@ const Login = () => {
     });
     const [error, setError] = React.useState(null);
     const [disabled, setDisabled] = React.useState(true);
+    const [showPassword, setShowPassword] = React.useState(false);
     const classes = useStyles();
     const dispatch = useDispatch();
     const router = useRouter();
@@ -106,9 +107,8 @@ const Login = () => {
 
     return (
         <div className={classes.root}>
-            <div className={classes.box}>
+            <Paper elevation={3} className={classes.box}>
                     <Typography variant="h6">Sign In</Typography>
-                    <br />
                     {error && <InputLabel>{error}</InputLabel>}
                     <br />
                     <InputLabel className={classes.label} htmlFor="component-simple">Email</InputLabel>
@@ -133,24 +133,23 @@ const Login = () => {
                         size="small"  
                         name="password" 
                         variant="outlined" 
-                        type="password"
+                        type={showPassword ? 'text': 'password'}
                         value={values.password}
                         onChange={handleChange} 
                         className={classes.input}
+                         InputProps={{
+                            endAdornment: (
+                                <InputAdornment position="end">
+                                    <IconButton
+                                        aria-label="toggle password visibility"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                    >
+                                        {showPassword ? <MdVisibility  style={{ color: '#272727', fontSize: 20 }} /> : <AiFillEyeInvisible  style={{ color: '#272727', fontSize: 20 }} />}
+                                    </IconButton>
+                                </InputAdornment>
+                            )
+                        }}
                     />
-                    <br />
-                    <Button
-                        name="gogole-login-button"
-                        type="primary"
-                        color="primary"
-                        size="small"
-                        variant="outlined"
-                        className={classes.googleButton}
-                        onClick={(e) => handleGoogleLogin(e)}
-                    >
-                        <AiOutlineGoogle />
-                    </Button>
-                    <br />
                     <Button 
                         color="primary" 
                         variant="contained"
@@ -161,7 +160,20 @@ const Login = () => {
                     >
                         Login
                     </Button>
-            </div>
+                    <br />
+                    <Button
+                        name="gogole-login-button"
+                        type="primary"
+                        color="primary"
+                        size="small"
+                        variant="outlined"
+                        startIcon={<FcGoogle />}
+                        className={classes.googleButton}
+                        onClick={(e) => handleGoogleLogin(e)}
+                    >
+                        Login with Google
+                    </Button>
+            </Paper>
         </div>
     );
 };
