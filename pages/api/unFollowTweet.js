@@ -14,7 +14,6 @@ module.exports = async (req, res) => {
             data: [],
         };
         const user_id = JSON.parse(req.body.body.user_id);
-        console.log(user_id)
         const shootPromise = () => {
             return new Promise((resolve, reject) => {
                 client.post("friendships/destroy.json", { user_id: user_id } , (error, tweets, response) => {

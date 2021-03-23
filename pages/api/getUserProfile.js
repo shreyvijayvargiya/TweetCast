@@ -32,7 +32,6 @@ module.exports = async (req, res) => {
             body: responseObject,
         });
     }catch(e) {
-        console.log(e, 'eee')
         res.send(e);
     }
 }

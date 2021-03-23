@@ -186,7 +186,7 @@ const Timelines = () => {
             >
                 <Alert>{snackBarMessage}</Alert>
             </Snackbar>
-            <Grid className={classes.search} justify="space-between" container>
+            {/* <Grid className={classes.search} justify="space-between" container>
                 <Grid item md={7}>
                     <TextField 
                         name="search"
@@ -248,7 +248,7 @@ const Timelines = () => {
                         )}
                     />
                 </Grid>
-            </Grid>
+            </Grid> */}
             {state ? 
             <div className={classes.timeline}>
                 {tweetTimelineData && tweetTimelineData.length > 0 ? tweetTimelineData.map(item => {

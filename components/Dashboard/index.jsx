@@ -32,7 +32,6 @@ const Dashboard = () => {
             const data = Object.keys(users).filter(item => {
                 if(users[item].email === currentUserEmail) return item
             });
-            console.log(users[data[0]]);
             dispatch(setAccessDataStore(users[data[0]]));
         });
     };

@@ -55,7 +55,6 @@ const TweetsPanel = () => {
         if(message.fileData){
             let storageRef = app.storage().ref(message.fileName);
             storageRef.put(message.file).then((snapshot) => {
-                console.log(snapshot)
             }).catch((err) => console.log(err, 'error in uploading image'));
             setTimeout(() => {
                 app.storage().ref(message.fileName).getDownloadURL().then((url) => {

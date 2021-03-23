@@ -15,7 +15,6 @@ module.exports = async(req, res) => {
         return new Promise((resolve, reject) => {
             client.post(url, { id: id }, (error, data) => {
                 if(error) {
-                    console.log(error, 'error')
                     reject(error)
                 }
                 resolve(data)

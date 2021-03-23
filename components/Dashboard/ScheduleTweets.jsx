@@ -106,7 +106,6 @@ const TweetsPanel = ({ email }) => {
                        setSnackBarMessage("Tweet posted successfully")
                    });
                 }
-                console.log(response, 'response')
             }).catch(error => {
                 console.log(error)
                 alert('Error in posting tweet')

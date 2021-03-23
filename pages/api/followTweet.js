@@ -25,7 +25,6 @@ module.exports = async (req, res) => {
 
         const response = await shootPromise();
         responseObject.data = response;
-        console.log(response, 'response')
         res.json({
             body: responseObject,
         });
